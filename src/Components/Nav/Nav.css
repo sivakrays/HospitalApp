@@ -1,0 +1,13 @@
+nav{
+    background-color:  var(--color-sidebar);
+    top: 0 !important;
+    position: fixed !important;
+    width: 100%;
+    height: 63px;
+}
+
+.navbar-brand > h4{
+    float: right;
+    padding-right: 30px;
+    color: var(--color--slate50) !important;
+}

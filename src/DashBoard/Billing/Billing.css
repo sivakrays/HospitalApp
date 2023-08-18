@@ -1,0 +1,50 @@
+
+
+@media(max-width:320px){
+    .billingDetails1{
+        margin-left: 1.5rem;
+    }
+}
+  
+@media (max-width:375px){
+    .billingDetails1{
+        margin-left: 2rem;
+    }
+}
+
+@media(max-width:425px){
+    .billingDetails1{
+        margin-left: 2.5rem;
+    }
+}
+
+@media(max-width:475px){
+    .billingDetails1{
+        margin-left: 2rem;
+    }
+}
+
+@media(max-width:640px){
+    .billingDetails1{
+        margin-left: 2rem;
+    }
+}
+
+@media(max-width:768px){
+    .billingDetails1{
+        margin-left: 2rem;
+    }
+}
+
+@media(max-width:1024px){
+    .billingDetails1{
+        margin-left: 2rem;
+    }
+}
+
+
+@media(max-width:1280px){
+    .billingDetails1{
+        margin-left: 2rem;
+    }
+}

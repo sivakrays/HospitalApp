@@ -1,0 +1,10 @@
+.pagination-nav{
+    background: none;
+    position: relative;
+    margin-top: 1rem;
+    margin-left: 4rem;
+}
+
+.page-item-number{
+    padding: 0.3rem 1rem;
+}

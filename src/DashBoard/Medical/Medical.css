@@ -1,0 +1,67 @@
+.page-btn{
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.medBtn{
+    display: flex;
+    gap: 10px;
+}
+
+
+
+/* Media Query */
+
+@media(min-width:320px){
+    .medical{
+        margin-left: 2.5rem;
+    }
+}
+  
+@media (min-width:375px){
+    .medical{
+        margin-left: 2.5rem;
+    }
+}
+
+@media(min-width:425px){
+    
+}
+
+@media(min-width:475px){
+    .medical{
+        margin-left: 2.5rem;
+    }
+}
+
+@media(max-width:476px){
+    /* .page-btn{
+        flex-direction: column;
+    } */
+}
+
+
+@media(min-width:576px){
+    .medical{
+        margin-left: 2.5rem;
+    }
+}
+
+@media(min-width:640px){
+    
+}
+
+@media(min-width:768px){
+    
+}
+
+@media(min-width:1024px){
+
+}
+
+
+@media(min-width:1280px){
+
+}

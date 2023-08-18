@@ -1,0 +1,118 @@
+.add__patient__form{
+    top: 50%;
+    left:50%;
+    transform: translate(-50%,-50%);
+    position: absolute;
+    min-width: 24rem;
+    padding: 20px;
+
+    margin-top: 37rem;
+}
+
+.camera, .camera__btn{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
+/* Media Query */
+
+@media(min-width:320px){
+    .add__patient__form{
+
+        top: 55%;
+        left: 58%;
+
+        min-width: 10rem;
+        max-width: 15rem;
+    }
+    .camera__img{
+        width: 14rem;
+    }
+}
+  
+@media (min-width:375px){
+    .add__patient__form{
+
+        top: 55%;
+        left: 57%;
+
+        min-width: 18rem;
+        max-width: 18rem;
+    }
+    .camera__img{
+        width: 14rem;
+    }
+}
+
+@media(min-width:425px){
+    .add__patient__form{
+
+        top: 55%;
+        left: 55%;
+
+        min-width: 20rem;
+    }
+}
+
+@media(min-width:475px){
+    .add__patient__form{
+
+        top: 55%;
+        left: 55%;
+
+        min-width: 24rem;
+    }
+}
+
+@media(min-width:576px){
+    .add__patient__form{
+
+        top: 55%;
+        left: 55%;
+
+        min-width: 24rem;
+    }
+}
+
+@media(min-width:640px){
+    .add__patient__form{
+
+        top: 55%;
+        left: 55%;
+
+        min-width: 27rem;
+    }
+}
+
+@media(min-width:768px){
+    .add__patient__form{
+
+        top: 20%;
+        left: 53%;
+
+        min-width: 35rem;
+    }
+}
+
+@media(min-width:1024px){
+    .add__patient__form{
+
+        top: 20%;
+        left: 53%;
+
+        min-width: 45rem;
+    }
+}
+
+
+@media(min-width:1280px){
+    .add__patient__form{
+
+        top: 20%;
+        left: 50%;
+
+        min-width: 55rem;
+    }
+}

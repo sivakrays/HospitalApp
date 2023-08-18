@@ -1,0 +1,65 @@
+
+
+
+@media(min-width:320px){
+    .filter{
+        width: 250px;
+        margin-left: 2.5rem;
+    }
+}
+  
+@media (min-width:375px){
+    .filter{
+        width: 260px;
+        margin-left: 3.5rem;
+    }
+}
+
+
+/* Media Query */
+
+@media(min-width:425px){
+    .filter{
+        width: 270px;
+        margin-left: 4.5rem;
+    }
+}
+
+@media(min-width:475px){
+    .filter{
+        width: 280px;
+        margin-left: 5.5rem;
+    }
+}
+
+@media(min-width:576px){
+    .filter{
+        width: 290px;
+        margin-left: 8.5rem;
+    }
+}
+
+@media(min-width:640px){
+    .filter{
+        width: 350px;
+    }
+}
+
+@media(min-width:768px){
+    .filter{
+        width: 700px;
+        margin-left: 3.5rem;
+    }
+}
+
+@media(min-width:1024px){
+    .filter{
+        width:90%;
+        margin-left: 3.5rem;
+    }
+}
+
+
+@media(min-width:1280px){
+
+}
