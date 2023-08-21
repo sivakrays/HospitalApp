@@ -1,27 +1,18 @@
 import React, { useEffect, useState } from "react";
-// import Nav from "../Nav/Nav";
 import { useParams } from "react-router-dom";
 import { Form, Row, Col, FloatingLabel } from "react-bootstrap";
 import axios from "axios";
-import FormCheckInput from "react-bootstrap/esm/FormCheckInput";
+import DataSearch from "../DataSearch/DataSearch";
+import "./PatientAppointment.css";
 
 const PatientAppointment = () => {
   const { id } = useParams();
   const [patient, setPatient] = useState([]);
+  const [doctorNameList, setDoctorNameList] = useState("");
+  const [search, setSearch] = useState("");
+  const [doctorName, setDoctorName] = useState("");
 
-  const [appointmentData, setAppointmentData] = useState({
-    doctor: "",
-    date: "",
-    time: "",
-    comments: "",
-    critical: "",
-  });
-
-  const handle = (e) => {
-    const newData = { ...appointmentData };
-    newData[e.target.name] = e.target.value;
-    setAppointmentData(newData);
-  };
+  // Fetch the data Based on the Id
 
   const filterItems = async () => {
     const res = await axios.get(
@@ -35,24 +26,90 @@ const PatientAppointment = () => {
     filterItems();
   }, []);
 
+  // Fetch the Data Based on the search input
+
+  useEffect(() => {
+    const fetchData = async () => {
+      if (search.length > 0) {
+        try {
+          const res = await axios.get(
+            "https://jsonplaceholder.typicode.com/users"
+          );
+          setDoctorNameList(res.data);
+        } catch (error) {
+          console.error("Error fetching data:", error);
+        }
+      }
+    };
+
+    fetchData();
+  }, [search]);
+
+  const handleSearch = (e) => {
+    const searchData = e.target.value;
+    setSearch(searchData);
+  };
+
+  const filteredData =
+    doctorNameList &&
+    doctorNameList.filter((item) =>
+      item.name.toLowerCase().includes(search.toLowerCase())
+    );
+
   // Get the current time
-  /* const getCurrentTime = () => {
+  const getCurrentTime = () => {
     const now = new Date();
     const hours = now.getHours().toString().padStart(2, "0");
     const minutes = now.getMinutes().toString().padStart(2, "0");
     return `${hours}:${minutes}`;
   };
-  */
+
+  const [appointmentData, setAppointmentData] = useState({
+    doctor: doctorName,
+    date: "",
+    time: getCurrentTime(),
+    comments: "",
+    status: "",
+  });
+
+
+  const handle = (e) => {
+    const newData = { ...appointmentData };
+    newData[e.target.name] = e.target.value;
+    setAppointmentData(newData);
+  };
+
+  const handleDoctorName = (e) => {
+    const selectedDoctorName = e.target.innerText;
+    setDoctorName(selectedDoctorName);
+    setSearch("");
+
+    setAppointmentData((prevData) => ({
+      ...prevData,
+      doctor: selectedDoctorName,
+    }));
+  };
+
+  const [doctorError, setDoctorError] = useState("");
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    console.log(appointmentData);
+    if (doctorName.length === 0) {
+      setDoctorError("Must Have the Doctor Name");
+    } else {
+      setDoctorError("");
+      setDoctorName("");
+      console.log("AppointMent Details", appointmentData);
+      const data = { ...appointmentData };
+      data.comments = "";
+      data.status = "";
+      setAppointmentData(data);
+    }
   };
 
   return (
     <section className="LabTest mt w-100">
-      {/* <Nav /> */}
       <div className="labTest__Box  p-3">
         <h3 className="text-center text-uppercase">Appointment</h3>
         <form onSubmit={(e) => handleSubmit(e)}>
@@ -78,24 +135,45 @@ const PatientAppointment = () => {
               ))}
             </Row>
           </div>
+
           <Row>
-            <Col className="mb-2 " md={3}>
-              <FloatingLabel controlId="Doctor" label="Doctor">
-                <Form.Select
-                  aria-label="Floating label select example"
-                  name="doctor"
-                  required
-                >
-                  <option>Select Doctor</option>
-                  <option value="Manoj">Manoj</option>
-                  <option value="Kumar">Kumar</option>
-                  <option value="Mukesh">Mukesh</option>
-                </Form.Select>
-              </FloatingLabel>
+            <Col className="mb-2" md={3}>
+              <DataSearch search={search} handleSearch={handleSearch} />
             </Col>
           </Row>
+          {search.length <= 0 ? (
+            ""
+          ) : (
+            <div className="doctor-list">
+              {search.length !== 0 &&
+                filteredData &&
+                filteredData.map((doctor) => (
+                  <div key={doctor.id}>
+                    <p onClick={(e) => handleDoctorName(e)}>{doctor.name}</p>
+                  </div>
+                ))}
+            </div>
+          )}
+
           <Row>
-            <Col md={4} className="mb-2">
+            <Col md={3} className="mb-2">
+              <FloatingLabel
+                controlId={`DoctorName`}
+                label="DoctorName"
+                className=""
+              >
+                <Form.Control
+                  type="text"
+                  placeholder="DoctorName"
+                  name="DoctorName"
+                  onChange={(e) => handle(e)}
+                  value={doctorName}
+                  required
+                  disabled
+                />
+              </FloatingLabel>
+            </Col>
+            <Col md={3} className="mb-2">
               <FloatingLabel
                 controlId={`appointmentDate`}
                 label="Appointment Date"
@@ -110,7 +188,7 @@ const PatientAppointment = () => {
                 />
               </FloatingLabel>
             </Col>
-            <Col md={4} className="mb-2">
+            <Col md={3} className="mb-2">
               <FloatingLabel
                 controlId="appointmentTime"
                 label="Appointment time"
@@ -119,13 +197,13 @@ const PatientAppointment = () => {
                   type="time"
                   placeholder="time"
                   name="time"
-                  // defaultValue={getCurrentTime()}
+                  defaultValue={appointmentData.time}
                   onChange={(e) => handle(e)}
                   required
                 />
               </FloatingLabel>
             </Col>
-            <Col md={4} className="mb-2">
+            <Col md={3} className="mb-2">
               <FloatingLabel
                 controlId={`appointmentComment`}
                 label="Appointment comment"
@@ -135,6 +213,7 @@ const PatientAppointment = () => {
                   type="text"
                   placeholder="Comment"
                   name="comments"
+                  value={appointmentData.comments}
                   onChange={(e) => handle(e)}
                   required
                 />
@@ -144,24 +223,28 @@ const PatientAppointment = () => {
 
           <Row>
             <Col md={6}>
-              <div className="d-flex check flex-wrap ">
+              <div className="d-flex check flex-wrap">
                 <Form.Check
                   type="radio"
                   label="Critical"
-                  name="Critical"
+                  name="status"
+                  value="Critical"
                   style={{ marginRight: "10px" }}
-                  id="critical"
+                  onChange={(e) => handle(e)}
                 />
                 <Form.Check
                   type="radio"
                   label="Normal"
-                  name="Normal"
-                  id="critical"
+                  name="status"
+                  value="Normal"
                   style={{ marginRight: "10px" }}
+                  onChange={(e) => handle(e)}
+                  required
                 />
               </div>
             </Col>
           </Row>
+          {doctorError && <p className="text-danger">{doctorError}</p>}
           <Row className="mt-4">
             <Col>
               <input

@@ -33,14 +33,14 @@ const SideNavBar = ( ) => {
       icon: <FaHospitalUser />,
     },
     {
-      path: "/patients",
-      name: "Patients",
-      icon: <FaBed />,
-    },
-    {
       path: "/appointment",
       name: "Appointment",
       icon: <FaCalendarDays />,
+    },
+    {
+      path: "/patients",
+      name: "Patients",
+      icon: <FaBed />,
     },
     {
       path: "/adduser",

@@ -2,13 +2,10 @@ import React, { useEffect, useState } from "react";
 import "../../Utility/Utility.css";
 import "./Patients.css";
 import SearchBox from "../../Components/SearchBox/SearchBox";
-// import Nav from "../../Components/Nav/Nav";
 import axios from "axios";
 import { Link } from "react-router-dom";
 
 const Patients = () => {
-
-  
   const [data, setData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [search, setSearch] = useState("");
@@ -33,20 +30,21 @@ const Patients = () => {
     setCurrentPage(1);
   }, [search]);
 
+  // Filter data based on search input for ID and name
+
   const handleSearch = (e) => {
     const searchData = e.target.value;
     setSearch(searchData);
   };
 
-  const indexOfLastItem = currentPage * itemsPerPage;
-  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-
-  // Filter data based on search input for ID and name
   const filteredData = data.filter(
     (item) =>
       item.id.toString().includes(search) ||
       item.title.toLowerCase().includes(search.toLowerCase())
   );
+
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
 
   const currentItems = filteredData.slice(indexOfFirstItem, indexOfLastItem);
 
@@ -80,7 +78,6 @@ const Patients = () => {
 
   return (
     <section className="patients">
-      {/* <Nav /> */}
       <div className="patient__search">
         <SearchBox search={search} handleSearch={handleSearch} />
 
@@ -116,7 +113,11 @@ const Patients = () => {
         <div className="patients__view g-3">
           {currentItems.map((item) => {
             return (
-              <Link to={`/PatientView/${item.id}`} className="text-dark" key={item.id}>
+              <Link
+                to={`/PatientView/${item.id}`}
+                className="text-dark"
+                key={item.id}
+              >
                 <div className="patients__box shadow" key={item.id}>
                   <img src={item.thumbnailUrl} alt="patient" />
                   <div className="patient__details">

@@ -85,7 +85,7 @@ const AddUser = () => {
     setCheckboxError(false);
     setPasswordMismatch(false);
     resetForm();
-    console.log("register", register);
+    console.log("User register", register);
   };
 
   return (

@@ -1,0 +1,11 @@
+.doctor-list {
+    max-height: 200px; 
+    width: 230px;
+    overflow-y: auto; 
+    border: 1px solid #ccc; 
+    padding: 10px; 
+    position: absolute;
+    z-index: 100;
+    background-color: whitesmoke;
+    cursor: pointer;
+  }

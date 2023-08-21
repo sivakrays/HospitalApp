@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-// import Nav from "../../Components/Nav/Nav";
 import "./AddPatients.css";
 import { Container, Form, Row, Col, FloatingLabel } from "react-bootstrap";
 
@@ -24,6 +23,7 @@ const AddPatients = () => {
     setImage(imageSrc);
   }, []);
 
+
   const [patients, setPatient] = useState({
     firstName: "",
     lastName: "",
@@ -37,7 +37,6 @@ const AddPatients = () => {
     state: "",
     city: "",
     street: "",
-    address: "",
     gurdianName: "",
     gurdianRelation: "",
     gurdianContact: "",
@@ -51,8 +50,6 @@ const AddPatients = () => {
   // Age Calculation
   const age = date.getFullYear() - patients.dob.slice(0, 4);
 
-  // Handle the camera
-
   function handle(e) {
     const newPatient = { ...patients };
     newPatient[e.target.name] = e.target.value;
@@ -65,13 +62,9 @@ const AddPatients = () => {
     facingMode: "user",
   };
 
-  // Handle pregnancy details
-
   const handlePregnancy = (e) => {
     setPregancy(e.target.value);
   };
-
-  // Handle the Allergy and Allergy Medicine
 
   const handleAllergy = (e) => {
     setAllergy(e.target.value);
@@ -81,8 +74,6 @@ const AddPatients = () => {
     setMedicine(e.target.value);
   };
 
-  // Handle the Submit Function
-
   const handleSubmit = (e) => {
     e.preventDefault();
 
@@ -90,36 +81,31 @@ const AddPatients = () => {
       setImageError(`please capture the Image`);
       console.log(image);
     }
-    if (pregnancy === " ") {
+    else if (pregnancy === " ") {
       setPregnancyError(`please Select the Pregnancy details`);
-    } else {
-      console.log(pregnancy);
-      console.log(image);
     }
-
     // if (allergy === "") {
     //   setError(`Please Select the Allergy Details`);
     // } else {
     //   console.log("patient", patients);
     //   setError("");
     // }
-
-    if (medicine === "" || medicine === null) {
+    else if (medicine === "" || medicine === null) {
       setError(`Please Select the Allergy Details`);
-    } else {
-      console.log("patient", patients);
-      setError("");
+    } 
+    else if(patients.contact.length !== 10){
+      setPhoneError("Phone Number Must be 10 Numbers only")
     }
-
-    if(patients.contact.length !== 10){
-        setPhoneError("Phone Number Must be 10 Numbers only")
+    else{
+      setError("");
+      setImageError("")
+      console.log('image',image)
+      console.log("patient", patients);
     }
   };
 
   return (
     <section className="addPatients mt">
-      {/* <Nav /> */}
-
       <form
         className="add__patient__form shadow "
         id="container"
@@ -131,7 +117,7 @@ const AddPatients = () => {
         >
           Add Patients
         </h2>
-        {imageError && <p className="text-danger">{imageError}</p>}
+        
         <div className="camera">
           {image === "" ? (
             <Webcam
@@ -590,7 +576,7 @@ const AddPatients = () => {
             )}
           </Row>
         </div>
-
+        {imageError && <p className="text-danger">{imageError}</p>}
         <div className="button1">
           <hr />
           <div className="add__user__btn mt-md">

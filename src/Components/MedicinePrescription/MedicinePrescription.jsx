@@ -63,7 +63,7 @@ const MedicinePrescription = () => {
               className=""
               
             >
-              <Form.Control type="text" placeholder="Medicine" required/>
+              <Form.Control type="text" placeholder="Medicine" required disabled/>
             </FloatingLabel>
           </Col>
           <Col md={3} className="mb-2">
@@ -83,7 +83,7 @@ const MedicinePrescription = () => {
               className=""
               
             >
-              <Form.Control type="text" placeholder="Interval" required/>
+              <Form.Control type="text" placeholder="Interval" required disabled/>
             </FloatingLabel>
           </Col>
           <Col md={3} className="mb-2">
@@ -93,7 +93,7 @@ const MedicinePrescription = () => {
               className=""
               
             >
-              <Form.Control type="text" placeholder="Comments" required/>
+              <Form.Control type="text" placeholder="Comments" required disabled/>
             </FloatingLabel>
           </Col>
         </Row>
