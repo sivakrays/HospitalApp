@@ -22,7 +22,7 @@ const PatientsView = () => {
   const [medicineFields, setMedicineFields] = useState([
     {
       id: uuidv4(),
-      medicine: medineName,
+      medicine: "",
       duration: "",
       interval: "",
       comments: "",
@@ -93,7 +93,7 @@ const PatientsView = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    if(medineName == 0){
+    if(medineName === 0){
       setMedicineNameError("Please Enter the Medicine Name");
     }
     else{
@@ -179,11 +179,11 @@ const PatientsView = () => {
           
           {medicineFields.map((field) => (
             <>
-            <Row>
+            {/* <Row>
             <Col className="mb-2" md={3}>
               <DataSearch search={search} handleSearch={handleSearch} />
             </Col>
-          </Row>
+          </Row> */}
             <Row key={field.id}>
               <Col md={3} className="mb-2">
                 <FloatingLabel
@@ -195,16 +195,16 @@ const PatientsView = () => {
                     type="text"
                     placeholder="Medicine"
                     required
-                    disabled
-                    value={medineName}
-                    // onChange={(e) => {
-                    //   const updatedFields = medicineFields.map((item) =>
-                    //     item.id === field.id
-                    //       ? { ...item, medicine: e.target.value }
-                    //       : item
-                    //   );
-                    //   setMedicineFields(updatedFields);
-                    // }}
+                   name="medicine"
+                    value={field.medicine}
+                    onChange={(e) => {
+                      const updatedFields = medicineFields.map((item) =>
+                        item.id === field.id
+                          ? { ...item, medicine: e.target.value }
+                          : item
+                      );
+                      setMedicineFields(updatedFields);
+                    }}
                   />
                 </FloatingLabel>
               </Col>
