@@ -4,7 +4,9 @@ import '../../Utility/Utility.css'
 import { Link } from 'react-router-dom'
 
 const Login = () => {
-
+  console.log('working')
+const handleLogin = () =>{
+}
 
   return (
     <section className='login'>
@@ -19,7 +21,7 @@ const Login = () => {
           <input type="password" name="" id="" className='form-control' placeholder='Enter your Password'/>
         </div>
         <div className="login__btn">
-          <Link to={'/DoctorView'} className='btn  login__button button'>Login</Link>
+          <Link to={'/DoctorView'} className='btn  login__button button' onClick={()=>handleLogin()}>Login</Link>
         </div>
 
 

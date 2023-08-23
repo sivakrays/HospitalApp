@@ -73,6 +73,7 @@ const InputTaskOne = () => {
       item.medicine && item.date && item.stockQty && item.price
   );
 
+
   return (
     <Container className="w-75 mt">
       <h2>Stock Control</h2>
