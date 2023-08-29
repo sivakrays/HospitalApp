@@ -21,6 +21,11 @@ import DoctorView from "./DashBoard/DoctorView/DoctorView";
 import Stock from "./Components/Stock/Stock";
 import AddStock from "./Components/AddStock/AddStock";
 import BillingView from "./Components/BillingView/BillingView";
+import Admin from "./Auth/Admin/Admin";
+import PatientUpdate from "./Auth/Admin/PatientUpdate/PatientUpdate"
+import UpdatePatient from "./Auth/Admin/UpdatePatient/UpdatePatient"
+import UpdateStaffs from "./Auth/Admin/UpdateStaffs/UpdateStaffs"
+import StaffsUpdate from "./Auth/Admin/StaffsUpdate/StaffsUpdate"
 
 function App() {
   return (
@@ -52,6 +57,11 @@ function App() {
           <Route path="/PatientReport/:id" element={<PatientReport />} />
           <Route path="/reports" element={<Report />} />
           <Route path="/billing" element={<Billing />} />
+          <Route path="/Admin" element={<Admin />} />
+          <Route path="/UpdatePatient" element={<UpdatePatient />}/>
+          <Route path="/PatientUpdate/:id" element={<PatientUpdate />}/>
+          <Route path="/UpdateStaffs" element={<UpdateStaffs />}/>
+          <Route path="/StaffsUpdate/:id" element={<StaffsUpdate />}/>
           <Route
             path="*"
             element={

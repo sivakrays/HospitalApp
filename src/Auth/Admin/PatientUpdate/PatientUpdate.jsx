@@ -1,8 +1,7 @@
 import React, { useState } from "react";
-import "./AddPatients.css";
+import "../../../DashBoard/AddPatients/AddPatients.css";
 import { Container, Form, Row, Col, FloatingLabel } from "react-bootstrap";
 import Webcam from "react-webcam";
-import { post } from "../../ApiCalls/ApiCalls";
 
 const AddPatients = () => {
   const [allergy, setAllergy] = useState("");
@@ -75,44 +74,7 @@ const AddPatients = () => {
 
   // Api Call
 
-  const handleRegister = () => {
-    const data = {
-      image: image,
-      pregnancy: pregnancy,
-      firstName: patients.firstName,
-      lastName: patients.lastName,
-      dob: patients.dob,
-      gender: patients.dob,
-      contact: patients.contact,
-      email: patients.email,
-      weight: patients.weight,
-      height: patients.height,
-      pincode: patients.pincode,
-      state: patients.state,
-      city: patients.city,
-      street: patients.street,
-      gurdianName: patients.gurdianName,
-      gurdianRelation: patients.gurdianRelation,
-      gurdianContact: patients.gurdianContact,
-      emergencyName: patients.emergencyName,
-      emergencyrelation: patients.emergencyrelation,
-      emergencyContact: patients.emergencyContact,
-      allergy: allergy,
-      medicine: medicine,
-      allergyName: patients.allergyName,
-      medicineName: patients.medicineName,
-    };
-
-    const config = {
-      headers: {
-        Accept: "application/json",
-      },
-    };
-
-    post("/", data, config).then((res) => {
-      console.log("message", res);
-    });
-  };
+  
 
   // Submit Function
 
@@ -136,7 +98,7 @@ const AddPatients = () => {
     } else if (patients.contact.length !== 10) {
       setPhoneError("Phone Number Must be 10 Numbers only");
     } else {
-      handleRegister();
+      
       setError("");
       setImageError("");
       console.log("image", image);

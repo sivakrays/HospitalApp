@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "./LabTest.css";
 import "../../Utility/Utility.css";
-// import Nav from "../Nav/Nav";
 import { Form, Row, Col, FloatingLabel } from "react-bootstrap";
 import { FaPlus, FaMinus } from "react-icons/fa6";
 
@@ -10,8 +9,8 @@ import axios from "axios";
 
 const LabTest = () => {
   const { id } = useParams();
-  const [patientTests, setPatientTests] = useState([]);
-  const [dynamicFields, setDynamicFields] = useState([
+  const [patientDetails, setpatientDetails] = useState([]);
+  const [LabTestData, setLabTestData] = useState([
     { id: 0, name: "", file: null, comments: "" },
   ]);
 
@@ -20,7 +19,7 @@ const LabTest = () => {
       `https://jsonplaceholder.typicode.com/photos?id=${id}`
     );
     const data = await res.data;
-    setPatientTests(data);
+    setpatientDetails(data);
   };
 
   useEffect(() => {
@@ -29,70 +28,70 @@ const LabTest = () => {
 
   const addField = () => {
     const newField = {
-      id: dynamicFields.length,
+      id: LabTestData.length,
       name: "",
       file: null,
       comments: "",
     };
-    setDynamicFields([...dynamicFields, newField]);
+    setLabTestData([...LabTestData, newField]);
   };
 
   const removeField = (id) => {
-    const updatedFields = dynamicFields.filter((field) => field.id !== id);
-    setDynamicFields(updatedFields);
+    const updatedFields = LabTestData.filter((field) => field.id !== id);
+    setLabTestData(updatedFields);
     console.log("Deleted Field ID:", id);
   };
 
   const handleFieldChange = (id, field, value) => {
-    const updatedFields = dynamicFields.map((f) => {
+    const updatedFields = LabTestData.map((f) => {
       if (f.id === id) {
         return { ...f, [field]: value };
       }
       return f;
     });
-    setDynamicFields(updatedFields);
+    setLabTestData(updatedFields);
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log('working')
+    console.log("Patient Test Result", LabTestData);
+    setLabTestData([{ id: 0, name: "", file: "", comments: "" }]);
   };
 
   return (
     <section className="LabTest mt w-100">
-      {/* <Nav /> */}
       <div className="labTest__Box  p-3">
-      <form onSubmit={(e) => handleSubmit(e)}>
-        <h3 className="text-center">Lab Report</h3>
+        <form onSubmit={(e) => handleSubmit(e)}>
+          <h3 className="text-center">Lab Report</h3>
 
-        <Row>
-          {patientTests.map((data) => (
-            <ul key={data.id}>
-              <Col md={6}>
-                <li>
-                  <img
-                    src={data.url}
-                    alt=""
-                    className="w-25"
-                    style={{ borderRadius: "50%" }}
-                  />
-                </li>
-              </Col>
-              <Col md={6}>
-                <li>
-                  <b>Patient ID: </b>
-                  {data.id}
-                </li>
-                <li>
-                  <b>Patient Name: </b>
-                  {data.title}
-                </li>
-              </Col>
-            </ul>
-          ))}
-        </Row>
+          <Row>
+            {patientDetails.map((data) => (
+              <ul key={data.id}>
+                <Col md={6}>
+                  <li>
+                    <img
+                      src={data.url}
+                      alt=""
+                      className="w-25"
+                      style={{ borderRadius: "50%" }}
+                    />
+                  </li>
+                </Col>
+                <Col md={6}>
+                  <li>
+                    <b>Patient ID: </b>
+                    {data.id}
+                  </li>
+                  <li>
+                    <b>Patient Name: </b>
+                    {data.title}
+                  </li>
+                </Col>
+              </ul>
+            ))}
+          </Row>
 
-          {dynamicFields.map((field, index) => (
+          {LabTestData.map((field, index) => (
             <Row className="mt-3" key={field.id}>
               <Col md={4} className="mb-2">
                 <FloatingLabel
@@ -143,12 +142,12 @@ const LabTest = () => {
                 </FloatingLabel>
               </Col>
               <Col md={4} className="mb-2">
-                {index === dynamicFields.length - 1 && (
+                {index === LabTestData.length - 1 && (
                   <button className="btn btn-success" onClick={addField}>
                     <FaPlus />
                   </button>
                 )}
-                {dynamicFields.length > 1 && (
+                {LabTestData.length > 1 && (
                   <button
                     className="btn btn-danger ml-2"
                     onClick={() => removeField(field.id)}
@@ -161,11 +160,15 @@ const LabTest = () => {
             </Row>
           ))}
 
-        <Row>
-          <Col className="d-flex justify-content-center align-item-center w-100 mt-3">
-            <input type="submit" value="Confirm" className="btn btn-primary" />
-          </Col>
-        </Row>
+          <Row>
+            <Col className="d-flex justify-content-center align-item-center w-100 mt-3">
+              <input
+                type="submit"
+                value="Confirm"
+                className="btn btn-primary"
+              />
+            </Col>
+          </Row>
         </form>
       </div>
     </section>

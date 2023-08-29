@@ -65,10 +65,11 @@ const InputTaskOne = () => {
 
   const handleSubmit = () => {
     console.log("Submitted data:", data);
+    setData("")
   };
 
   // Calculate form validity
-  const formIsValid = data.every(
+  const formIsValid = data && data.every(
     (item) =>
       item.medicine && item.date && item.stockQty && item.price
   );
@@ -78,7 +79,7 @@ const InputTaskOne = () => {
     <Container className="w-75 mt">
       <h2>Stock Control</h2>
       <hr />
-      {data.map((dataItem, i) => (
+      {data && data.map((dataItem, i) => (
         <div key={i}>
           <br />
           <Row className="mb-3">

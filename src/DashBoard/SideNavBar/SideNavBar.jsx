@@ -11,13 +11,15 @@ import {
   FaFileInvoice,
   FaUsers,
   FaVialCircleCheck,
-  FaUserDoctor
+  FaUserDoctor,
+  FaUserLock,
+  FaBell,
 } from "react-icons/fa6";
 import "./SideNavBar.css";
 import "../../Utility/Utility.css";
 import { NavLink, Link, Outlet } from "react-router-dom";
 
-const SideNavBar = ( ) => {
+const SideNavBar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const toggle = () => setIsOpen(!isOpen);
 
@@ -72,6 +74,11 @@ const SideNavBar = ( ) => {
       name: "Billing",
       icon: <FaFileInvoice />,
     },
+    {
+      path: "/Admin",
+      name: "Admin",
+      icon: <FaUserLock />,
+    },
   ];
 
   const closeSidebar = () => {
@@ -95,7 +102,13 @@ const SideNavBar = ( ) => {
         }}
       >
         <div></div>
-        <h3 className="text-white text-uppercase">ABC Hospital</h3>
+        <div className="d-flex justify-content-lg-center align-items-center justify-content-sm-center">
+          <FaBell className="m-3 text-white" style={{ cursor: "pointer" }} />
+          <h6 className="text-white text-uppercase mt-2">USER: Manoj</h6>
+          <Link to={'/'}>
+            <button className="btn btn-primary m-4">Logout</button>
+          </Link>
+        </div>
       </div>
 
       <div
@@ -162,7 +175,9 @@ const SideNavBar = ( ) => {
         {children}
       </main> */}
 
-      <main onClick={closeSidebar}><Outlet /></main>
+      <main onClick={closeSidebar}>
+        <Outlet />
+      </main>
     </div>
   );
 };

@@ -1,11 +1,10 @@
 import React, { useState } from "react";
-import "../../Utility/Utility.css";
-import "./AddUser.css";
+import "../../../Utility/Utility.css";
+import "../../../DashBoard/AddUser/AddUser.css"
 import FloatingLabel from "react-bootstrap/FloatingLabel";
 import Form from "react-bootstrap/Form";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
-import { post } from "../../ApiCalls/ApiCalls";
 
 const AddUser = () => {
   const [role, setRole] = useState([]);
@@ -70,36 +69,7 @@ const AddUser = () => {
     }
   };
 
-  // Api Call
 
-  const handleAddUser = () => {
-    const data = {
-      firstName: register.firstName,
-      lastName: register.lastName,
-      userName: register.userName,
-      contact: register.contact,
-      pincode: register.pincode,
-      state: register.state,
-      city: register.city,
-      street: register.street,
-      email: register.email,
-      gender: register.gender,
-      password: register.password,
-      confirmPassword: register.confirmPassword,
-      dob: register.dob,
-      role: role,
-      primaryRole: register.primaryRole,
-    };
-    const config = {
-      headers: {
-        Accept: "application/json",
-      },
-    };
-
-    post("", data, config).then((res)=>{
-      console.log("User Register Success", res)
-    })
-  };
 
   // Submit Function
 
@@ -112,7 +82,6 @@ const AddUser = () => {
       setCheckboxError(true);
       return;
     } else {
-      handleAddUser();
       setCheckboxError(false);
       setPasswordMismatch(false);
       resetForm();
@@ -130,7 +99,7 @@ const AddUser = () => {
           className="text-center mb-3  text-white  rounded py-3 text-uppercase shadow"
           style={{ backgroundColor: "var(--color-sidebar)" }}
         >
-          Add User
+          Update User Info
         </h2>
 
         {/* Name Field */}
@@ -440,18 +409,14 @@ const AddUser = () => {
         <div className="add__user__btn mt-md">
           <input
             type="submit"
-            value="Add User"
+            value="Update"
             className="btn button"
             style={{
-              backgroundColor: "var(--color-sidebar)",
+              backgroundColor: "var(--color-sidebarActive)",
               color: "var(--color-slate50)",
             }}
           />
-          {checkboxError && (
-            <p className="text-danger text-center">
-              Please select at least one role.
-            </p>
-          )}
+          
           {passwordMismatch && (
             <p className="text-danger text-center">Passwords do not match.</p>
           )}

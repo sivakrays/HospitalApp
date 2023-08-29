@@ -4,6 +4,7 @@ import { Form, Row, Col, FloatingLabel } from "react-bootstrap";
 import axios from "axios";
 import DataSearch from "../DataSearch/DataSearch";
 import "./PatientAppointment.css";
+import { post } from "../../ApiCalls/ApiCalls";
 
 const PatientAppointment = () => {
   const { id } = useParams();
@@ -11,6 +12,7 @@ const PatientAppointment = () => {
   const [doctorNameList, setDoctorNameList] = useState("");
   const [search, setSearch] = useState("");
   const [doctorName, setDoctorName] = useState("");
+  const [doctorError, setDoctorError] = useState("");
 
   // Fetch the data Based on the Id
 
@@ -72,7 +74,6 @@ const PatientAppointment = () => {
     status: "",
   });
 
-
   const handle = (e) => {
     const newData = { ...appointmentData };
     newData[e.target.name] = e.target.value;
@@ -90,7 +91,28 @@ const PatientAppointment = () => {
     }));
   };
 
-  const [doctorError, setDoctorError] = useState("");
+  // Api Call
+
+  const handlePatientAppointment = () => {
+    const data = {
+      doctor: doctorName,
+      date: appointmentData.date,
+      time: appointmentData.time,
+      comments: appointmentData.comments,
+      status: appointmentData.status,
+    };
+    const config = {
+      headers: {
+        Accept: "application/json",
+      },
+    };
+
+    post("/", data, config).then((res) => {
+      console.log("Appointment Successfully Added", res);
+    });
+  };
+
+  // Submit Function
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -98,6 +120,7 @@ const PatientAppointment = () => {
     if (doctorName.length === 0) {
       setDoctorError("Must Have the Doctor Name");
     } else {
+      handlePatientAppointment();
       setDoctorError("");
       setDoctorName("");
       console.log("AppointMent Details", appointmentData);
