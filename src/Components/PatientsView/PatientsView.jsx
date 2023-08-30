@@ -15,6 +15,9 @@ import "../AddStock/AddStock.css";
 import { FaMinus, FaPlus } from "react-icons/fa6";
 import { v4 as uuidv4 } from "uuid";
 import "./PatientsView.css";
+import accessDenied from "../../Assets/Access_Denied.svg"
+
+
 const InputTaskOne = () => {
   const { id } = useParams();
   const [patientDetails, setPatientDetails] = useState([]);

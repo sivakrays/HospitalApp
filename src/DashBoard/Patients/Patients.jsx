@@ -4,8 +4,9 @@ import "./Patients.css";
 import SearchBox from "../../Components/SearchBox/SearchBox";
 import axios from "axios";
 import { Link } from "react-router-dom";
+import accessDenied from "../../Assets/Access_Denied.svg";
 
-const Patients = () => {
+const Patients = (props) => {
   const [data, setData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [search, setSearch] = useState("");
@@ -77,66 +78,81 @@ const Patients = () => {
   };
 
   return (
-    <section className="patients">
-      <div className="patient__search">
-        <SearchBox search={search} handleSearch={handleSearch} />
+    <>
+      {props.role.includes("Admin") ? (
+        <section className="patients">
+          <div className="patient__search">
+            <SearchBox search={search} handleSearch={handleSearch} />
 
-        <div className="pagination-nav ">
-          <ul className="pagination">
-            <li className="page-item">
-              <a href="#prePage" className="page-link" onClick={prePage}>
-                Pre
-              </a>
-            </li>
-            <li className="page-item-number">
-              <select
-                className="form-select"
-                value={currentPage}
-                onChange={(e) => changeCurrentPage(parseInt(e.target.value))}
-              >
-                {renderPageNumbersDropdown().map((pageNum) => (
-                  <option key={pageNum} value={pageNum}>
-                    {pageNum}
-                  </option>
-                ))}
-              </select>
-            </li>
-            <li className="page-item">
-              <a href="#nextPage" className="page-link btn" onClick={afterPage}>
-                Next
-              </a>
-            </li>
-          </ul>
-          <p>Total Records: {getTotalRecords()}</p>
-        </div>
+            <div className="pagination-nav ">
+              <ul className="pagination">
+                <li className="page-item">
+                  <a href="#prePage" className="page-link" onClick={prePage}>
+                    Pre
+                  </a>
+                </li>
+                <li className="page-item-number">
+                  <select
+                    className="form-select"
+                    value={currentPage}
+                    onChange={(e) =>
+                      changeCurrentPage(parseInt(e.target.value))
+                    }
+                  >
+                    {renderPageNumbersDropdown().map((pageNum) => (
+                      <option key={pageNum} value={pageNum}>
+                        {pageNum}
+                      </option>
+                    ))}
+                  </select>
+                </li>
+                <li className="page-item">
+                  <a
+                    href="#nextPage"
+                    className="page-link btn"
+                    onClick={afterPage}
+                  >
+                    Next
+                  </a>
+                </li>
+              </ul>
+              <p>Total Records: {getTotalRecords()}</p>
+            </div>
 
-        <div className="patients__view g-3">
-          {currentItems.map((item) => {
-            return (
-              <Link
-                to={`/PatientView/${item.id}`}
-                className="text-dark"
-                key={item.id}
-              >
-                <div className="patients__box shadow" key={item.id}>
-                  <img src={item.thumbnailUrl} alt="patient" />
-                  <div className="patient__details">
-                    <p>
-                      <b>Mrn.No:</b>
-                      {item.id}
-                    </p>
-                    <p>
-                      <b>Name:</b>
-                      {item.title}
-                    </p>
-                  </div>
-                </div>
-              </Link>
-            );
-          })}
+            <div className="patients__view g-3">
+              {currentItems.map((item) => {
+                return (
+                  <Link
+                    to={`/PatientView/${item.id}`}
+                    className="text-dark"
+                    key={item.id}
+                  >
+                    <div className="patients__box shadow" key={item.id}>
+                      <img src={item.thumbnailUrl} alt="patient" />
+                      <div className="patient__details">
+                        <p>
+                          <b>Mrn.No:</b>
+                          {item.id}
+                        </p>
+                        <p>
+                          <b>Name:</b>
+                          {item.title}
+                        </p>
+                      </div>
+                    </div>
+                  </Link>
+                );
+              })}
+            </div>
+          </div>
+        </section>
+      ) : (
+        <div className="accessDenied">
+          <img src={accessDenied} alt="Access Denied" />
+          {/* <p>Access Denied</p> */}
         </div>
-      </div>
-    </section>
+      )}
+    </>
   );
 };
 

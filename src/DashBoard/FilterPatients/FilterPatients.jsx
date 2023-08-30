@@ -4,38 +4,39 @@ import SearchBox from "../../Components/SearchBox/SearchBox";
 import { Link } from "react-router-dom";
 import { Container, Form, Row, Col, FloatingLabel } from "react-bootstrap";
 import "./FilterPatients.css";
+import accessDenied from "../../Assets/Access_Denied.svg";
 
-const FilterPatients = () => {
+const FilterPatients = (props) => {
   const [data, setData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [search, setSearch] = useState("");
   const [age, setAge] = useState("");
   const [ageError, setageError] = useState("");
-  
+
   useEffect(() => {
     const fetchData = async () => {
       try {
         const res = await axios.get(
           "https://jsonplaceholder.typicode.com/photos"
-          );
-          setData(res.data);
-        } catch (error) {
-          console.error("Error fetching data:", error);
-        }
-      };
-      
-      fetchData();
-    }, []);
-    
-    useEffect(() => {
-      setCurrentPage(1); // Reset page number when search changes
+        );
+        setData(res.data);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  useEffect(() => {
+    setCurrentPage(1); // Reset page number when search changes
   }, [search]);
 
   const handleSearch = (e) => {
     const searchData = e.target.value;
     setSearch(searchData);
   };
-  
+
   const itemsPerPage = 12;
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
@@ -77,20 +78,19 @@ const FilterPatients = () => {
     return filteredData.length;
   };
 
-
   const handleageValidation = (e) => {
     setAge(e.target.value);
     if (age < 0) {
       setageError("Please Provide  proper Age");
-    }
-    else if(age === ""){
-      setageError("")
+    } else if (age === "") {
+      setageError("");
     }
   };
 
   return (
+    <>
+      {props.role.includes("Admin") ? (
     <section className="patients">
-      {/* <Nav /> */}
       <div className="patient__search">
         <SearchBox search={search} handleSearch={handleSearch} />
 
@@ -173,7 +173,7 @@ const FilterPatients = () => {
           </Container>
         </div>
         {ageError && (
-          <p className="text-danger" style={{marginLeft:'5rem'}}>
+          <p className="text-danger" style={{ marginLeft: "5rem" }}>
             {ageError}
           </p>
         )}
@@ -231,6 +231,13 @@ const FilterPatients = () => {
         </div>
       </div>
     </section>
+    ) : (
+      <div className="accessDenied">
+        <img src={accessDenied} alt="Access Denied" />
+        {/* <p>Access Denied</p> */}
+      </div>
+    )}
+  </>
   );
 };
 

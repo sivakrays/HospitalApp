@@ -1,10 +1,23 @@
-import React from 'react'
-import UpdateComponent from "../../../Components/UpdateComponent/UpdateComponent"
+import React from "react";
+import UpdateComponent from "../../../Components/UpdateComponent/UpdateComponent";
+import accessDenied from "../../../Assets/Access_Denied.svg";
 
-const UpdateStaffs = () => {
+
+const UpdateStaffs = (props) => {
   return (
-    <div><UpdateComponent path="StaffsUpdate"/></div>
-  )
-}
+    <>
+      {props.role.includes("Admin") ? (
+        <div>
+          <UpdateComponent path="StaffsUpdate" />
+        </div>
+      ) : (
+        <div className="accessDenied">
+          <img src={accessDenied} alt="Access Denied" />
+          {/* <p>Access Denied</p> */}
+        </div>
+      )}
+    </>
+  );
+};
 
-export default UpdateStaffs
+export default UpdateStaffs;

@@ -5,14 +5,14 @@ import SearchBox from "../../Components/SearchBox/SearchBox";
 import { Tab, Tabs, Table } from "react-bootstrap";
 import axios from "axios";
 import { Link } from "react-router-dom";
+import accessDenied from "../../Assets/Access_Denied.svg"
 
-const Lab = () => {
+const Lab = (props) => {
   const [medical, setMedicalData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [search, setSearch] = useState("");
   const recordPerPage = 10;
   const [sortOrder, setSortOrder] = useState("asc");
-
 
   useEffect(() => {
     const fetchData = async () => {
@@ -29,11 +29,10 @@ const Lab = () => {
     fetchData();
   }, []);
 
-
-// Search Based on the Search Box Input
+  // Search Based on the Search Box Input
 
   useEffect(() => {
-    setCurrentPage(1); 
+    setCurrentPage(1);
   }, [search]);
 
   const handleSearch = (e) => {
@@ -47,9 +46,7 @@ const Lab = () => {
       item.title.toLowerCase().includes(search.toLowerCase())
   );
 
-
-
-// Page Pagination
+  // Page Pagination
 
   const lastIndex = currentPage * recordPerPage;
   const firstIndex = lastIndex - recordPerPage;
@@ -84,8 +81,6 @@ const Lab = () => {
     return pageNumbers;
   };
 
-
-
   // Sort Based on the Mrn.Number
 
   const sortedRecords = [...currentRecords].sort((a, b) => {
@@ -95,119 +90,157 @@ const Lab = () => {
       return b.id - a.id;
     }
   });
+  console.log(props.role);
 
   return (
-    <section className="Lab">
-      <SearchBox search={search} handleSearch={handleSearch} />
+    <>
+      {props.role.includes("Admin")  ? (
+        <section className="Lab">
+          <SearchBox search={search} handleSearch={handleSearch} />
 
-      <div className="medical">
-        <div className="lab-pagination-nav mt-3">
-          <ul className="pagination">
-            <li className="page-item">
-              <a href="#prePage" className="page-link" onClick={prePage}>
-                Pre
-              </a>
-            </li>
-            <li className="page-item-number">
-              <select className="form-select" value={currentPage} onChange={(e) => changeCurrentPage(parseInt(e.target.value))}>
-                {renderPageNumbersDropdown().map((pageNum) => (
-                  <option key={pageNum} value={pageNum}>{pageNum}</option>
-                ))}
-              </select>
-            </li>
-            <li className="page-item">
-              <a href="#nextPage" className="page-link btn" onClick={AfterPage}>
-                Next
-              </a>
-            </li>
-          </ul>
-          <p>Total Records: {getTotalRecords()}</p>
-        </div>
-        <hr />
-        <Tabs defaultActiveKey="pending" id="myTab">
-          <Tab eventKey="pending" title="Pending">
-            <div className="table-responsive">
-              <Table className="table">
-                <thead>
-                  <tr>
-                  <th onClick={() => setSortOrder(sortOrder === "asc" ? "desc" : "asc")} style={{cursor:'pointer'}}>Mrn.No</th>
-                    <th>Name</th>
-                    <th>Date</th>
-                    <th>Status</th>
-                    <th>Action</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {sortedRecords.length === 0 ? (
-                      <tr>
-                        <td colSpan="5" className="text-center">
-                          No records found.
-                        </td>
-                      </tr>
-                    ) : (
-                      sortedRecords.map((item) => (
-                    <tr key={item.id}>
-                      <td>{item.id}</td>
-                      <td>{item.title}</td>
-                      <td>{new Date().toLocaleDateString('en-US')}</td>
-                      <td>Pending</td>
-                      <td>
-                        <Link to={`/LabTest/${item.id}`}>
-                        <input
-                          type="button"
-                          value="Open"
-                          className="btn btn-secondary"
-                        /></Link>
-                      </td>
-                    </tr>
-                  ))
-                )}
-                </tbody>
-              </Table>
+          <div className="medical">
+            <div className="lab-pagination-nav mt-3">
+              <ul className="pagination">
+                <li className="page-item">
+                  <a href="#prePage" className="page-link" onClick={prePage}>
+                    Pre
+                  </a>
+                </li>
+                <li className="page-item-number">
+                  <select
+                    className="form-select"
+                    value={currentPage}
+                    onChange={(e) =>
+                      changeCurrentPage(parseInt(e.target.value))
+                    }
+                  >
+                    {renderPageNumbersDropdown().map((pageNum) => (
+                      <option key={pageNum} value={pageNum}>
+                        {pageNum}
+                      </option>
+                    ))}
+                  </select>
+                </li>
+                <li className="page-item">
+                  <a
+                    href="#nextPage"
+                    className="page-link btn"
+                    onClick={AfterPage}
+                  >
+                    Next
+                  </a>
+                </li>
+              </ul>
+              <p>Total Records: {getTotalRecords()}</p>
             </div>
-          </Tab>
-          <Tab eventKey="dispatched" title="Dispatched">
-            <div className="table-responsive">
-              <Table className="table">
-                <thead>
-                  <tr>
-                  <th onClick={() => setSortOrder(sortOrder === "asc" ? "desc" : "asc")} style={{cursor:'pointer'}}>Mrn.No</th>
-                    <th>Name</th>
-                    <th>Date</th>
-                    <th>Status</th>
-                    {/* <th>Action</th> */}
-                  </tr>
-                </thead>
-                <tbody>
-                {sortedRecords.length === 0 ? (
+            <hr />
+            <Tabs defaultActiveKey="pending" id="myTab">
+              <Tab eventKey="pending" title="Pending">
+                <div className="table-responsive">
+                  <Table className="table">
+                    <thead>
                       <tr>
-                        <td colSpan="5" className="text-center">
-                          No records found.
-                        </td>
+                        <th
+                          onClick={() =>
+                            setSortOrder(sortOrder === "asc" ? "desc" : "asc")
+                          }
+                          style={{ cursor: "pointer" }}
+                        >
+                          Mrn.No
+                        </th>
+                        <th>Name</th>
+                        <th>Date</th>
+                        <th>Status</th>
+                        <th>Action</th>
                       </tr>
-                    ) : (sortedRecords.map((item) => (
-                    <tr key={item.id}>
-                      <td>{item.id}</td>
-                      <td>{item.title}</td>
-                      <td>{new Date().toLocaleDateString('en-US')}</td>
-                      <td>Dispatched</td>
-                      {/* <td>
+                    </thead>
+                    <tbody>
+                      {sortedRecords.length === 0 ? (
+                        <tr>
+                          <td colSpan="5" className="text-center">
+                            No records found.
+                          </td>
+                        </tr>
+                      ) : (
+                        sortedRecords.map((item) => (
+                          <tr key={item.id}>
+                            <td>{item.id}</td>
+                            <td>{item.title}</td>
+                            <td>{new Date().toLocaleDateString("en-US")}</td>
+                            <td>Pending</td>
+                            <td>
+                              <Link to={`/LabTest/${item.id}`}>
+                                <input
+                                  type="button"
+                                  value="Open"
+                                  className="btn btn-secondary"
+                                />
+                              </Link>
+                            </td>
+                          </tr>
+                        ))
+                      )}
+                    </tbody>
+                  </Table>
+                </div>
+              </Tab>
+              <Tab eventKey="dispatched" title="Dispatched">
+                <div className="table-responsive">
+                  <Table className="table">
+                    <thead>
+                      <tr>
+                        <th
+                          onClick={() =>
+                            setSortOrder(sortOrder === "asc" ? "desc" : "asc")
+                          }
+                          style={{ cursor: "pointer" }}
+                        >
+                          Mrn.No
+                        </th>
+                        <th>Name</th>
+                        <th>Date</th>
+                        <th>Status</th>
+                        {/* <th>Action</th> */}
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {sortedRecords.length === 0 ? (
+                        <tr>
+                          <td colSpan="5" className="text-center">
+                            No records found.
+                          </td>
+                        </tr>
+                      ) : (
+                        sortedRecords.map((item) => (
+                          <tr key={item.id}>
+                            <td>{item.id}</td>
+                            <td>{item.title}</td>
+                            <td>{new Date().toLocaleDateString("en-US")}</td>
+                            <td>Dispatched</td>
+                            {/* <td>
                         <input
                           type="button"
                           value="Open"
                           className="btn btn-secondary"
                         />
                       </td> */}
-                    </tr>
-                  ))
-                )}
-                </tbody>
-              </Table>
-            </div>
-          </Tab>
-        </Tabs>
-      </div>
-    </section>
+                          </tr>
+                        ))
+                      )}
+                    </tbody>
+                  </Table>
+                </div>
+              </Tab>
+            </Tabs>
+          </div>
+        </section>
+      ) : (
+        <div className="accessDenied">
+          <img src={accessDenied} alt="Access Denied" />
+          {/* <p>Access Denied</p> */}
+        </div>
+      )}
+    </>
   );
 };
 

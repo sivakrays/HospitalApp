@@ -22,58 +22,98 @@ import Stock from "./Components/Stock/Stock";
 import AddStock from "./Components/AddStock/AddStock";
 import BillingView from "./Components/BillingView/BillingView";
 import Admin from "./Auth/Admin/Admin";
-import PatientUpdate from "./Auth/Admin/PatientUpdate/PatientUpdate"
-import UpdatePatient from "./Auth/Admin/UpdatePatient/UpdatePatient"
-import UpdateStaffs from "./Auth/Admin/UpdateStaffs/UpdateStaffs"
-import StaffsUpdate from "./Auth/Admin/StaffsUpdate/StaffsUpdate"
-import UpdateAppointment from "./Auth/Admin/UpdateAppointment/UpdateAppointment"
-import AppointmentUpdate from "./Auth/Admin/UpdateAppointment/AppointmentUpdate/AppointmentUpdate"
-import UpdatePerscription from "./Auth/Admin/UpdatePerscription/UpdatePerscription"
+import PatientUpdate from "./Auth/Admin/PatientUpdate/PatientUpdate";
+import UpdatePatient from "./Auth/Admin/UpdatePatient/UpdatePatient";
+import UpdateStaffs from "./Auth/Admin/UpdateStaffs/UpdateStaffs";
+import StaffsUpdate from "./Auth/Admin/StaffsUpdate/StaffsUpdate";
+import UpdateAppointment from "./Auth/Admin/UpdateAppointment/UpdateAppointment";
+import AppointmentUpdate from "./Auth/Admin/UpdateAppointment/AppointmentUpdate/AppointmentUpdate";
+import UpdatePerscription from "./Auth/Admin/UpdatePerscription/UpdatePerscription";
+import pageNotFound from "./Assets/404.svg"
 
 function App() {
+  // Doctor
+  // Receptionist
+  // Nurse
+  // Laboratory
+  // Medical
+  // Admin
+
+  const role = ["Admin"];
+
   return (
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Login />} />
-        <Route element={<SideNavBar />}>
-          <Route path="/DoctorView" element={<DoctorView />} />
+        <Route element={<SideNavBar role={role} />}>
+          <Route path="/DoctorView" element={<DoctorView role={role} />} />
           <Route
             path="/medicinePrescription/:id"
-            element={<MedicinePrescription />}
+            element={<MedicinePrescription role={role}/>}
           />
-          <Route path="/lab" element={<Lab />} />
-          <Route path="/labTest/:id" element={<LabTest />} />
-          <Route path="/stock" element={<Stock />} />
-          <Route path="/medical" element={<Medical />} />
-          <Route path="/addStock" element={<AddStock />} />
-          <Route path="/patients" element={<Patients />} />
-          <Route path="/adduser" element={<AddUser />} />
-          <Route path="/addpatients" element={<AddPatients />} />
-          <Route path="/appointment" element={<Appointment />} />
+          <Route path="/lab" element={<Lab role={role} />} />
+          <Route path="/labTest/:id" element={<LabTest role={role} />} />
+          <Route path="/stock" element={<Stock role={role} />} />
+          <Route path="/medical" element={<Medical role={role} />} />
+          <Route path="/addStock" element={<AddStock role={role} />} />
+          <Route path="/patients" element={<Patients role={role} />} />
+          <Route path="/adduser" element={<AddUser role={role} />} />
+          <Route path="/addpatients" element={<AddPatients role={role} />} />
+          <Route path="/appointment" element={<Appointment role={role} />} />
           <Route
             path="/patientAppointment/:id"
-            element={<PatientAppointment />}
+            element={<PatientAppointment role={role}/>}
           />
-          <Route path="/filterPatients" element={<FilterPatients />} />
-          <Route path="/PatientView/:id" element={<PatientsView />} />
-          <Route path="/BillingView/:id" element={<BillingView />} />
-          <Route path="/PatientReport/:id" element={<PatientReport />} />
-          <Route path="/reports" element={<Report />} />
-          <Route path="/billing" element={<Billing />} />
-          <Route path="/Admin" element={<Admin />} />
-          <Route path="/UpdatePatient" element={<UpdatePatient />}/>
-          <Route path="/PatientUpdate/:id" element={<PatientUpdate />}/>
-          <Route path="/UpdateStaffs" element={<UpdateStaffs />}/>
-          <Route path="/StaffsUpdate/:id" element={<StaffsUpdate />}/>
-          <Route path="/UpdateAppointment" element={<UpdateAppointment />}/>
-          <Route path="/AppointmentUpdate/:id" element={<AppointmentUpdate />}/>
-          <Route path="/UpdatePerscription" element={<UpdatePerscription />}/>
-          
+          <Route
+            path="/filterPatients"
+            element={<FilterPatients role={role} />}
+          />
+          <Route
+            path="/PatientView/:id"
+            element={<PatientsView role={role} />}
+          />
+          <Route
+            path="/BillingView/:id"
+            element={<BillingView role={role} />}
+          />
+          <Route
+            path="/PatientReport/:id"
+            element={<PatientReport role={role} />}
+          />
+          <Route path="/reports" element={<Report role={role} />} />
+          <Route path="/billing" element={<Billing role={role} />} />
+          <Route path="/Admin" element={<Admin role={role} />} />
+          <Route
+            path="/UpdatePatient"
+            element={<UpdatePatient role={role} />}
+          />
+          <Route
+            path="/PatientUpdate/:id"
+            element={<PatientUpdate role={role} />}
+          />
+          <Route path="/UpdateStaffs" element={<UpdateStaffs role={role} />} />
+          <Route
+            path="/StaffsUpdate/:id"
+            element={<StaffsUpdate role={role} />}
+          />
+          <Route
+            path="/UpdateAppointment"
+            element={<UpdateAppointment role={role} />}
+          />
+          <Route
+            path="/AppointmentUpdate/:id"
+            element={<AppointmentUpdate role={role} />}
+          />
+          <Route
+            path="/UpdatePerscription"
+            element={<UpdatePerscription role={role} />}
+          />
+
           <Route
             path="*"
             element={
-              <div className="mt d-flex justify-content-center align-items-center h-75">
-                Oops!!! Page Not Found
+              <div className="accessDenied">
+                <img src={pageNotFound} alt="PageNotFound"/>
               </div>
             }
           />

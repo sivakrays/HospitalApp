@@ -2,8 +2,10 @@ import React from "react";
 import { Container, Card, Button } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import "./Admin.css";
+import accessDenied from "../../Assets/Access_Denied.svg";
 
-const AdminPanel = () => {
+
+const AdminPanel = (props) => {
   const adminData = [
     {
       title: "Patient Management",
@@ -45,30 +47,44 @@ const AdminPanel = () => {
   ];
 
   return (
-    <Container className="mt-5 container">
-      <h2 className="text-center">Admin Panel</h2>
-      <div className="d-flex align-items-center justify-content-center card-grid flex-wrap">
-        {adminData &&
-          adminData.map((item, index) => {
-            return (
-              <div>
-                <dic className="mb-4">
-                  <Card className="card">
-                    <Card.Body className="cardBody">
-                      <Card.Title className="cardTxt">{item.title}</Card.Title>
-                      <Card.Text className="cardTxt">{item.text1} <br />{item.text2}</Card.Text>
-                      {/* <Card.Text className="cardTxt">{item.text2}</Card.Text> */}
-                      <Link to={item.path}>
-                        <Button variant="success">Manage</Button>
-                      </Link>
-                    </Card.Body>
-                  </Card>
-                </dic>
-              </div>
-            );
-          })}
-      </div>
-    </Container>
+    <>
+      {props.role.includes("Admin") ? (
+        <Container className="mt-5 container">
+          <h2 className="text-center">Admin Panel</h2>
+          <div className="d-flex align-items-center justify-content-center card-grid flex-wrap">
+            {adminData &&
+              adminData.map((item, index) => {
+                return (
+                  <div>
+                    <dic className="mb-4">
+                      <Card className="card1">
+                        <Card.Body className="cardBody">
+                          <Card.Title className="cardTxt">
+                            {item.title}
+                          </Card.Title>
+                          <Card.Text className="cardTxt">
+                            {item.text1} <br />
+                            {item.text2}
+                          </Card.Text>
+                          {/* <Card.Text className="cardTxt">{item.text2}</Card.Text> */}
+                          <Link to={item.path}>
+                            <Button variant="success">Manage</Button>
+                          </Link>
+                        </Card.Body>
+                      </Card>
+                    </dic>
+                  </div>
+                );
+              })}
+          </div>
+        </Container>
+      ) : (
+        <div className="accessDenied">
+          <img src={accessDenied} alt="Access Denied" />
+          {/* <p>Access Denied</p> */}
+        </div>
+      )}
+    </>
   );
 };
 

@@ -6,6 +6,7 @@ import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import listPlugin from "@fullcalendar/list";
 import { FaXmark } from "react-icons/fa6";
+import accessDenied from "../../Assets/Access_Denied.svg";
 
 const EventModal = ({ event, onClose }) => {
   return (
@@ -25,7 +26,7 @@ const EventModal = ({ event, onClose }) => {
   );
 };
 
-const DoctorView = () => {
+const DoctorView = (props) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState(null);
 
@@ -127,24 +128,33 @@ const DoctorView = () => {
   // const buttonSize ="sm";
 
   return (
-    <div className="container container2 mt-5 ">
-      <Fullcalendar
-        plugins={[dayGridPlugin, timeGridPlugin, listPlugin]}
-        initialView= "timeGridDay"
-        headerToolbar={headerToolbar}
-        events={events}
-        eventClick={handleEventClick}
-        themeSystem="bootstrap"
-        height={height}
-        // buttonSize={buttonSize}
-      />
+    <>
+      {props.role.includes("Admin") ? (
+        <div className="container container2 mt-5 ">
+          <Fullcalendar
+            plugins={[dayGridPlugin, timeGridPlugin, listPlugin]}
+            initialView="timeGridDay"
+            headerToolbar={headerToolbar}
+            events={events}
+            eventClick={handleEventClick}
+            themeSystem="bootstrap"
+            height={height}
+            // buttonSize={buttonSize}
+          />
 
-      {isModalOpen && selectedEvent && (
-        <div className="modal-overlay">
-          <EventModal event={selectedEvent} onClose={handleCloseModal} />
+          {isModalOpen && selectedEvent && (
+            <div className="modal-overlay">
+              <EventModal event={selectedEvent} onClose={handleCloseModal} />
+            </div>
+          )}
+        </div>
+      ) : (
+        <div className="accessDenied">
+          <img src={accessDenied} alt="Access Denied" />
+          {/* <p>Access Denied</p> */}
         </div>
       )}
-    </div>
+    </>
   );
 };
 

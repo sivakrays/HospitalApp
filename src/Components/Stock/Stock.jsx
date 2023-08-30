@@ -4,8 +4,9 @@ import { Link } from "react-router-dom";
 import SearchBox from "../SearchBox/SearchBox";
 import "./Stock.css";
 import axios from "axios";
+import accessDenied from "../../Assets/Access_Denied.svg";
 
-const Stock = () => {
+const Stock = (props) => {
   const [stockData, setStockData] = useState([]);
   const [search, setSearch] = useState("");
 
@@ -77,80 +78,95 @@ const Stock = () => {
   };
 
   return (
-    <section className="stock container">
-      <SearchBox search={search} handleSearch={handleSearch} />
+    <>
+      {props.role.includes("Admin") ? (
+        <section className="stock container">
+          <SearchBox search={search} handleSearch={handleSearch} />
 
-      <div className="addStockBtn d-flex flex-row justify-content-between">
-        <div className="stock-pagination-nav mt-3">
-          <ul className="pagination">
-            <li className="page-item">
-              <a href="#prePage" className="page-link" onClick={prePage}>
-                Pre
-              </a>
-            </li>
-            <li className="page-item-number">
-              <select
-                className="form-select"
-                value={currentPage}
-                onChange={(e) => changeCurrentPage(parseInt(e.target.value))}
+          <div className="addStockBtn d-flex flex-row justify-content-between">
+            <div className="stock-pagination-nav mt-3">
+              <ul className="pagination">
+                <li className="page-item">
+                  <a href="#prePage" className="page-link" onClick={prePage}>
+                    Pre
+                  </a>
+                </li>
+                <li className="page-item-number">
+                  <select
+                    className="form-select"
+                    value={currentPage}
+                    onChange={(e) =>
+                      changeCurrentPage(parseInt(e.target.value))
+                    }
+                  >
+                    {renderPageNumbersDropdown().map((pageNum) => (
+                      <option key={pageNum} value={pageNum}>
+                        {pageNum}
+                      </option>
+                    ))}
+                  </select>
+                </li>
+                <li className="page-item">
+                  <a
+                    href="#nextPage"
+                    className="page-link btn"
+                    onClick={AfterPage}
+                  >
+                    Next
+                  </a>
+                </li>
+              </ul>
+              <p>Total Records: {getTotalRecords()}</p>
+            </div>
+            <div className="AddBtn">
+              <Link
+                className="addStockBtn d-flex justify-content-end"
+                to="/addStock"
               >
-                {renderPageNumbersDropdown().map((pageNum) => (
-                  <option key={pageNum} value={pageNum}>
-                    {pageNum}
-                  </option>
-                ))}
-              </select>
-            </li>
-            <li className="page-item">
-              <a href="#nextPage" className="page-link btn" onClick={AfterPage}>
-                Next
-              </a>
-            </li>
-          </ul>
-          <p>Total Records: {getTotalRecords()}</p>
-        </div>
-        <div className="AddBtn">
-          <Link
-            className="addStockBtn d-flex justify-content-end"
-            to="/addStock"
-          >
-            <button className="btn btn-danger">Add Stock</button>
-          </Link>
-        </div>
-      </div>
+                <button className="btn btn-danger">Add Stock</button>
+              </Link>
+            </div>
+          </div>
 
-        <hr />
-      <div className="container mt-4">
-        <Table responsive striped bordered hover>
-          <thead>
-            <tr>
-              <th>Number</th>
-              <th>Medicine Name</th>
-              <th>Expiry Date</th>
-              <th>Stock Qty</th>
-            </tr>
-          </thead>
-          <tbody>
-            {currentRecords.length === 0 ? (
-              <tr>
-                <td colSpan="4" className="text-center">
-                  No records found.
-                </td>
-              </tr>
-            ) : (
-              currentRecords.map((item) => (
-                <tr key={item.id}>
-                  <td>{item.id}</td>
-                  <td>{item.title}</td>
-                  <td>{new Date().toLocaleDateString("en-US")}</td>
-                  <td>90</td>
+          <hr />
+          <div className="container mt-4">
+            <Table responsive striped bordered hover>
+              <thead>
+                <tr>
+                  <th>Number</th>
+                  <th>Medicine Name</th>
+                  <th>Expiry Date</th>
+                  <th>Stock Qty</th>
                 </tr>
-              ))
-            )}
-          </tbody>
-        </Table>
-      </div>
-    </section>
+              </thead>
+              <tbody>
+                {currentRecords.length === 0 ? (
+                  <tr>
+                    <td colSpan="4" className="text-center">
+                      No records found.
+                    </td>
+                  </tr>
+                ) : (
+                  currentRecords.map((item) => (
+                    <tr key={item.id}>
+                      <td>{item.id}</td>
+                      <td>{item.title}</td>
+                      <td>{new Date().toLocaleDateString("en-US")}</td>
+                      <td>90</td>
+                    </tr>
+                  ))
+                )}
+              </tbody>
+            </Table>
+          </div>
+        </section>
+      ) : (
+        <div className="accessDenied">
+          <img src={accessDenied} alt="Access Denied" />
+          {/* <p>Access Denied</p> */}
+        </div>
+      )}
+    </>
   );
 };
 

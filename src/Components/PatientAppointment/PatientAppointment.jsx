@@ -5,8 +5,9 @@ import axios from "axios";
 import DataSearch from "../DataSearch/DataSearch";
 import "./PatientAppointment.css";
 import { post } from "../../ApiCalls/ApiCalls";
+import accessDenied from "../../Assets/Access_Denied.svg";
 
-const PatientAppointment = () => {
+const PatientAppointment = (props) => {
   const { id } = useParams();
   const [patient, setPatient] = useState([]);
   const [doctorNameList, setDoctorNameList] = useState("");
@@ -132,154 +133,165 @@ const PatientAppointment = () => {
   };
 
   return (
-    <section className="LabTest mt w-100">
-      <div className="labTest__Box  p-3">
-        <h3 className="text-center text-uppercase">Appointment</h3>
-        <form onSubmit={(e) => handleSubmit(e)}>
-          <div className="patient__details text-center">
-            <Row>
-              {patient.map((data) => (
-                <Col key={data.id}>
-                  <img
-                    src={data.url}
-                    alt=""
-                    width={130}
-                    style={{ borderRadius: "50%" }}
-                  />
-                  <p>
-                    <b>Patient ID: </b>
-                    {data.id}
-                  </p>
-                  <p>
-                    <b>Patient Name: </b>
-                    {data.title}
-                  </p>
-                </Col>
-              ))}
-            </Row>
-          </div>
-
-          <Row>
-            <Col className="mb-2" md={3}>
-              <DataSearch search={search} handleSearch={handleSearch} />
-            </Col>
-          </Row>
-          {search.length <= 0 ? (
-            ""
-          ) : (
-            <div className="doctor-list">
-              {search.length !== 0 &&
-                filteredData &&
-                filteredData.map((doctor) => (
-                  <div key={doctor.id}>
-                    <p onClick={(e) => handleDoctorName(e)}>{doctor.name}</p>
-                  </div>
-                ))}
-            </div>
-          )}
-
-          <Row>
-            <Col md={3} className="mb-2">
-              <FloatingLabel
-                controlId={`DoctorName`}
-                label="DoctorName"
-                className=""
-              >
-                <Form.Control
-                  type="text"
-                  placeholder="DoctorName"
-                  name="DoctorName"
-                  onChange={(e) => handle(e)}
-                  value={doctorName}
-                  required
-                  disabled
-                />
-              </FloatingLabel>
-            </Col>
-            <Col md={3} className="mb-2">
-              <FloatingLabel
-                controlId={`appointmentDate`}
-                label="Appointment Date"
-                className=""
-              >
-                <Form.Control
-                  type="date"
-                  placeholder="date"
-                  name="date"
-                  onChange={(e) => handle(e)}
-                  required
-                />
-              </FloatingLabel>
-            </Col>
-            <Col md={3} className="mb-2">
-              <FloatingLabel
-                controlId="appointmentTime"
-                label="Appointment time"
-              >
-                <Form.Control
-                  type="time"
-                  placeholder="time"
-                  name="time"
-                  defaultValue={appointmentData.time}
-                  onChange={(e) => handle(e)}
-                  required
-                />
-              </FloatingLabel>
-            </Col>
-            <Col md={3} className="mb-2">
-              <FloatingLabel
-                controlId={`appointmentComment`}
-                label="Appointment comment"
-                className=""
-              >
-                <Form.Control
-                  type="text"
-                  placeholder="Comment"
-                  name="comments"
-                  value={appointmentData.comments}
-                  onChange={(e) => handle(e)}
-                  required
-                />
-              </FloatingLabel>
-            </Col>
-          </Row>
-
-          <Row>
-            <Col md={6}>
-              <div className="d-flex check flex-wrap">
-                <Form.Check
-                  type="radio"
-                  label="Critical"
-                  name="status"
-                  value="Critical"
-                  style={{ marginRight: "10px" }}
-                  onChange={(e) => handle(e)}
-                />
-                <Form.Check
-                  type="radio"
-                  label="Normal"
-                  name="status"
-                  value="Normal"
-                  style={{ marginRight: "10px" }}
-                  onChange={(e) => handle(e)}
-                  required
-                />
+    <>
+      {props.role.includes("Admin") ? (
+        <section className="LabTest mt w-100">
+          <div className="labTest__Box  p-3">
+            <h3 className="text-center text-uppercase">Appointment</h3>
+            <form onSubmit={(e) => handleSubmit(e)}>
+              <div className="patient__details text-center">
+                <Row>
+                  {patient.map((data) => (
+                    <Col key={data.id}>
+                      <img
+                        src={data.url}
+                        alt=""
+                        width={130}
+                        style={{ borderRadius: "50%" }}
+                      />
+                      <p>
+                        <b>Patient ID: </b>
+                        {data.id}
+                      </p>
+                      <p>
+                        <b>Patient Name: </b>
+                        {data.title}
+                      </p>
+                    </Col>
+                  ))}
+                </Row>
               </div>
-            </Col>
-          </Row>
-          {doctorError && <p className="text-danger">{doctorError}</p>}
-          <Row className="mt-4">
-            <Col>
-              <input
-                type="submit"
-                value="Book Appointment"
-                className="btn btn-primary"
-              />
-            </Col>
-          </Row>
-        </form>
-      </div>
-    </section>
+
+              <Row>
+                <Col className="mb-2" md={3}>
+                  <DataSearch search={search} handleSearch={handleSearch} />
+                </Col>
+              </Row>
+              {search.length <= 0 ? (
+                ""
+              ) : (
+                <div className="doctor-list">
+                  {search.length !== 0 &&
+                    filteredData &&
+                    filteredData.map((doctor) => (
+                      <div key={doctor.id}>
+                        <p onClick={(e) => handleDoctorName(e)}>
+                          {doctor.name}
+                        </p>
+                      </div>
+                    ))}
+                </div>
+              )}
+
+              <Row>
+                <Col md={3} className="mb-2">
+                  <FloatingLabel
+                    controlId={`DoctorName`}
+                    label="DoctorName"
+                    className=""
+                  >
+                    <Form.Control
+                      type="text"
+                      placeholder="DoctorName"
+                      name="DoctorName"
+                      onChange={(e) => handle(e)}
+                      value={doctorName}
+                      required
+                      disabled
+                    />
+                  </FloatingLabel>
+                </Col>
+                <Col md={3} className="mb-2">
+                  <FloatingLabel
+                    controlId={`appointmentDate`}
+                    label="Appointment Date"
+                    className=""
+                  >
+                    <Form.Control
+                      type="date"
+                      placeholder="date"
+                      name="date"
+                      onChange={(e) => handle(e)}
+                      required
+                    />
+                  </FloatingLabel>
+                </Col>
+                <Col md={3} className="mb-2">
+                  <FloatingLabel
+                    controlId="appointmentTime"
+                    label="Appointment time"
+                  >
+                    <Form.Control
+                      type="time"
+                      placeholder="time"
+                      name="time"
+                      defaultValue={appointmentData.time}
+                      onChange={(e) => handle(e)}
+                      required
+                    />
+                  </FloatingLabel>
+                </Col>
+                <Col md={3} className="mb-2">
+                  <FloatingLabel
+                    controlId={`appointmentComment`}
+                    label="Appointment comment"
+                    className=""
+                  >
+                    <Form.Control
+                      type="text"
+                      placeholder="Comment"
+                      name="comments"
+                      value={appointmentData.comments}
+                      onChange={(e) => handle(e)}
+                      required
+                    />
+                  </FloatingLabel>
+                </Col>
+              </Row>
+
+              <Row>
+                <Col md={6}>
+                  <div className="d-flex check flex-wrap">
+                    <Form.Check
+                      type="radio"
+                      label="Critical"
+                      name="status"
+                      value="Critical"
+                      style={{ marginRight: "10px" }}
+                      onChange={(e) => handle(e)}
+                    />
+                    <Form.Check
+                      type="radio"
+                      label="Normal"
+                      name="status"
+                      value="Normal"
+                      style={{ marginRight: "10px" }}
+                      onChange={(e) => handle(e)}
+                      required
+                    />
+                  </div>
+                </Col>
+              </Row>
+              {doctorError && <p className="text-danger">{doctorError}</p>}
+              <Row className="mt-4">
+                <Col>
+                  <input
+                    type="submit"
+                    value="Book Appointment"
+                    className="btn btn-primary"
+                  />
+                </Col>
+              </Row>
+            </form>
+          </div>
+        </section>
+      ) : (
+        <div className="accessDenied">
+          <img src={accessDenied} alt="Access Denied" />
+          {/* <p>Access Denied</p> */}
+        </div>
+      )}
+    </>
   );
 };
 

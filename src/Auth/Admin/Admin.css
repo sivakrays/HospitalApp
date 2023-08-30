@@ -1,7 +1,7 @@
 .card-grid{
     gap: 40px !important;
 }
-.card{
+.card1{
     width: 350px !important;
     height: 220px !important;
     padding: 10px;
@@ -19,7 +19,7 @@
 /* Media Query */
 
 @media(min-width:320px){
-    .card{
+    .card1{
         width: 250px !important;
         margin-left: 3rem;
     }
@@ -33,13 +33,13 @@
 }
 
 @media(min-width:425px){
-    .card{
+    .card1{
         width: 300px !important;
         margin-left: 3rem;
     }
 }
 @media(min-width:425px){
-    .card{
+    .card1{
         width: 320px !important;
         margin-left: 3rem;
     }

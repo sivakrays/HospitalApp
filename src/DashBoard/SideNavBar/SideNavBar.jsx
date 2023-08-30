@@ -19,67 +19,141 @@ import "./SideNavBar.css";
 import "../../Utility/Utility.css";
 import { NavLink, Link, Outlet } from "react-router-dom";
 
-const SideNavBar = () => {
+const SideNavBar = (props) => {
   const [isOpen, setIsOpen] = useState(false);
   const toggle = () => setIsOpen(!isOpen);
+  const menuItem = [];
 
-  const menuItem = [
-    {
-      path: "/DoctorView",
-      name: "Doctor",
-      icon: <FaUserDoctor />,
-    },
-    {
-      path: "/addpatients",
-      name: "AddPatients",
-      icon: <FaHospitalUser />,
-    },
-    {
-      path: "/appointment",
-      name: "Appointment",
-      icon: <FaCalendarDays />,
-    },
-    {
-      path: "/patients",
-      name: "Patients",
-      icon: <FaBed />,
-    },
-    {
-      path: "/adduser",
-      name: "AddUser",
-      icon: <FaUserPlus />,
-    },
-    {
-      path: "/filterPatients",
-      name: "FilterPatients",
-      icon: <FaUsers />,
-    },
-    {
-      path: "/medical",
-      name: "Medical",
-      icon: <FaBriefcaseMedical />,
-    },
-    {
-      path: "/lab",
-      name: "Lab",
-      icon: <FaVialCircleCheck />,
-    },
-    {
-      path: "/reports",
-      name: "Reports",
-      icon: <FaFileMedical />,
-    },
-    {
+  // Conditional Based Routing
+
+  if (props.role.includes("Doctor")) {
+    menuItem.push(
+      {
+        path: "/DoctorView",
+        name: "Doctor",
+        icon: <FaUserDoctor />,
+      },
+      {
+        path: "/patients",
+        name: "Patients",
+        icon: <FaBed />,
+      },
+      {
+        path: "/reports",
+        name: "Reports",
+        icon: <FaFileMedical />,
+      }
+    );
+  } else if (props.role.includes("Receptionist")) {
+    menuItem.push(
+      {
+        path: "/addpatients",
+        name: "AddPatients",
+        icon: <FaHospitalUser />,
+      },
+      {
+        path: "/appointment",
+        name: "Appointment",
+        icon: <FaCalendarDays />,
+      }
+    );
+  } else if (props.role.includes("Nurse")) {
+    menuItem.push({
       path: "/billing",
       name: "Billing",
       icon: <FaFileInvoice />,
-    },
-    {
-      path: "/Admin",
-      name: "Admin",
-      icon: <FaUserLock />,
-    },
-  ];
+    });
+  } else if (props.role.includes("Laboratory")) {
+    menuItem.push(
+      {
+        path: "/lab",
+        name: "Lab",
+        icon: <FaVialCircleCheck />,
+      },
+      {
+        path: "/filterPatients",
+        name: "FilterPatients",
+        icon: <FaUsers />,
+      }
+    );
+  } else if (props.role.includes("Medical")) {
+    menuItem.push(
+      {
+        path: "/medical",
+        name: "Medical",
+        icon: <FaBriefcaseMedical />,
+      },
+      {
+        path: "/billing",
+        name: "Billing",
+        icon: <FaFileInvoice />,
+      },
+      {
+        path: "/filterPatients",
+        name: "FilterPatients",
+        icon: <FaUsers />,
+      }
+    );
+  } else if (props.role.includes("Admin")) {
+    menuItem.push(
+      {
+        path: "/DoctorView",
+        name: "Doctor",
+        icon: <FaUserDoctor />,
+      },
+      {
+        path: "/addpatients",
+        name: "AddPatients",
+        icon: <FaHospitalUser />,
+      },
+      {
+        path: "/appointment",
+        name: "Appointment",
+        icon: <FaCalendarDays />,
+      },
+      {
+        path: "/patients",
+        name: "Patients",
+        icon: <FaBed />,
+      },
+      {
+        path: "/adduser",
+        name: "AddUser",
+        icon: <FaUserPlus />,
+      },
+      {
+        path: "/filterPatients",
+        name: "FilterPatients",
+        icon: <FaUsers />,
+      },
+      {
+        path: "/medical",
+        name: "Medical",
+        icon: <FaBriefcaseMedical />,
+      },
+      {
+        path: "/lab",
+        name: "Lab",
+        icon: <FaVialCircleCheck />,
+      },
+      {
+        path: "/reports",
+        name: "Reports",
+        icon: <FaFileMedical />,
+      },
+      {
+        path: "/billing",
+        name: "Billing",
+        icon: <FaFileInvoice />,
+      },
+      {
+        path: "/Admin",
+        name: "Admin",
+        icon: <FaUserLock />,
+      }
+    );
+  } else {
+  }
 
   const closeSidebar = () => {
     if (isOpen) {
@@ -105,7 +179,7 @@ const SideNavBar = () => {
         <div className="d-flex justify-content-lg-center align-items-center justify-content-sm-center">
           <FaBell className="m-3 text-white" style={{ cursor: "pointer" }} />
           <h6 className="text-white text-uppercase mt-2">USER: Manoj</h6>
-          <Link to={'/'}>
+          <Link to={"/"}>
             <button className="btn btn-primary m-4">Logout</button>
           </Link>
         </div>
