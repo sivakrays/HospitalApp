@@ -55,8 +55,8 @@ const AdminPanel = (props) => {
             {adminData &&
               adminData.map((item, index) => {
                 return (
-                  <div>
-                    <dic className="mb-4">
+                  <div key={index}>
+                    <div className="mb-4">
                       <Card className="card1">
                         <Card.Body className="cardBody">
                           <Card.Title className="cardTxt">
@@ -72,7 +72,7 @@ const AdminPanel = (props) => {
                           </Link>
                         </Card.Body>
                       </Card>
-                    </dic>
+                    </div>
                   </div>
                 );
               })}

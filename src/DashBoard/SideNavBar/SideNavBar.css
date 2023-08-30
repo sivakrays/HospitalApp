@@ -62,33 +62,30 @@ main{
     margin-left: 10px;
 }
 
-
-
 .topBar{
     height: 60px;
     background-color: var(--color-sidebar);
 }
 
-.changeSideBarVisible{
-    width: 2.5rem;
-    height: 2.5rem;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    color: white;
-    z-index: 100;
-    background-color: var(--color-sidebar);
-    top: 93%;
-    left: 4%;
-    position: absolute;
-    border-radius: 50%;
-    cursor: pointer;
-}
+
+
+
 
 /* Media Query */
 
-@media(min-width:320px){
-    
+@media(max-width:320px){
+    .settingIconContent{
+        background-color: white;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        
+        justify-content: center;
+        align-items: center;
+        
+        
+        transition: 0.2s all;
+    }
 }
   
 @media (min-width:375px){
@@ -103,12 +100,16 @@ main{
     
 }
 
-@media(min-width:640px){
-    
+@media(max-width:640px){
+    .onlymobile{
+        display: none !important;
+    }
 }
 
 @media(min-width:768px){
-    
+    .settingIcon{
+        display: none !important;
+    }
 }
 
 @media(min-width:1024px){

@@ -14,6 +14,7 @@ import {
   FaUserDoctor,
   FaUserLock,
   FaBell,
+  FaGear,
 } from "react-icons/fa6";
 import "./SideNavBar.css";
 import "../../Utility/Utility.css";
@@ -21,6 +22,7 @@ import { NavLink, Link, Outlet } from "react-router-dom";
 
 const SideNavBar = (props) => {
   const [isOpen, setIsOpen] = useState(false);
+  const [SettingClicked, setSettingClick] = useState(false)
   const toggle = () => setIsOpen(!isOpen);
   const menuItem = [];
 
@@ -161,6 +163,11 @@ const SideNavBar = (props) => {
     }
   };
 
+  const handleSettings = ()=>{
+    setSettingClick(true)
+    console.log(SettingClicked)
+  }
+
   return (
     <div className="sideNav" style={{ position: "relative", height: "100vh" }}>
       <div
@@ -176,7 +183,10 @@ const SideNavBar = (props) => {
         }}
       >
         <div></div>
-        <div className="d-flex justify-content-lg-center align-items-center justify-content-sm-center">
+        <div className="settingIcon" onClick={handleSettings}>
+          <FaGear className="text-white" />
+        </div>
+        <div className="d-flex justify-content-lg-center align-items-center justify-content-center onlymobile">
           <FaBell className="m-3 text-white" style={{ cursor: "pointer" }} />
           <h6 className="text-white text-uppercase mt-2">USER: Manoj</h6>
           <Link to={"/"}>
@@ -184,6 +194,14 @@ const SideNavBar = (props) => {
           </Link>
         </div>
       </div>
+
+      {/* <div className="settingIconContent shadow rounded " style={{display:SettingClicked  ? "block" : 'none'}}>
+        <FaBell className="m-3 text-dark" style={{ cursor: "pointer" }} />
+        <h6 className="text-dark text-uppercase mt-2">USER: Manoj</h6>
+        <Link to={"/"}>
+          <button className="btn btn-primary m-4">Logout</button>
+        </Link>
+      </div> */}
 
       <div
         className="sidebar"
