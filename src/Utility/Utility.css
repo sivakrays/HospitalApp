@@ -15,13 +15,7 @@
     --color-sidebarActive:rgb(12, 119, 148);
 }
 
-.accessDenied{
-    width: 400px;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%,-50%);
-    position: absolute;
-}
+
 
 .button{
     background-color: var(--color-blue);
@@ -65,4 +59,73 @@ li{
 
 .mt{
     margin-top: 4rem;
+}
+
+.accessDenied{
+    width: 400px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    position: absolute;
+}
+
+@media (min-width:320px){
+    .accessDenied{
+        width: 250px;
+       
+    }
+}
+@media (min-width:375px){
+    .accessDenied{
+        width: 300px;
+       
+    }
+}
+@media (min-width:425px){
+    .accessDenied{
+        width: 320px;
+       
+    }
+}
+@media (min-width:475px){
+    .accessDenied{
+        width: 330px;
+       
+    }
+}
+
+@media (min-width:576px){
+    .accessDenied{
+        width: 350px;
+       
+    }
+}
+
+@media (min-width:640px){
+    .accessDenied{
+        width: 350px;
+       
+    }
+}
+
+
+@media (min-width:768px){
+    .accessDenied{
+        width: 380px;
+       
+    }
+}
+
+@media (min-width:1024px){
+    .accessDenied{
+        width: 400px;
+       
+    }
+}
+
+@media (min-width:1280px){
+    .accessDenied{
+        width: 400px;
+       
+    }
 }

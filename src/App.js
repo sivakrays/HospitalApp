@@ -39,7 +39,7 @@ function App() {
   // Medical
   // Admin
 
-  const role = ["Admin"];
+  const role = ["Medical"];
 
   return (
     <BrowserRouter>

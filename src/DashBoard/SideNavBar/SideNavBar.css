@@ -69,6 +69,22 @@ main{
     background-color: var(--color-sidebar);
 }
 
+.changeSideBarVisible{
+    width: 2.5rem;
+    height: 2.5rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    z-index: 100;
+    background-color: var(--color-sidebar);
+    top: 93%;
+    left: 4%;
+    position: absolute;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
 /* Media Query */
 
 @media(min-width:320px){

@@ -120,18 +120,20 @@ const InputTaskOne = (props) => {
                         disabled
                       />
                     </FloatingLabel>
-                    <div className="search-results">
-                      {dataItem.searchResults &&
-                        dataItem.searchResults.map((result, index) => (
-                          <div
-                            key={index}
-                            onClick={() => handleSearchResultClick(result, i)}
-                            className="result-item"
-                          >
-                            {result}
-                          </div>
-                        ))}
-                    </div>
+                    {searchBar.length !== 0 && (
+                      <div className="search-results">
+                        {dataItem.searchResults &&
+                          dataItem.searchResults.map((result, index) => (
+                            <div
+                              key={index}
+                              onClick={() => handleSearchResultClick(result, i)}
+                              className="result-item"
+                            >
+                              {result}
+                            </div>
+                          ))}
+                      </div>
+                    )}
                   </Col>
                   <Col sm={3}>
                     <FloatingLabel label="Expiry Date">
