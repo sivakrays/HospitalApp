@@ -1,6 +1,15 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { Button, Col, Container, Form, FormControl, InputGroup, Row, FloatingLabel } from "react-bootstrap";
+import {
+  Button,
+  Col,
+  Container,
+  Form,
+  FormControl,
+  InputGroup,
+  Row,
+  FloatingLabel,
+} from "react-bootstrap";
 import "./AddStock.css";
 import { FaMinus, FaPlus } from "react-icons/fa6";
 
@@ -65,118 +74,123 @@ const InputTaskOne = () => {
 
   const handleSubmit = () => {
     console.log("Submitted data:", data);
-    setData("")
+    setData("");
   };
 
   // Calculate form validity
-  const formIsValid = data && data.every(
-    (item) =>
-      item.medicine && item.date && item.stockQty && item.price
-  );
-
+  const formIsValid =
+    data &&
+    data.every(
+      (item) => item.medicine && item.date && item.stockQty && item.price
+    );
 
   return (
     <Container className="w-75 mt">
       <h2>Stock Control</h2>
       <hr />
-      {data && data.map((dataItem, i) => (
-        <div key={i}>
-          <br />
-          <Row className="mb-3">
-            <Col md={3}>
-              <InputGroup>
-                <FloatingLabel label="Medicine Search">
-                  <FormControl
-                    type="search"
-                    name={`search-${i}`}
-                    placeholder="Search the Name"
-                    onChange={(e) => handleSearch(e, i)}
+      {data &&
+        data.map((dataItem, i) => (
+          <div key={i}>
+            <br />
+            <Row className="mb-3">
+              <Col md={3}>
+                <InputGroup>
+                  <FloatingLabel label="Medicine Search">
+                    <FormControl
+                      type="search"
+                      name={`search-${i}`}
+                      placeholder="Search the Name"
+                      onChange={(e) => handleSearch(e, i)}
+                    />
+                  </FloatingLabel>
+                </InputGroup>
+              </Col>
+            </Row>
+            <Row>
+              <Col sm={3}>
+                <FloatingLabel label="Medicine">
+                  <Form.Control
+                    type="text"
+                    name="medicine"
+                    value={dataItem.medicine}
+                    onChange={(e) => handleChange(e, i)}
+                    disabled
                   />
                 </FloatingLabel>
-              </InputGroup>
-            </Col>
-          </Row>
-          <Row>
-            <Col sm={3}>
-              <FloatingLabel label="Medicine">
-                <Form.Control
-                  type="text"
-                  name="medicine"
-                  value={dataItem.medicine}
-                  onChange={(e) => handleChange(e, i)}
-                  disabled
-                />
-              </FloatingLabel>
-            </Col>
-            <Col sm={3}>
-              <FloatingLabel label="Expiry Date">
-                <Form.Control
-                  type="date"
-                  name="date"
-                  value={dataItem.date}
-                  onChange={(e) => handleChange(e, i)}
-                  required
-                  isInvalid={!dataItem.date}
-                />
-                <Form.Control.Feedback type="invalid">
-                  Please provide a valid date.
-                </Form.Control.Feedback>
-              </FloatingLabel>
-            </Col>
-            <Col sm={3}>
-              <FloatingLabel label="Stock Qty">
-                <Form.Control
-                  type="text"
-                  name="stockQty"
-                  value={dataItem.stockQty}
-                  onChange={(e) => handleChange(e, i)}
-                  required
-                  isInvalid={!dataItem.stockQty}
-                />
-                <Form.Control.Feedback type="invalid">
-                  Please provide a stock quantity.
-                </Form.Control.Feedback>
-              </FloatingLabel>
-            </Col>
-            <Col sm={2}>
-              <FloatingLabel label="Price">
-                <Form.Control
-                  type="text"
-                  name="price"
-                  value={dataItem.price}
-                  onChange={(e) => handleChange(e, i)}
-                  pattern="\d+(\.\d{2})?"
-                  required
-                  isInvalid={
-                    !dataItem.price || (dataItem.price && !/\d+(\.\d{2})?/.test(dataItem.price))
-                  }
-                />
-                <Form.Control.Feedback type="invalid">
-                  Please provide a valid price (e.g., 10 or 10.50).
-                </Form.Control.Feedback>
-              </FloatingLabel>
-            </Col>
-            <Col md={1}>
-              <Button variant="danger" onClick={() => handleDelete(i)} className="mt-2">
-                <FaMinus />
-              </Button>
-            </Col>
-          </Row>
-
-          <div className="search-results">
-            {dataItem.searchResults &&
-              dataItem.searchResults.map((result, index) => (
-                <div
-                  key={index}
-                  onClick={() => handleSearchResultClick(result, i)}
-                  className="result-item"
+                <div className="search-results">
+              {dataItem.searchResults &&
+                dataItem.searchResults.map((result, index) => (
+                  <div
+                    key={index}
+                    onClick={() => handleSearchResultClick(result, i)}
+                    className="result-item"
+                  >
+                    {result}
+                  </div>
+                ))}
+            </div>
+              </Col>
+              <Col sm={3}>
+                <FloatingLabel label="Expiry Date">
+                  <Form.Control
+                    type="date"
+                    name="date"
+                    value={dataItem.date}
+                    onChange={(e) => handleChange(e, i)}
+                    required
+                    isInvalid={!dataItem.date}
+                  />
+                  <Form.Control.Feedback type="invalid">
+                    Please provide a valid date.
+                  </Form.Control.Feedback>
+                </FloatingLabel>
+              </Col>
+              <Col sm={3}>
+                <FloatingLabel label="Stock Qty">
+                  <Form.Control
+                    type="text"
+                    name="stockQty"
+                    value={dataItem.stockQty}
+                    onChange={(e) => handleChange(e, i)}
+                    required
+                    isInvalid={!dataItem.stockQty}
+                  />
+                  <Form.Control.Feedback type="invalid">
+                    Please provide a stock quantity.
+                  </Form.Control.Feedback>
+                </FloatingLabel>
+              </Col>
+              <Col sm={2}>
+                <FloatingLabel label="Price">
+                  <Form.Control
+                    type="text"
+                    name="price"
+                    value={dataItem.price}
+                    onChange={(e) => handleChange(e, i)}
+                    pattern="\d+(\.\d{2})?"
+                    required
+                    isInvalid={
+                      !dataItem.price ||
+                      (dataItem.price && !/\d+(\.\d{2})?/.test(dataItem.price))
+                    }
+                  />
+                  <Form.Control.Feedback type="invalid">
+                    Please provide a valid price (e.g., 10 or 10.50).
+                  </Form.Control.Feedback>
+                </FloatingLabel>
+              </Col>
+              <Col md={1}>
+                <Button
+                  variant="danger"
+                  onClick={() => handleDelete(i)}
+                  className="mt-2"
                 >
-                  {result}
-                </div>
-              ))}
+                  <FaMinus />
+                </Button>
+              </Col>
+            </Row>
           </div>
-        </div>
-      ))}
+        ))}
 
       <Button variant="primary" onClick={handleAdd} className="mt-3 mb-2">
         <FaPlus />
@@ -194,18 +208,6 @@ const InputTaskOne = () => {
 };
 
 export default InputTaskOne;
-
-
-
-
-
-
-
-
-
-
-
-
 
 // import React, { useState } from "react";
 // import { Col, FloatingLabel, Form, Row } from "react-bootstrap";

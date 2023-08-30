@@ -26,6 +26,9 @@ import PatientUpdate from "./Auth/Admin/PatientUpdate/PatientUpdate"
 import UpdatePatient from "./Auth/Admin/UpdatePatient/UpdatePatient"
 import UpdateStaffs from "./Auth/Admin/UpdateStaffs/UpdateStaffs"
 import StaffsUpdate from "./Auth/Admin/StaffsUpdate/StaffsUpdate"
+import UpdateAppointment from "./Auth/Admin/UpdateAppointment/UpdateAppointment"
+import AppointmentUpdate from "./Auth/Admin/UpdateAppointment/AppointmentUpdate/AppointmentUpdate"
+import UpdatePerscription from "./Auth/Admin/UpdatePerscription/UpdatePerscription"
 
 function App() {
   return (
@@ -62,6 +65,10 @@ function App() {
           <Route path="/PatientUpdate/:id" element={<PatientUpdate />}/>
           <Route path="/UpdateStaffs" element={<UpdateStaffs />}/>
           <Route path="/StaffsUpdate/:id" element={<StaffsUpdate />}/>
+          <Route path="/UpdateAppointment" element={<UpdateAppointment />}/>
+          <Route path="/AppointmentUpdate/:id" element={<AppointmentUpdate />}/>
+          <Route path="/UpdatePerscription" element={<UpdatePerscription />}/>
+          
           <Route
             path="*"
             element={

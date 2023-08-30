@@ -1,0 +1,86 @@
+/* Media Query */
+
+@media(min-width:320px) {
+    .responsive-perscription {
+        width: 250px;
+        margin-left: 1.5rem;
+    }
+}
+
+@media (min-width:375px) {
+    .responsive-perscription {
+        width: 300px;
+        margin-left: 2rem;
+    }
+}
+
+@media(min-width:425px) {
+    .responsive-perscription {
+        width: 350px;
+        margin-left: 2rem;
+    }
+}
+
+@media(min-width:475px) {
+    .responsive-perscription {
+        width: 380px;
+        margin-left: 2rem;
+    }
+}
+
+@media(min-width:576px) {
+    .medicine-perscription {
+        width: 500px;
+    }
+}
+
+@media(min-width:640px) {
+    .medicine-perscription {
+        width: 530px;
+    }
+
+    .responsive-perscription {
+        width: 380px;
+        margin-left: 1rem;
+    }
+}
+
+@media(min-width:768px) {
+    .medicine-perscription {
+        width: 650px;
+    }
+
+    .responsive-perscription {
+        width: 380px;
+        margin-left: 2.5rem;
+    }
+    .labtest{
+        width: 650px !important;
+    }
+}
+
+@media(min-width:1024px) {
+    .medicine-perscription {
+        width: 100%;
+    }
+
+    .responsive-perscription {
+        width: 100%;
+        margin-left: 2rem;
+    }
+    .labtest{
+        width: 100% !important;
+    }
+}
+
+
+@media(min-width:1280px) {
+    .medicine-perscription {
+        width: 100%;
+    }
+
+    .responsive-perscription {
+        width: 100%;
+        margin-left: 2rem;
+    }
+}

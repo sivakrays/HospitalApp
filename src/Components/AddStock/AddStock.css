@@ -20,5 +20,40 @@
     cursor: pointer;
   }
   
-  /* Adjust other styling as needed */
+ /* Media Query */
+
+@media(min-width:320px){
+    .search-results{
+      width: 200px !important;
+    }
+}
+  
+@media (min-width:375px){
+    
+}
+
+@media(min-width:425px){
+    
+}
+
+@media(min-width:475px){
+    
+}
+
+@media(min-width:640px){
+    
+}
+
+@media(min-width:768px){
+    
+}
+
+@media(min-width:1024px){
+    
+}
+
+
+@media(min-width:1280px){
+
+}
   

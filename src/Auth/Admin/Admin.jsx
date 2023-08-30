@@ -1,5 +1,5 @@
 import React from "react";
-import { Container, Row, Col, Card, Button } from "react-bootstrap";
+import { Container, Card, Button } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import "./Admin.css";
 
@@ -15,7 +15,7 @@ const AdminPanel = () => {
       title: "Appointment Scheduling",
       text1: "Schedule and manage appointments.",
       text2: "Todays Appointments: 150",
-      path: "/changeAppointment",
+      path: "/UpdateAppointment",
     },
     {
       title: "Staff Management",
@@ -28,24 +28,24 @@ const AdminPanel = () => {
       title: "Filter the Patient Details",
       text1: "Manage hospital staff and their roles.",
       text2: "Total Patients Records: 1200",
-      path: "/UpdateStaffs",
+      path: "/filterPatients",
     },
     {
       title: "Stock Management",
       text1: "Manage patient information and records.",
       text2: "Total Medicine Stock: 1200",
-      path: "/UpdatePatient",
+      path: "/stock",
     },
     {
       title: "Doctor perscription Management",
       text1: "Manage patient information and records.",
       text2: "Total Patients Records: 1200",
-      path: "/UpdatePatient",
+      path: "/UpdatePerscription",
     },
   ];
 
   return (
-    <Container className="mt-5">
+    <Container className="mt-5 container">
       <h2 className="text-center">Admin Panel</h2>
       <div className="d-flex align-items-center justify-content-center card-grid flex-wrap">
         {adminData &&
@@ -56,15 +56,10 @@ const AdminPanel = () => {
                   <Card className="card">
                     <Card.Body className="cardBody">
                       <Card.Title className="cardTxt">{item.title}</Card.Title>
-                      <Card.Text className="cardTxt">{item.text1}</Card.Text>
-                      <Card.Text className="cardTxt">{item.text2}</Card.Text>
+                      <Card.Text className="cardTxt">{item.text1} <br />{item.text2}</Card.Text>
+                      {/* <Card.Text className="cardTxt">{item.text2}</Card.Text> */}
                       <Link to={item.path}>
-                        <Button variant="primary">Update</Button>
-                      </Link>
-                      <Link to={item.path}>
-                        <Button variant="danger" className="mx-3">
-                          Delete
-                        </Button>
+                        <Button variant="success">Manage</Button>
                       </Link>
                     </Card.Body>
                   </Card>

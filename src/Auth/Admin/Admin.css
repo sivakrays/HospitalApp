@@ -3,4 +3,61 @@
 }
 .card{
     width: 350px !important;
+    height: 220px !important;
+    padding: 10px;
+}
+
+.container{
+    width: 100%;
+    /* overflow: hidden; */
+}
+
+
+
+
+
+/* Media Query */
+
+@media(min-width:320px){
+    .card{
+        width: 250px !important;
+        margin-left: 3rem;
+    }
+    .card-grid{
+        gap: 10px !important;
+    }
+}
+  
+@media (min-width:375px){
+    
+}
+
+@media(min-width:425px){
+    .card{
+        width: 300px !important;
+        margin-left: 3rem;
+    }
+}
+@media(min-width:425px){
+    .card{
+        width: 320px !important;
+        margin-left: 3rem;
+    }
+}
+
+
+
+@media(min-width:640px){
+    
+}
+
+
+
+@media(min-width:1024px){
+    
+}
+
+
+@media(min-width:1280px){
+
 }

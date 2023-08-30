@@ -1,10 +1,10 @@
 import React from 'react'
 import UpdateComponent from "../../../Components/UpdateComponent/UpdateComponent"
 
-const UpdateStaffs = () => {
+const UpdateAppointment = () => {
   return (
-    <div><UpdateComponent path="StaffsUpdate"/></div>
+    <div><UpdateComponent path="PatientAppointment"/></div>
   )
 }
 
-export default UpdateStaffs
+export default UpdateAppointment
