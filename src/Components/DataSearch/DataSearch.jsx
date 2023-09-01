@@ -3,6 +3,7 @@ import "./DataSearch.css";
 import { Col, Row } from "react-bootstrap";
 
 const DataSearch = ({ search, handleSearch }) => {
+
   return (
     <>
       <form className="list__search__form" onSubmit={(e) => e.preventDefault()}>

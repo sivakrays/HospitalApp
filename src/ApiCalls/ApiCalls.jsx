@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const BASE_URL = "";
+const BASE_URL = "https://hospitalbackend-production.up.railway.app/api";
 
 const apiInstance = axios.create({
   baseURL: BASE_URL,

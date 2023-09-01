@@ -13,30 +13,31 @@ import {
 import "./AddStock.css";
 import { FaMinus, FaPlus } from "react-icons/fa6";
 import accessDenied from "../../Assets/Access_Denied.svg";
+import { get, post } from "../../ApiCalls/ApiCalls";
 
 const InputTaskOne = (props) => {
   const [searchBar, setSearchBar] = useState("");
   const [data, setData] = useState([
-    { medicine: "", date: "", stockQty: "", price: "", searchResults: [] },
+    { medicineName: "", expiryDate: "", stockQty: "", price: "", searchResults: [] ,userId: '20'},
   ]);
   const [medicineNames, setMedicineNames] = useState([]);
-
+  const [searchValue, setSearchValue] = useState("");
   useEffect(() => {
-    axios
-      .get("https://jsonplaceholder.typicode.com/users")
-      .then((response) => {
-        const names = response.data.map((user) => user.name);
-        setMedicineNames(names);
-      })
-      .catch((error) => {
-        console.error("Error fetching data:", error);
-      });
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    };
+    {
+      get(`/medicine`, config).then((res) => setMedicineNames(res.data));
+    }
+
   }, []);
 
   const handleAdd = () => {
     setData([
       ...data,
-      { medicine: "", date: "", stockQty: "", price: "", searchResults: [] },
+      { medicineName: "", expiryDate: "", stockQty: "", price: "", searchResults: [],userId: '20' },
     ]);
   };
 
@@ -55,7 +56,8 @@ const InputTaskOne = (props) => {
   };
 
   const handleSearch = (e, dataIndex) => {
-    const searchValue = e.target.value.toLowerCase();
+    setSearchValue(e.target.value.toLowerCase());
+    // const searchValue = e.target.value.toLowerCase();
     setSearchBar(searchValue);
     const filteredResults = medicineNames.filter((name) =>
       name.toLowerCase().includes(searchBar)
@@ -67,14 +69,32 @@ const InputTaskOne = (props) => {
 
   const handleSearchResultClick = (result, dataIndex) => {
     const newData = [...data];
-    newData[dataIndex].medicine = result;
+    newData[dataIndex].medicineName = result;
     newData[dataIndex].searchResults = [];
     setData(newData);
-    setSearchBar("");
+    setSearchValue("");
+  };
+
+
+
+  // Api Call
+
+  const handleRegister = () => {
+
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    };
+
+    post("/stock", data, config).then((res) => {
+      console.log("message", res);
+    });
   };
 
   const handleSubmit = () => {
     console.log("Submitted data:", data);
+    handleRegister()
     setData("");
   };
 
@@ -82,8 +102,11 @@ const InputTaskOne = (props) => {
   const formIsValid =
     data &&
     data.every(
-      (item) => item.medicine && item.date && item.stockQty && item.price
+      (item) => item.medicineName && item.expiryDate && item.stockQty && item.price
     );
+
+
+
 
   return (
     <>
@@ -114,13 +137,13 @@ const InputTaskOne = (props) => {
                     <FloatingLabel label="Medicine">
                       <Form.Control
                         type="text"
-                        name="medicine"
-                        value={dataItem.medicine}
+                        name="medicineName"
+                        value={dataItem.medicineName}
                         onChange={(e) => handleChange(e, i)}
                         disabled
                       />
                     </FloatingLabel>
-                    {searchBar.length !== 0 && (
+                    {dataItem.searchResults.length !== 0 && (
                       <div className="search-results">
                         {dataItem.searchResults &&
                           dataItem.searchResults.map((result, index) => (
@@ -139,14 +162,14 @@ const InputTaskOne = (props) => {
                     <FloatingLabel label="Expiry Date">
                       <Form.Control
                         type="date"
-                        name="date"
-                        value={dataItem.date}
+                        name="expiryDate"
+                        value={dataItem.expiryDate}
                         onChange={(e) => handleChange(e, i)}
                         required
-                        isInvalid={!dataItem.date}
+                        isInvalid={!dataItem.expiryDate}
                       />
                       <Form.Control.Feedback type="invalid">
-                        Please provide a valid date.
+                        Please provide a valid ExpiryDate.
                       </Form.Control.Feedback>
                     </FloatingLabel>
                   </Col>
@@ -221,159 +244,3 @@ const InputTaskOne = (props) => {
 };
 
 export default InputTaskOne;
-
-// import React, { useState } from "react";
-// import { Col, FloatingLabel, Form, Row } from "react-bootstrap";
-// import { FaMinus, FaPlus } from "react-icons/fa6";
-
-// const AddStock = () => {
-//   const [fields, setFields] = useState([
-//     {
-//       userId: "",
-//       medicineName: "",
-//       expiryDate: "",
-//       stockQty: "",
-//       price: "",
-//     },
-//   ]);
-
-//   const addField = () => {
-//     setFields([
-//       ...fields,
-//       { userId: "", medicineName: "", expiryDate: "", stockQty: "", price: "" },
-//     ]);
-//   };
-
-//   const handleFieldChange = (index, event) => {
-//     const { name, value } = event.target;
-//     const updatedFields = [...fields];
-//     updatedFields[index][name] = value;
-//     setFields(updatedFields);
-//   };
-
-//   const removeField = (index) => {
-//     if (fields.length === 1) {
-//       return;
-//     }
-//     const updatedFields = [...fields];
-//     updatedFields.splice(index, 1);
-//     setFields(updatedFields);
-//   };
-
-//   const handleSubmit = (event) => {
-//     event.preventDefault();
-//     console.log("Stock Details:", fields);
-//     setFields([{ medicineName: "", expiryDate: "", stockQty: "", price: "" }]);
-//   };
-
-//   return (
-//     <section className="addStock mt container w-75">
-//       <h2>Stock Control</h2>
-//       <hr />
-//       <form onSubmit={(e) => handleSubmit(e)}>
-//         {fields.map((field, index) => (
-//           <>
-//             <Row>
-//               <Col md={3} className="mb-2">
-//                 {" "}
-//                 <FloatingLabel
-//                   controlId={`medicineName_${index}`}
-//                   label="Medicine Name"
-//                   className=""
-//                 >
-//                   <Form.Control type="Search" name="search" />
-//                 </FloatingLabel>
-//               </Col>
-//             </Row>
-//             <Row key={index}>
-//               <Col md={3} className="mb-2">
-//                 <FloatingLabel
-//                   controlId={`medicineName_${index}`}
-//                   label="Medicine Name"
-//                   className=""
-//                 >
-//                   <Form.Control
-//                     type="text"
-//                     name="medicineName"
-//                     value={field.medicineName}
-//                     onChange={(e) => handleFieldChange(index, e)}
-//                     required
-//                   />
-//                 </FloatingLabel>
-//               </Col>
-//               <Col md={3} className="mb-2">
-//                 <FloatingLabel
-//                   controlId={`expiryDate_${index}`}
-//                   label="Expiry Date"
-//                   className=""
-//                 >
-//                   <Form.Control
-//                     type="date"
-//                     name="expiryDate"
-//                     value={field.expiryDate}
-//                     onChange={(e) => handleFieldChange(index, e)}
-//                     required
-//                   />
-//                 </FloatingLabel>
-//               </Col>
-//               <Col md={3} className="mb-2">
-//                 <FloatingLabel
-//                   controlId={`stockQty_${index}`}
-//                   label="Stock Qty"
-//                   className=""
-//                 >
-//                   <Form.Control
-//                     type="text"
-//                     name="stockQty"
-//                     value={field.stockQty}
-//                     onChange={(e) => handleFieldChange(index, e)}
-//                     required
-//                   />
-//                 </FloatingLabel>
-//               </Col>
-//               <Col md={2} className="mb-2">
-//                 <FloatingLabel
-//                   controlId={`price_${index}`}
-//                   label="Price"
-//                   className=""
-//                 >
-//                   <Form.Control
-//                     type="text"
-//                     name="price"
-//                     value={field.price}
-//                     onChange={(e) => handleFieldChange(index, e)}
-//                     required
-//                   />
-//                 </FloatingLabel>
-//               </Col>
-//               <Col md={1} className="mb-2">
-//                 {index > 0 && (
-//                   <button
-//                     className="btn btn-danger btn-sm"
-//                     onClick={() => removeField(index)}
-//                   >
-//                     <FaMinus />
-//                   </button>
-//                 )}
-//               </Col>
-//             </Row>
-//           </>
-//         ))}
-//         <Row>
-//           <Col>
-//             <button className="btn btn-danger btn-sm mt-2" onClick={addField}>
-//               <FaPlus />
-//             </button>
-//           </Col>
-//         </Row>
-//         <input
-//           type="submit"
-//           value="Submit"
-//           className="btn btn-secondary mt-2"
-//         />
-//       </form>
-//     </section>
-//   );
-// };
-
-// export default AddStock;

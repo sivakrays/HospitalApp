@@ -28,7 +28,8 @@ const SideNavBar = (props) => {
 
   // Conditional Based Routing
 
-  if (props.role.includes("Doctor")) {
+
+  {props.role.includes("Doctor") &&
     menuItem.push(
       {
         path: "/DoctorView",
@@ -46,7 +47,8 @@ const SideNavBar = (props) => {
         icon: <FaFileMedical />,
       }
     );
-  } else if (props.role.includes("Receptionist")) {
+  } 
+ { props.role.includes("Receptionist") &&
     menuItem.push(
       {
         path: "/addpatients",
@@ -59,13 +61,15 @@ const SideNavBar = (props) => {
         icon: <FaCalendarDays />,
       }
     );
-  } else if (props.role.includes("Nurse")) {
+  }
+  {props.role.includes("Nurse") &&
     menuItem.push({
       path: "/billing",
       name: "Billing",
       icon: <FaFileInvoice />,
     });
-  } else if (props.role.includes("Laboratory")) {
+  } 
+  {props.role.includes("Laboratory") &&
     menuItem.push(
       {
         path: "/lab",
@@ -78,7 +82,9 @@ const SideNavBar = (props) => {
         icon: <FaUsers />,
       }
     );
-  } else if (props.role.includes("Medical")) {
+  }
+  
+  {props.role.includes("Medical") &&
     menuItem.push(
       {
         path: "/medical",
@@ -96,7 +102,9 @@ const SideNavBar = (props) => {
         icon: <FaUsers />,
       }
     );
-  } else if (props.role.includes("Admin")) {
+  }
+
+    {props.role.includes("Admin") &&
     menuItem.push(
       {
         path: "/DoctorView",
@@ -154,8 +162,7 @@ const SideNavBar = (props) => {
         icon: <FaUserLock />,
       }
     );
-  } else {
-  }
+  } 
 
   const closeSidebar = () => {
     if (isOpen) {

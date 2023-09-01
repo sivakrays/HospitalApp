@@ -6,6 +6,7 @@ import axios from "axios";
 import { Link } from "react-router-dom";
 import { FaTrashCan } from "react-icons/fa6";
 import { FaEdit } from "react-icons/fa";
+import { get } from "../../ApiCalls/ApiCalls";
 
 const Lab = (props) => {
   const [medical, setMedicalData] = useState([]);
@@ -20,14 +21,15 @@ const Lab = (props) => {
 
   useEffect(() => {
     const fetchData = async () => {
-      try {
-        const res = await axios.get(
-          "https://jsonplaceholder.typicode.com/photos"
-        );
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      };
+
+      get("/patients", config).then((res) => {
         setMedicalData(res.data);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
+      });
     };
 
     fetchData();
@@ -46,8 +48,8 @@ const Lab = (props) => {
 
   const filteredMedical = medical.filter(
     (item) =>
-      item.id.toString().includes(search) ||
-      item.title.toLowerCase().includes(search.toLowerCase())
+      item.mrnNo.toString().includes(search) ||
+      item.PatientName.toLowerCase().includes(search.toLowerCase())
   );
 
   // Page Pagination
@@ -128,55 +130,60 @@ const Lab = (props) => {
           </ul>
           <p>Total Records: {getTotalRecords()}</p>
         </div>
-        <hr />
+        {/* <hr /> */}
         <div className="table-responsive">
-          <Table className="table">
-            <thead>
-              <tr>
-                <th
-                  onClick={() =>
-                    setSortOrder(sortOrder === "asc" ? "desc" : "asc")
-                  }
-                  style={{ cursor: "pointer" }}
-                >
-                  Mrn.No
-                </th>
-                <th>Name</th>
-
-                <th>Action</th>
-              </tr>
-            </thead>
-            <tbody>
-              {sortedRecords.length === 0 ? (
+          <center>
+            <Table className="table w-75" striped bordered hover>
+              <thead>
                 <tr>
-                  <td colSpan="5" className="text-center">
-                    No records found.
-                  </td>
+                  <th
+                    onClick={() =>
+                      setSortOrder(sortOrder === "asc" ? "desc" : "asc")
+                    }
+                    style={{ cursor: "pointer" }}
+                  >
+                    Mrn.No
+                  </th>
+                  <th>Name</th>
+
+                  <th colSpan="2">Action</th>
                 </tr>
-              ) : (
-                sortedRecords.map((item) => (
-                  <tr key={item.id}>
-                    <td>{item.id}</td>
-                    <td>{item.title}</td>
-                    <td>
-                      <Link
-                        to={`/${props.path}/${item.id}`}
-                        className="btn btn-primary"
-                      >
-                        <FaEdit />
-                      </Link>
-                      <div
-                        className="btn btn-danger mx-lg-3"
-                        onClick={handleShow}
-                      >
-                        <FaTrashCan />
-                      </div>
+              </thead>
+              <tbody>
+                {sortedRecords.length === 0 ? (
+                  <tr>
+                    <td colSpan="5" className="text-center">
+                      No records found.
                     </td>
                   </tr>
-                ))
-              )}
-            </tbody>
-          </Table>
+                ) : (
+                  sortedRecords.map((item) => (
+                    <tr key={item.mrnNo}>
+                      <td>{item.mrnNo}</td>
+                      <td>{item.PatientName}</td>
+                      <td>
+                        <Link
+                          to={`/${props.path}/${item.mrnNo}`}
+                          className="btn btn-primary"
+                        >
+                          Update
+                          <FaEdit />
+                        </Link>
+
+                        <div
+                          className="btn btn-danger mx-lg-3"
+                          onClick={handleShow}
+                        >
+                          Delete
+                          <FaTrashCan />
+                        </div>
+                      </td>
+                    </tr>
+                  ))
+                )}
+              </tbody>
+            </Table>
+          </center>
         </div>
       </div>
       <Modal show={show} onHide={handleClose} centered>

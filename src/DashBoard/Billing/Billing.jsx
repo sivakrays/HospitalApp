@@ -5,6 +5,7 @@ import { Tab, Table, Tabs } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import accessDenied from "../../Assets/Access_Denied.svg";
+import Loader from "../../Components/Loader/Loader";
 
 const Billing = (props) => {
   const [billingData, setBillingData] = useState([]);
@@ -77,125 +78,138 @@ const Billing = (props) => {
     <>
       {props.role.includes("Admin") ? (
         <section className="billing ">
-          <SearchBox search={search} handleSearch={handleSearch} />
+          {billingData.length > 0 ? (
+            <>
+              <SearchBox search={search} handleSearch={handleSearch} />
+              <div className="container billingDetails1">
+                {/* <h2 className="text-uppercase">Billing Counter</h2> */}
+                <div className="billing-pagination-nav mt-3">
+                  <ul className="pagination">
+                    <li className="page-item">
+                      <a
+                        href="#prePage"
+                        className="page-link"
+                        onClick={prePage}
+                      >
+                        Pre
+                      </a>
+                    </li>
+                    <li className="page-item-number">
+                      <select
+                        className="form-select"
+                        value={currentPage}
+                        onChange={(e) =>
+                          changeCurrentPage(parseInt(e.target.value))
+                        }
+                      >
+                        {renderPageNumbersDropdown().map((pageNum) => (
+                          <option key={pageNum} value={pageNum}>
+                            {pageNum}
+                          </option>
+                        ))}
+                      </select>
+                    </li>
+                    <li className="page-item">
+                      <a
+                        href="#nextPage"
+                        className="page-link btn"
+                        onClick={AfterPage}
+                      >
+                        Next
+                      </a>
+                    </li>
+                  </ul>
+                  <p>Total Records: {getTotalRecords()}</p>
+                </div>
+                <hr />
 
-          <div className="container billingDetails1">
-            {/* <h2 className="text-uppercase">Billing Counter</h2> */}
-            <div className="billing-pagination-nav mt-3">
-              <ul className="pagination">
-                <li className="page-item">
-                  <a href="#prePage" className="page-link" onClick={prePage}>
-                    Pre
-                  </a>
-                </li>
-                <li className="page-item-number">
-                  <select
-                    className="form-select"
-                    value={currentPage}
-                    onChange={(e) =>
-                      changeCurrentPage(parseInt(e.target.value))
-                    }
-                  >
-                    {renderPageNumbersDropdown().map((pageNum) => (
-                      <option key={pageNum} value={pageNum}>
-                        {pageNum}
-                      </option>
-                    ))}
-                  </select>
-                </li>
-                <li className="page-item">
-                  <a
-                    href="#nextPage"
-                    className="page-link btn"
-                    onClick={AfterPage}
-                  >
-                    Next
-                  </a>
-                </li>
-              </ul>
-              <p>Total Records: {getTotalRecords()}</p>
-            </div>
-            <hr />
-
-            <div className="billingDetails">
-              <Tabs defaultActiveKey="pending" id="myTab">
-                <Tab eventKey="pending" title="Pending">
-                  <div className="table-responsive">
-                    <Table className="table">
-                      <thead>
-                        <tr>
-                          <th style={{ cursor: "pointer" }}>Mrn.No</th>
-                          <th>Name</th>
-                          <th>Billing Date</th>
-                          <th>Status</th>
-                          <th>Action</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {currentRecords.length === 0 ? (
-                          <tr>
-                            <td colSpan="5" className="text-center">
-                              No records found.
-                            </td>
-                          </tr>
-                        ) : (
-                          currentRecords.map((item) => (
-                            <tr key={item.id}>
-                              <td>{item.id}</td>
-                              <td>{item.title}</td>
-                              <td>{new Date().toLocaleDateString("en-US")}</td>
-                              <td>Pending</td>
-                              <td>
-                                <Link to={`/BillingView/${item.id}`}>
-                                  <input
-                                    type="button"
-                                    value="Open"
-                                    className="btn btn-secondary"
-                                  />
-                                </Link>
-                              </td>
+                <div className="billingDetails">
+                  <Tabs defaultActiveKey="pending" id="myTab">
+                    <Tab eventKey="pending" title="Pending">
+                      <div className="table-responsive">
+                        <Table className="table">
+                          <thead>
+                            <tr>
+                              <th style={{ cursor: "pointer" }}>Mrn.No</th>
+                              <th>Name</th>
+                              <th>Billing Date</th>
+                              <th>Status</th>
+                              <th>Action</th>
                             </tr>
-                          ))
-                        )}
-                      </tbody>
-                    </Table>
-                  </div>
-                </Tab>
-                <Tab eventKey="dispatched" title="Dispatched">
-                  <div className="table-responsive">
-                    <Table className="table">
-                      <thead>
-                        <tr>
-                          <th style={{ cursor: "pointer" }}>Mrn.No</th>
-                          <th>Name</th>
-                          <th>Billing Date</th>
-                          <th>Status</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {currentRecords.length === 0 ? (
-                          <tr>
-                            <td colSpan="4" className="text-center">
-                              No records found.
-                            </td>
-                          </tr>
-                        ) : (
-                          currentRecords.map((item) => (
-                            <tr key={item.id}>
-                              <td>{item.id}</td>
-                              <td>{item.title}</td>
-                              <td>{new Date().toLocaleDateString("en-US")}</td>
-                              <td>Completed</td>
+                          </thead>
+                          <tbody>
+                            {currentRecords.length === 0 ? (
+                              <tr>
+                                <td colSpan="5" className="text-center">
+                                  No records found.
+                                </td>
+                              </tr>
+                            ) : (
+                              currentRecords.map((item) => (
+                                <tr key={item.id}>
+                                  <td>{item.id}</td>
+                                  <td>{item.title}</td>
+                                  <td>
+                                    {new Date().toLocaleDateString("en-US")}
+                                  </td>
+                                  <td>Pending</td>
+                                  <td>
+                                    <Link to={`/BillingView/${item.id}`}>
+                                      <input
+                                        type="button"
+                                        value="Open"
+                                        className="btn btn-secondary"
+                                      />
+                                    </Link>
+                                  </td>
+                                </tr>
+                              ))
+                            )}
+                          </tbody>
+                        </Table>
+                      </div>
+                    </Tab>
+                    <Tab eventKey="dispatched" title="Dispatched">
+                      <div className="table-responsive">
+                        <Table className="table">
+                          <thead>
+                            <tr>
+                              <th style={{ cursor: "pointer" }}>Mrn.No</th>
+                              <th>Name</th>
+                              <th>Billing Date</th>
+                              <th>Status</th>
                             </tr>
-                          ))
-                        )}
-                      </tbody>
-                    </Table>
-                  </div>
-                </Tab>
-              </Tabs>
-            </div>
-          </div>
+                          </thead>
+                          <tbody>
+                            {currentRecords.length === 0 ? (
+                              <tr>
+                                <td colSpan="4" className="text-center">
+                                  No records found.
+                                </td>
+                              </tr>
+                            ) : (
+                              currentRecords.map((item) => (
+                                <tr key={item.id}>
+                                  <td>{item.id}</td>
+                                  <td>{item.title}</td>
+                                  <td>
+                                    {new Date().toLocaleDateString("en-US")}
+                                  </td>
+                                  <td>Completed</td>
+                                </tr>
+                              ))
+                            )}
+                          </tbody>
+                        </Table>
+                      </div>
+                    </Tab>
+                  </Tabs>
+                </div>
+              </div>
+            </>
+          ) : (
+            <Loader />
+          )}
         </section>
       ) : (
         <div className="accessDenied">

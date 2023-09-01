@@ -5,25 +5,32 @@ import SearchBox from "../SearchBox/SearchBox";
 import "./Stock.css";
 import axios from "axios";
 import accessDenied from "../../Assets/Access_Denied.svg";
+import { get } from "../../ApiCalls/ApiCalls";
 
 const Stock = (props) => {
   const [stockData, setStockData] = useState([]);
   const [search, setSearch] = useState("");
+  const [expiry,setExpiry] = useState("")
 
   useEffect(() => {
     const fetchData = async () => {
-      try {
-        const res = await axios.get(
-          "https://jsonplaceholder.typicode.com/photos"
-        );
-        setStockData(res.data);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      };
+
+      get(`/getStocks`, config).then((res) => setStockData(res.data));
+      // const expiryDateSlice = stockData.expiryDate;
+      // console.log(expiryDateSlice)
+      // setExpiry(expiryDateSlice && expiryDateSlice.slice(0, 10))
+      // console.log(expiry)
     };
 
     fetchData();
   }, []);
+
+  
 
   useEffect(() => {
     setCurrentPage(1);
@@ -37,7 +44,7 @@ const Stock = (props) => {
   const filteredStock = stockData.filter(
     (item) =>
       item.id.toString().includes(search) ||
-      item.title.toLowerCase().includes(search.toLowerCase())
+      item.medicineName.toLowerCase().includes(search.toLowerCase())
   );
 
   // Pagination
@@ -147,12 +154,13 @@ const Stock = (props) => {
                     </td>
                   </tr>
                 ) : (
+                  currentRecords &&
                   currentRecords.map((item) => (
                     <tr key={item.id}>
                       <td>{item.id}</td>
-                      <td>{item.title}</td>
-                      <td>{new Date().toLocaleDateString("en-US")}</td>
-                      <td>90</td>
+                      <td>{item.medicineName}</td>
+                      <td>{item.expiryDate}</td>
+                      <td>{item.stockQty}</td>
                     </tr>
                   ))
                 )}

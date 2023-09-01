@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "../../../Utility/Utility.css";
 import "../../../DashBoard/AddUser/AddUser.css";
 import FloatingLabel from "react-bootstrap/FloatingLabel";
@@ -6,26 +6,13 @@ import Form from "react-bootstrap/Form";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import accessDenied from "../../../Assets/Access_Denied.svg";
+import { get } from "../../../ApiCalls/ApiCalls";
 
 const AddUser = (props) => {
   const [role, setRole] = useState([]);
-  const [register, setRegister] = useState({
-    firstName: "",
-    lastName: "",
-    userName: "",
-    contact: "",
-    pincode: "",
-    state: "",
-    city: "",
-    street: "",
-    address: "",
-    email: "",
-    password: "",
-    confirmPassword: "",
-    dob: "",
-    gender: "",
-    primaryRole: "",
-  });
+  const [register, setRegister] = useState({});
+
+  console.log(register)
 
   const resetForm = () => {
     setRegister({
@@ -69,6 +56,24 @@ const AddUser = (props) => {
       setRole((prevRoles) => prevRoles.filter((role) => role !== roleName));
     }
   };
+
+  // Api Call
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      };
+
+      get(`/getUser`, config).then((res) => {
+        setRegister(res.data);
+      });
+    };
+
+    fetchData();
+  }, []);
 
   // Submit Function
 

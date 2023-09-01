@@ -4,6 +4,8 @@ import SearchBox from "../../Components/SearchBox/SearchBox";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import accessDenied from "../../Assets/Access_Denied.svg";
+import { get } from "../../ApiCalls/ApiCalls";
+import Loader from '../../Components/Loader/Loader'
 
 const Patients = (props) => {
   const [data, setData] = useState([]);
@@ -13,13 +15,13 @@ const Patients = (props) => {
 
   useEffect(() => {
     const fetchData = async () => {
-      try {
-        const res = await axios.get(
-          "https://jsonplaceholder.typicode.com/photos"
-        );
-        setData(res.data);
-      } catch (error) {
-        console.error("Error fetching data:", error);
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      };
+      {
+        get(`/patients`, config).then((res) => setData(res.data));
       }
     };
 
@@ -42,8 +44,8 @@ const Patients = (props) => {
 
   const filteredData = data.filter(
     (item) =>
-      item.id.toString().includes(search) ||
-      item.title.toLowerCase().includes(search.toLowerCase())
+      item.mrnNo.toString().includes(search) ||
+      item.PatientName.toLowerCase().includes(search.toLowerCase())
   );
 
   // Pagination for Patients view
@@ -82,70 +84,119 @@ const Patients = (props) => {
     <>
       {props.role.includes("Admin") ? (
         <section className="patients">
-          <div className="patient__search">
-            <SearchBox search={search} handleSearch={handleSearch} />
+          {data.length > 0 ? (
+            <div className="patient__search">
+              <SearchBox search={search} handleSearch={handleSearch} />
 
-            <div className="pagination-nav ">
-              <ul className="pagination">
-                <li className="page-item">
-                  <a href="#prePage" className="page-link" onClick={prePage}>
-                    Pre
-                  </a>
-                </li>
-                <li className="page-item-number">
-                  <select
-                    className="form-select"
-                    value={currentPage}
-                    onChange={(e) =>
-                      changeCurrentPage(parseInt(e.target.value))
-                    }
-                  >
-                    {renderPageNumbersDropdown().map((pageNum) => (
-                      <option key={pageNum} value={pageNum}>
-                        {pageNum}
-                      </option>
-                    ))}
-                  </select>
-                </li>
-                <li className="page-item">
-                  <a
-                    href="#nextPage"
-                    className="page-link btn"
-                    onClick={afterPage}
-                  >
-                    Next
-                  </a>
-                </li>
-              </ul>
-              <p>Total Records: {getTotalRecords()}</p>
-            </div>
+              <div className="pagination-nav ">
+                <ul className="pagination">
+                  <li className="page-item">
+                    <a href="#prePage" className="page-link" onClick={prePage}>
+                      Pre
+                    </a>
+                  </li>
+                  <li className="page-item-number">
+                    <select
+                      className="form-select"
+                      value={currentPage}
+                      onChange={(e) =>
+                        changeCurrentPage(parseInt(e.target.value))
+                      }
+                    >
+                      {renderPageNumbersDropdown().map((pageNum) => (
+                        <option key={pageNum} value={pageNum}>
+                          {pageNum}
+                        </option>
+                      ))}
+                    </select>
+                  </li>
+                  <li className="page-item">
+                    <a
+                      href="#nextPage"
+                      className="page-link btn"
+                      onClick={afterPage}
+                    >
+                      Next
+                    </a>
+                  </li>
+                </ul>
+                <p>Total Records: {getTotalRecords()}</p>
+              </div>
 
-            <div className="patients__view g-3">
-              {currentItems.map((item) => {
-                return (
-                  <Link
-                    to={`/PatientAppointment/${item.id}`}
-                    className="text-dark"
-                    key={item.id}
-                  >
-                    <div className="patients__box shadow" key={item.id}>
-                      <img src={item.thumbnailUrl} alt="patient" />
-                      <div className="patient__details">
-                        <p>
-                          <b>ID:</b>
-                          {item.id}
-                        </p>
-                        <p>
-                          <b>Name:</b>
-                          {item.title}
-                        </p>
+              {/* <div class="container mt-5">
+              <div class="card" style={{ width: "18rem" }}>
+                <img
+                  src={data.photo}
+                  class="card-img-top"
+                  alt="Profile Picture"
+                />
+                <div class="card-body">
+                  <h5 class="card-title">John Doe</h5>
+                  <p class="card-text">ID: 1234567890</p>
+                  <a href="#" class="btn btn-primary">
+                    View Profile
+                  </a>
+                </div>
+              </div>
+            </div> */}
+
+              <div className="patients__view g-3">
+                {currentItems.map((item) => {
+                  return (
+                    <Link
+                      to={`/PatientAppointment/${item.mrnNo}`}
+                      className="text-dark"
+                      key={item.mrnNo}
+                    >
+                      {/* <div className="container mt-5">
+                      <div className="card" style={{ width: "18rem" }}>
+                        <img
+                          src={item.photo}
+                          className="card-img-top"
+                          alt="Profile Picture"
+                        />
+                        <div className="card-body">
+                          <h5 className="card-title ">Name: <span className="text-uppercase">{item.PatientName}</span></h5>
+                          <p className="card-text">Mrn.No: {item.mrnNo}</p>
+                          <a href="#" className="btn btn-primary">
+                            View Profile
+                          </a>
+                        </div>
                       </div>
-                    </div>
-                  </Link>
-                );
-              })}
+                    </div> */}
+                      {/* <div class="profile-card" key={item.mrnNo}>
+                      <img
+                        src={item.photo}
+                        alt="Profile Picture"
+                        class="profile-picture"
+                      />
+                      <p class="number">Mrn.No:{item.mrnNo}</p>
+                      <h1 class="name">Name:{item.PatientName}</h1>
+                      <button class="view-button">View Profile</button>
+                    </div> */}
+
+                      <div className="patients__box shadow" key={item.mrnNo}>
+                        <img src={item.photo} alt="patient" />
+                        <div className="patient__details">
+                          <p>
+                            <b>ID:</b>
+                            {item.mrnNo}
+                          </p>
+                          <p>
+                            <b>Name:</b>
+                            {item.PatientName}
+                          </p>
+                          <div className="btn btn-primary">View Patient</div>
+                        </div>
+                      </div>
+                    </Link>
+                  );
+                })}
+              </div>
             </div>
-          </div>
+          ) : (
+            <Loader />
+          )}
         </section>
       ) : (
         <div className="accessDenied">

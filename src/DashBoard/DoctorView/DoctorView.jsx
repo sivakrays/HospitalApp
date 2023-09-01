@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "../../Utility/Utility.css";
 import "./DoctorView.css";
 import Fullcalendar from "@fullcalendar/react";
@@ -7,6 +7,7 @@ import timeGridPlugin from "@fullcalendar/timegrid";
 import listPlugin from "@fullcalendar/list";
 import { FaXmark } from "react-icons/fa6";
 import accessDenied from "../../Assets/Access_Denied.svg";
+import { get } from "../../ApiCalls/ApiCalls";
 
 const EventModal = ({ event, onClose }) => {
   return (
@@ -29,6 +30,23 @@ const EventModal = ({ event, onClose }) => {
 const DoctorView = (props) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState(null);
+  const [appointmentData, setappointmentData]  =useState({})
+
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     const config = {
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //       },
+  //     };
+  //     {
+  //       get(`/getAppointment`, config).then((res) => setappointmentData(res.data));
+  //     }
+  //   };
+
+  //   fetchData();
+  // }, []);
+
 
   const events = [
     {

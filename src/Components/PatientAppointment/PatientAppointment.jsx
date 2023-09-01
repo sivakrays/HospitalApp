@@ -4,7 +4,7 @@ import { Form, Row, Col, FloatingLabel } from "react-bootstrap";
 import axios from "axios";
 import DataSearch from "../DataSearch/DataSearch";
 import "./PatientAppointment.css";
-import { post } from "../../ApiCalls/ApiCalls";
+import { get, post } from "../../ApiCalls/ApiCalls";
 import accessDenied from "../../Assets/Access_Denied.svg";
 
 const PatientAppointment = (props) => {
@@ -14,33 +14,39 @@ const PatientAppointment = (props) => {
   const [search, setSearch] = useState("");
   const [doctorName, setDoctorName] = useState("");
   const [doctorError, setDoctorError] = useState("");
+  const [doctorId, setDoctorId]= useState('10')
 
   // Fetch the data Based on the Id
 
   const filterItems = async () => {
-    const res = await axios.get(
-      `https://jsonplaceholder.typicode.com/photos?id=${id}`
-    );
-    const data = await res.data;
-    setPatient(data);
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    };
+    {
+      get(`/mrnNo?mrnNo=${id}`, config).then((res) => setPatient(res.data));
+    }
   };
 
   useEffect(() => {
     filterItems();
   }, []);
 
-  // Fetch the Data Based on the search input
+  // Fetch the Doctor Name Based on the search input
 
   useEffect(() => {
     const fetchData = async () => {
       if (search.length > 0) {
-        try {
-          const res = await axios.get(
-            "https://jsonplaceholder.typicode.com/users"
+        const config = {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        };
+        {
+          get(`/doctor`, config).then((res) =>
+          setDoctorNameList(res.data)
           );
-          setDoctorNameList(res.data);
-        } catch (error) {
-          console.error("Error fetching data:", error);
         }
       }
     };
@@ -56,7 +62,7 @@ const PatientAppointment = (props) => {
   const filteredData =
     doctorNameList &&
     doctorNameList.filter((item) =>
-      item.name.toLowerCase().includes(search.toLowerCase())
+      item.toLowerCase().includes(search.toLowerCase())
     );
 
   // Get the current time
@@ -71,8 +77,8 @@ const PatientAppointment = (props) => {
     doctor: doctorName,
     date: "",
     time: getCurrentTime(),
-    comments: "",
-    status: "",
+    appointmentComment: "",
+    criticalityStatus: "",
   });
 
   const handle = (e) => {
@@ -96,11 +102,12 @@ const PatientAppointment = (props) => {
 
   const handlePatientAppointment = () => {
     const data = {
+      doctorId: doctorId,
       doctor: doctorName,
       date: appointmentData.date,
       time: appointmentData.time,
-      comments: appointmentData.comments,
-      status: appointmentData.status,
+      appointmentComment: appointmentData.appointmentComment,
+      criticalityStatus: appointmentData.criticalityStatus,
     };
     const config = {
       headers: {
@@ -108,7 +115,7 @@ const PatientAppointment = (props) => {
       },
     };
 
-    post("/", data, config).then((res) => {
+    post("/appointment", data, config).then((res) => {
       console.log("Appointment Successfully Added", res);
     });
   };
@@ -126,8 +133,8 @@ const PatientAppointment = (props) => {
       setDoctorName("");
       console.log("AppointMent Details", appointmentData);
       const data = { ...appointmentData };
-      data.comments = "";
-      data.status = "";
+      data.appointmentComment = "";
+      data.criticalityStatus = "";
       setAppointmentData(data);
     }
   };
@@ -141,24 +148,24 @@ const PatientAppointment = (props) => {
             <form onSubmit={(e) => handleSubmit(e)}>
               <div className="patient__details text-center">
                 <Row>
-                  {patient.map((data) => (
-                    <Col key={data.id}>
+                  {patient && (
+                    <Col key={patient.mrnNo}>
                       <img
-                        src={data.url}
+                        src={patient.photo}
                         alt=""
                         width={130}
                         style={{ borderRadius: "50%" }}
                       />
                       <p>
                         <b>Patient ID: </b>
-                        {data.id}
+                        {patient.mrnNo}
                       </p>
                       <p>
                         <b>Patient Name: </b>
-                        {data.title}
+                        {patient.firstName} {patient.lastName}
                       </p>
                     </Col>
-                  ))}
+                  )}
                 </Row>
               </div>
 
@@ -173,10 +180,10 @@ const PatientAppointment = (props) => {
                 <div className="doctor-list">
                   {search.length !== 0 &&
                     filteredData &&
-                    filteredData.map((doctor) => (
-                      <div key={doctor.id}>
+                    filteredData.map((doctor,index) => (
+                      <div key={index}>
                         <p onClick={(e) => handleDoctorName(e)}>
-                          {doctor.name}
+                          {doctor}
                         </p>
                       </div>
                     ))}
@@ -234,14 +241,14 @@ const PatientAppointment = (props) => {
                 <Col md={3} className="mb-2">
                   <FloatingLabel
                     controlId={`appointmentComment`}
-                    label="Appointment comment"
+                    label="Purpose"
                     className=""
                   >
                     <Form.Control
                       type="text"
                       placeholder="Comment"
-                      name="comments"
-                      value={appointmentData.comments}
+                      name="appointmentComment"
+                      value={appointmentData.appointmentComment}
                       onChange={(e) => handle(e)}
                       required
                     />
@@ -255,7 +262,7 @@ const PatientAppointment = (props) => {
                     <Form.Check
                       type="radio"
                       label="Critical"
-                      name="status"
+                      name="criticalityStatus"
                       value="Critical"
                       style={{ marginRight: "10px" }}
                       onChange={(e) => handle(e)}
@@ -263,7 +270,7 @@ const PatientAppointment = (props) => {
                     <Form.Check
                       type="radio"
                       label="Normal"
-                      name="status"
+                      name="criticalityStatus"
                       value="Normal"
                       style={{ marginRight: "10px" }}
                       onChange={(e) => handle(e)}

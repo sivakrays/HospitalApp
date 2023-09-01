@@ -118,7 +118,7 @@ const AddPatients = (props) => {
               className="text-center text-uppercase text-center mb-3  text-white  rounded py-3 text-uppercase shadow"
               style={{ backgroundColor: "var(--color-sidebar)" }}
             >
-              Add Patients
+              Update Patient Details
             </h2>
 
             <div className="camera">
@@ -592,7 +592,7 @@ const AddPatients = (props) => {
               <div className="add__user__btn mt-md">
                 <input
                   type="submit"
-                  value="Add Patient"
+                  value="Update"
                   className="btn button"
                   style={{
                     backgroundColor: "var(--color-sidebar)",

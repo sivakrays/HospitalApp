@@ -82,22 +82,22 @@ const AddUser = (props) => {
       pincode: register.pincode,
       state: register.state,
       city: register.city,
-      street: register.street,
+      houseNo: register.street,
       email: register.email,
       gender: register.gender,
       password: register.password,
       confirmPassword: register.confirmPassword,
       dob: register.dob,
-      role: role,
+      roles: role,
       primaryRole: register.primaryRole,
     };
     const config = {
       headers: {
-        Accept: "application/json",
+        "Content-Type": "application/json",
       },
     };
 
-    post("", data, config).then((res) => {
+    post("/user", data, config).then((res) => {
       console.log("User Register Success", res);
     });
   };

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./AddPatients.css";
 import { Container, Form, Row, Col, FloatingLabel } from "react-bootstrap";
 import Webcam from "react-webcam";
@@ -10,9 +10,9 @@ const AddPatients = (props) => {
   const [medicine, setMedicine] = useState("");
   const [image, setImage] = useState("");
   const webcamRef = React.useRef(null);
-  const date = new Date();
-  const [pregnancy, setPregancy] = useState("");
+  const [pregnancy, setPregancy] = useState();
 
+  const [age, setAge] = useState(0);
   const [imageError, setImageError] = useState("");
   const [pregancyError, setPregnancyError] = useState("");
   const [error, setError] = useState();
@@ -48,7 +48,13 @@ const AddPatients = (props) => {
   });
 
   // Age Calculation
-  const age = date.getFullYear() - patients.dob.slice(0, 4);
+  useEffect(() => {
+    const date = new Date().getFullYear();
+    const birthYear = parseInt(patients.dob.slice(0, 4));
+    const ageCalculation = date - birthYear;
+    setAge(ageCalculation);
+  }, [patients.dob]);
+  // console.log(new Date().getFullYear() - birthYear);
 
   function handle(e) {
     const newPatient = { ...patients };
@@ -78,12 +84,13 @@ const AddPatients = (props) => {
 
   const handleRegister = () => {
     const data = {
-      image: image,
-      pregnancy: pregnancy,
+      photo: image,
+      age: age,
+      pregnancyDetail: pregnancy,
       firstName: patients.firstName,
       lastName: patients.lastName,
       dob: patients.dob,
-      gender: patients.dob,
+      gender: patients.gender,
       contact: patients.contact,
       email: patients.email,
       weight: patients.weight,
@@ -91,26 +98,26 @@ const AddPatients = (props) => {
       pincode: patients.pincode,
       state: patients.state,
       city: patients.city,
-      street: patients.street,
-      gurdianName: patients.gurdianName,
-      gurdianRelation: patients.gurdianRelation,
-      gurdianContact: patients.gurdianContact,
+      houseNo: patients.street,
+      guardianName: patients.gurdianName,
+      guardianRelation: patients.gurdianRelation,
+      guardianContact: patients.gurdianContact,
       emergencyName: patients.emergencyName,
-      emergencyrelation: patients.emergencyrelation,
+      emergencyRelation: patients.emergencyrelation,
       emergencyContact: patients.emergencyContact,
-      allergy: allergy,
-      medicine: medicine,
+      allergies: allergy,
+      medicines: medicine,
       allergyName: patients.allergyName,
-      medicineName: patients.medicineName,
+      allergyMedicine: patients.medicineName,
     };
 
     const config = {
       headers: {
-        Accept: "application/json",
+        "Content-Type": "application/json",
       },
     };
 
-    post("/", data, config).then((res) => {
+    post("/patient", data, config).then((res) => {
       console.log("message", res);
     });
   };
@@ -125,25 +132,46 @@ const AddPatients = (props) => {
       console.log(image);
     } else if (pregnancy === " ") {
       setPregnancyError(`please Select the Pregnancy details`);
-    }
-    // if (allergy === "") {
-    //   setError(`Please Select the Allergy Details`);
-    // } else {
-    //   console.log("patient", patients);
-    //   setError("");
-    // }
-    else if (medicine === "" || medicine === null) {
+    } else if (medicine === "" || medicine === null) {
       setError(`Please Select the Allergy Details`);
-    } else if (patients.contact.length !== 10) {
+    } else if (patients.contact && patients.contact.length !== 10) {
       setPhoneError("Phone Number Must be 10 Numbers only");
     } else {
       handleRegister();
       setError("");
       setImageError("");
+      setImage("")
+      setPregancy("")
+      setAllergy("")
+      setMedicine("")
       console.log("image", image);
       console.log("patient", patients);
+      setPatient({
+        firstName: "",
+        lastName: "",
+        dob: "",
+        gender: "",
+        contact: "",
+        email: "",
+        weight: "",
+        height: "",
+        pincode: "",
+        state: "",
+        city: "",
+        street: "",
+        gurdianName: "",
+        gurdianRelation: "",
+        gurdianContact: "",
+        emergencyName: "",
+        emergencyrelation: "",
+        emergencyContact: "",
+        allergyName: "",
+        medicineName: "",
+      });
     }
   };
+
+
 
   return (
     <>
@@ -413,7 +441,7 @@ const AddPatients = (props) => {
               </Container>
             </div>
             {pregancyError && <p className="text-danger">{pregancyError}</p>}
-            {patients.gender.includes("Female") && (
+            {patients.gender && patients.gender.includes("Female") && (
               <div className="emergency__details__inputs ">
                 <p className="mt-3">Pregnancy Details</p>
                 <hr />
@@ -431,8 +459,8 @@ const AddPatients = (props) => {
                         onChange={(e) => handlePregnancy(e)}
                       >
                         <option value="">Choose</option>
-                        <option value="Yes">Yes</option>
-                        <option value="No">No</option>
+                        <option value={true}>Yes</option>
+                        <option value={false}>No</option>
                       </Form.Select>
                     </FloatingLabel>
                   </Col>
@@ -440,7 +468,7 @@ const AddPatients = (props) => {
               </div>
             )}
 
-            {age < 18 ? (
+            {age < 18 && (
               <div className="Gurdian__details__inputs ">
                 <p className="mt-3">Gurdian Details</p>
                 <hr />
@@ -492,8 +520,6 @@ const AddPatients = (props) => {
                   </Col>
                 </Row>
               </div>
-            ) : (
-              ""
             )}
 
             <div className="emergency__details__inputs ">
