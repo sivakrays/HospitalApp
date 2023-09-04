@@ -159,7 +159,7 @@ const Stock = (props) => {
                     <tr key={item.id}>
                       <td>{item.id}</td>
                       <td>{item.medicineName}</td>
-                      <td>{item.expiryDate}</td>
+                      <td>{item.expiryDate.slice(0,10)}</td>
                       <td>{item.stockQty}</td>
                     </tr>
                   ))

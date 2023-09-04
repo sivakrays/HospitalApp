@@ -6,13 +6,32 @@ import Form from "react-bootstrap/Form";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import accessDenied from "../../../Assets/Access_Denied.svg";
-import { get } from "../../../ApiCalls/ApiCalls";
+import { get, put } from "../../../ApiCalls/ApiCalls";
+import { useParams } from "react-router-dom";
 
 const AddUser = (props) => {
-  const [role, setRole] = useState([]);
-  const [register, setRegister] = useState({});
+  const { id } = useParams();
 
-  console.log(register)
+  const [staffData, setStaffData] = useState("");
+
+  const [register, setRegister] = useState({});
+  const [role, setRole] = useState([]);
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [userName, setUserName] = useState("");
+  const [dob, setdob] = useState("");
+  const [gender, setGender] = useState("");
+  const [contact, setContact] = useState("");
+  const [email, setEmail] = useState("");
+  const [pincode, setPincode] = useState("");
+  const [state, setState] = useState("");
+  const [city, setCity] = useState("");
+  const [houseNo, setHouseNo] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [primaryRole, setPrimaryRole] = useState("");
+
+  // console.log(register);
 
   const resetForm = () => {
     setRegister({
@@ -35,14 +54,36 @@ const AddUser = (props) => {
     setRole([]);
   };
 
+  useEffect(() => {
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    };
+
+    get(`/userId?userId=${id}`, config).then((res) => {
+      setStaffData(res.data);
+      setFirstName(res.data.firstName);
+      setLastName(res.data.lastName);
+      setUserName(res.data.userName);
+      setdob(res.data.dob);
+      setGender(res.data.gender);
+      setContact(res.data.contact);
+      setEmail(res.data.email);
+      setPincode(res.data.pincode);
+      setState(res.data.state);
+      setCity(res.data.city);
+      setHouseNo(res.data.houseNo);
+      setPassword(res.data.password);
+      setConfirmPassword(res.data.confirmPassword);
+      setPrimaryRole(res.data.primaryRole);
+      setRole(res.data.roles);
+    });
+  }, []);
+
   const [checkboxError, setCheckboxError] = useState(false);
   const [passwordMismatch, setPasswordMismatch] = useState(false);
 
-  function handle(e) {
-    const newdata = { ...register };
-    newdata[e.target.name] = e.target.value;
-    setRegister(newdata);
-  }
 
   // Handle the Role
 
@@ -59,36 +100,52 @@ const AddUser = (props) => {
 
   // Api Call
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const config = {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      };
-
-      get(`/getUser`, config).then((res) => {
-        setRegister(res.data);
-      });
+  const handleStaffsDetails = () => {
+    const data = {
+      userId: id,
+      firstName: firstName,
+      lastName: lastName,
+      userName: userName,
+      dob: dob,
+      gender: gender,
+      houseNo: houseNo,
+      contact: contact,
+      city: city,
+      state: state,
+      pincode: pincode,
+      email: email,
+      password: password,
+      confirmPassword: confirmPassword,
+      primaryRole: primaryRole,
+      roles: role,
     };
 
-    fetchData();
-  }, []);
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    };
+
+    put("/updateUser", data, config).then((res) => {
+      console.log("Result", res);
+    });
+  };
 
   // Submit Function
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (register.password !== register.confirmPassword) {
+    if (password !== confirmPassword) {
       setPasswordMismatch(true);
       return;
     } else if (role.length === 0) {
       setCheckboxError(true);
       return;
     } else {
+      handleStaffsDetails()
       setCheckboxError(false);
       setPasswordMismatch(false);
-      resetForm();
+      // resetForm();
       console.log("User register", register);
     }
   };
@@ -121,8 +178,8 @@ const AddUser = (props) => {
                     type="text"
                     placeholder="FirstName"
                     name="firstName"
-                    onChange={(e) => handle(e)}
-                    value={register.firstName}
+                    onChange={(e) => setFirstName(e.target.value)}
+                    value={firstName}
                     required
                   />
                 </FloatingLabel>
@@ -133,8 +190,8 @@ const AddUser = (props) => {
                     type="text"
                     placeholder="LastName"
                     name="lastName"
-                    onChange={(e) => handle(e)}
-                    value={register.lastName}
+                    onChange={(e) => setLastName(e.target.value)}
+                    value={lastName}
                     required
                   />
                 </FloatingLabel>
@@ -154,8 +211,8 @@ const AddUser = (props) => {
                     type="text"
                     placeholder="UserName"
                     name="userName"
-                    onChange={(e) => handle(e)}
-                    value={register.userName}
+                    onChange={(e) => setUserName(e.target.value)}
+                    value={userName}
                     required
                   />
                 </FloatingLabel>
@@ -166,8 +223,8 @@ const AddUser = (props) => {
                     type="text"
                     placeholder="Contact"
                     name="contact"
-                    onChange={(e) => handle(e)}
-                    value={register.contact}
+                    onChange={(e) => setContact(e.target.value)}
+                    value={contact}
                     required
                   />
                 </FloatingLabel>
@@ -187,8 +244,8 @@ const AddUser = (props) => {
                     type="text"
                     placeholder="Pincode"
                     name="pincode"
-                    onChange={(e) => handle(e)}
-                    value={register.pincode}
+                    onChange={(e) => setPincode(e.target.value)}
+                    value={pincode}
                     required
                   />
                 </FloatingLabel>
@@ -199,8 +256,8 @@ const AddUser = (props) => {
                     type="text"
                     placeholder="State"
                     name="state"
-                    onChange={(e) => handle(e)}
-                    value={register.state}
+                    onChange={(e) => setState(e.target.value)}
+                    value={state}
                     required
                   />
                 </FloatingLabel>
@@ -216,8 +273,8 @@ const AddUser = (props) => {
                     type="text"
                     placeholder="City"
                     name="city"
-                    onChange={(e) => handle(e)}
-                    value={register.city}
+                    onChange={(e) => setCity(e.target.value)}
+                    value={city}
                     required
                   />
                 </FloatingLabel>
@@ -227,9 +284,9 @@ const AddUser = (props) => {
                   <Form.Control
                     type="text"
                     placeholder="House no and Street"
-                    name="street"
-                    onChange={(e) => handle(e)}
-                    value={register.street}
+                    name="houseNo"
+                    onChange={(e) => setHouseNo(e.target.value)}
+                    value={houseNo}
                     required
                   />
                 </FloatingLabel>
@@ -249,8 +306,8 @@ const AddUser = (props) => {
                     type="email"
                     placeholder="name@example.com"
                     name="email"
-                    onChange={(e) => handle(e)}
-                    value={register.email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    value={email}
                     required
                   />
                 </FloatingLabel>
@@ -260,8 +317,8 @@ const AddUser = (props) => {
                   <Form.Select
                     aria-label="Floating label select example"
                     name="gender"
-                    onChange={(e) => handle(e)}
-                    value={register.gender}
+                    onChange={(e) => setGender(e.target.value)}
+                    value={gender}
                     required
                   >
                     <option value="">Select The Gender</option>
@@ -289,8 +346,8 @@ const AddUser = (props) => {
                     type="password"
                     placeholder="Password"
                     name="password"
-                    onChange={(e) => handle(e)}
-                    value={register.password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    value={password}
                     required
                   />
                 </FloatingLabel>
@@ -301,8 +358,8 @@ const AddUser = (props) => {
                     type="password"
                     placeholder="Confirm Password"
                     name="confirmPassword"
-                    onChange={(e) => handle(e)}
-                    value={register.confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    value={confirmPassword}
                     required
                   />
                 </FloatingLabel>
@@ -310,7 +367,6 @@ const AddUser = (props) => {
             </Row>
 
             {/* DOB and Role field*/}
-
             <Row className="mt-md">
               <Col md={6}>
                 <FloatingLabel
@@ -322,8 +378,8 @@ const AddUser = (props) => {
                     type="date"
                     placeholder="Date of Birth"
                     name="dob"
-                    onChange={(e) => handle(e)}
-                    value={register.dob}
+                    onChange={(e) => setdob(e.target.value)}
+                    value={dob.slice(0, 10)}
                     max={new Date().toISOString().split("T")[0]}
                     required
                   />
@@ -392,8 +448,8 @@ const AddUser = (props) => {
                     <Form.Select
                       aria-label="Floating label select example"
                       name="primaryRole"
-                      onChange={(e) => handle(e)}
-                      value={register.primaryRole}
+                      onChange={(e) => setPrimaryRole(e.target.value)}
+                      value={primaryRole}
                       required
                     >
                       <option value="">Select The Primary Role</option>

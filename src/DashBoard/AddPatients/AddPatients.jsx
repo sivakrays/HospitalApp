@@ -11,7 +11,6 @@ const AddPatients = (props) => {
   const [image, setImage] = useState("");
   const webcamRef = React.useRef(null);
   const [pregnancy, setPregancy] = useState();
-
   const [age, setAge] = useState(0);
   const [imageError, setImageError] = useState("");
   const [pregancyError, setPregnancyError] = useState("");
@@ -170,6 +169,8 @@ const AddPatients = (props) => {
       });
     }
   };
+
+  console.log('patientss dooobbbb : ', patients.dob);
 
 
 

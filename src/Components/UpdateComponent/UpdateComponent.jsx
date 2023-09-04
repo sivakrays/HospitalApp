@@ -3,12 +3,14 @@ import "../../Utility/Utility.css";
 import SearchBox from "../SearchBox/SearchBox";
 import { Button, Modal, Table } from "react-bootstrap";
 import axios from "axios";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { FaTrashCan } from "react-icons/fa6";
 import { FaEdit } from "react-icons/fa";
 import { get } from "../../ApiCalls/ApiCalls";
 
 const Lab = (props) => {
+  const navigate = useNavigate();
+
   const [medical, setMedicalData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [search, setSearch] = useState("");
@@ -19,20 +21,36 @@ const Lab = (props) => {
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
+  const [staffData, setStaffData] = useState();
+
   useEffect(() => {
-    const fetchData = async () => {
-      const config = {
-        headers: {
-          "Content-Type": "application/json",
-        },
+    if (props.path === "StaffsUpdate") {
+      const fetchData1 = async () => {
+        const config = {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        };
+
+        get(`/getUser`, config).then((res) => {
+          setMedicalData(res.data);
+        });
       };
+      fetchData1();
+    } else if (props.path === "PatientUpdate") {
+      const fetchData2 = async () => {
+        const config = {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        };
 
-      get("/patients", config).then((res) => {
-        setMedicalData(res.data);
-      });
-    };
-
-    fetchData();
+        get("/patients", config).then((res) => {
+          setMedicalData(res.data);
+        });
+      };
+      fetchData2();
+    }
   }, []);
 
   // Search Based on the Search Box Input
@@ -46,10 +64,11 @@ const Lab = (props) => {
     setSearch(data);
   };
 
-  const filteredMedical = medical.filter(
-    (item) =>
-      item.mrnNo.toString().includes(search) ||
-      item.PatientName.toLowerCase().includes(search.toLowerCase())
+  const filteredMedical = medical.filter((item) =>
+    props.path === "StaffsUpdate"
+      ? item.userId.toString().includes(search)
+      : item.mrnNo.toString().includes(search) ||
+        item.PatientName.toLowerCase().includes(search.toLowerCase())
   );
 
   // Page Pagination
@@ -130,7 +149,6 @@ const Lab = (props) => {
           </ul>
           <p>Total Records: {getTotalRecords()}</p>
         </div>
-        {/* <hr /> */}
         <div className="table-responsive">
           <center>
             <Table className="table w-75" striped bordered hover>
@@ -157,18 +175,24 @@ const Lab = (props) => {
                     </td>
                   </tr>
                 ) : (
-                  sortedRecords.map((item) => (
-                    <tr key={item.mrnNo}>
-                      <td>{item.mrnNo}</td>
-                      <td>{item.PatientName}</td>
+                  sortedRecords.map((item, index) => (
+                    <tr key={index}>
+                      <td>
+                        {item.mrnNo} {item.userId}
+                      </td>
+                      <td>
+                        {item.PatientName} {item.userName}
+                      </td>
                       <td>
                         <Link
-                          to={`/${props.path}/${item.mrnNo}`}
+                          to={`/${props.path}/${item.mrnNo || item.userId}`}
                           className="btn btn-primary"
                         >
                           Update
                           <FaEdit />
                         </Link>
+
+                       
 
                         <div
                           className="btn btn-danger mx-lg-3"

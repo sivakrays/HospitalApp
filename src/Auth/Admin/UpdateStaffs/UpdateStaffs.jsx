@@ -1,14 +1,16 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import UpdateComponent from "../../../Components/UpdateComponent/UpdateComponent";
 import accessDenied from "../../../Assets/Access_Denied.svg";
 
-
 const UpdateStaffs = (props) => {
+
+
+
   return (
     <>
       {props.role.includes("Admin") ? (
         <div>
-          <UpdateComponent path="StaffsUpdate" />
+          <UpdateComponent path="StaffsUpdate"/>
         </div>
       ) : (
         <div className="accessDenied">

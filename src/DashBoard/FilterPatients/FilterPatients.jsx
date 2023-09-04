@@ -9,12 +9,13 @@ import { get } from "../../ApiCalls/ApiCalls";
 import Loader from "../../Components/Loader/Loader";
 
 const FilterPatients = (props) => {
-  const [data, setData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [search, setSearch] = useState("");
-  const [age, setAge] = useState("");
+  const [data, setData] = useState([]);
   const [ageError, setageError] = useState("");
 
+  const [age, setAge] = useState("");
+  const [gender, setGender] = useState("");
   const [date, setDate] = useState("");
 
   useEffect(() => {
@@ -91,6 +92,32 @@ const FilterPatients = (props) => {
     }
   };
 
+  // Api Calls
+  useEffect(() => {
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    };
+    if (age !== "") {
+      get(`filter?age=${age}`, config).then((res) => {
+        console.log(res.data);
+      });
+    }
+    else if (gender !== "") {
+      get(`filter?gender=${gender}`, config).then((res) => {
+        console.log(res.data);
+      });
+    }
+  }, [age]);
+
+  console.log(gender)
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    // handleFilter();
+  };
+
   return (
     <>
       {props.role.includes("Admin") ? (
@@ -99,86 +126,94 @@ const FilterPatients = (props) => {
             <div className="patient__search">
               <SearchBox search={search} handleSearch={handleSearch} />
 
-              <div className="filter  mt-5">
-                <Container>
-                  <Row>
-                    <Col md={2}>
-                      <FloatingLabel
-                        controlId="floatingInput"
-                        label="Date"
-                        className="mb-3"
-                      >
-                        <Form.Control
-                          type="date"
-                          placeholder="date"
-                          name="date"
-                          className="date__field"
-                          value={date}
-                          onChange={(e) => setDate(e.target.value)}
-                          required
-                        />
-                      </FloatingLabel>
-                    </Col>
-                    <Col md={2}>
-                      <FloatingLabel controlId="gender" label="Gender">
-                        <Form.Select
-                          aria-label="Floating label select example"
-                          name="gender"
-                          required
-                          className="mb-2"
+              <form onSubmit={(e) => handleSubmit(e)}>
+                <div className="filter  mt-5">
+                  <Container>
+                    <Row>
+                      <Col md={2}>
+                        <FloatingLabel
+                          controlId="floatingInput"
+                          label="Date"
+                          className="mb-3"
                         >
-                          <option value="">Select The Gender</option>
-                          <option value="Male">Male</option>
-                          <option value="Female">Female</option>
-                          <option value="Others">Others</option>
-                        </Form.Select>
-                        <Form.Control.Feedback type="invalid">
-                          Please select a Gender.
-                        </Form.Control.Feedback>
-                      </FloatingLabel>
-                    </Col>
-                    <Col md={2}>
-                      <FloatingLabel
-                        controlId="floatingInput"
-                        label="Age"
-                        className="mb-3"
-                      >
-                        <Form.Control
-                          type="number"
-                          placeholder="FirstName"
-                          name="firstName"
-                          required
-                          onChange={(e) => handleageValidation(e)}
-                          min="1"
-                          max="120"
+                          <Form.Control
+                            type="date"
+                            placeholder="date"
+                            name="date"
+                            className="date__field"
+                            value={date}
+                            onChange={(e) => setDate(e.target.value)}
+                            required
+                          />
+                        </FloatingLabel>
+                      </Col>
+                      <Col md={2}>
+                        <FloatingLabel controlId="gender" label="Gender">
+                          <Form.Select
+                            aria-label="Floating label select example"
+                            name="gender"
+                            required
+                            className="mb-2"
+                            onChange={(e)=> setGender(e.target.value)}
+                          >
+                            <option value="">Select The Gender</option>
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                            <option value="Others">Others</option>
+                          </Form.Select>
+                          <Form.Control.Feedback type="invalid">
+                            Please select a Gender.
+                          </Form.Control.Feedback>
+                        </FloatingLabel>
+                      </Col>
+                      <Col md={2}>
+                        <FloatingLabel
+                          controlId="floatingInput"
+                          label="Age"
+                          className="mb-3"
+                        >
+                          <Form.Control
+                            type="number"
+                            placeholder="FirstName"
+                            name="firstName"
+                            required
+                            onChange={(e) => handleageValidation(e)}
+                            min="1"
+                            max="120"
+                          />
+                        </FloatingLabel>
+                      </Col>
+                      <Col md={2}>
+                        <FloatingLabel
+                          controlId="floatingInput"
+                          label="State"
+                          className="mb-3"
+                        >
+                          <Form.Control
+                            type="search"
+                            placeholder="FirstName"
+                            name="firstName"
+                            required
+                          />
+                        </FloatingLabel>
+                      </Col>
+                      <Col md={2}>
+                        <Form.Check
+                          type="checkbox"
+                          label="Pregnancy"
+                          name="pregnancy"
+                          style={{ marginRight: "10px", marginTop: "1rem" }}
                         />
-                      </FloatingLabel>
-                    </Col>
-                    <Col md={2}>
-                      <FloatingLabel
-                        controlId="floatingInput"
-                        label="State"
-                        className="mb-3"
-                      >
-                        <Form.Control
-                          type="search"
-                          placeholder="FirstName"
-                          name="firstName"
-                          required
-                        />
-                      </FloatingLabel>
-                    </Col>
-                    <Col md={2}>
-                      <Form.Check
-                        type="checkbox"
-                        label="Pregnancy"
-                        name="pregnancy"
-                        style={{ marginRight: "10px", marginTop: "1rem" }}
-                      />
-                    </Col>
-                  </Row>
-                </Container>
-              </div>
+                      </Col>
+                    </Row>
+                    {/* <input
+                      type="submit"
+                      value="Filter"
+                      className="btn btn-primary"
+                    /> */}
+                  </Container>
+                </div>
+              </form>
               {ageError && (
                 <p className="text-danger" style={{ marginLeft: "5rem" }}>
                   {ageError}
