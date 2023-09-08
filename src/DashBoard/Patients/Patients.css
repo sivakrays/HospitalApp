@@ -1,10 +1,6 @@
-/* .patients{
-    width: 110% !important;
-} */
-
 .patients__view{
     display: flex;
-    gap: 20px;
+    gap: 10px;
     justify-content: center;
     align-items: center;
     margin: 0 3rem;

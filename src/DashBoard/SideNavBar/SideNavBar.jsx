@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import {
   FaBars,
   FaBriefcaseMedical,
@@ -18,151 +18,192 @@ import {
 } from "react-icons/fa6";
 import "./SideNavBar.css";
 import "../../Utility/Utility.css";
-import { NavLink, Link, Outlet } from "react-router-dom";
+import { NavLink, Link, Outlet, useNavigate } from "react-router-dom";
+import { AuthContext } from "../../Context/authContext";
 
 const SideNavBar = (props) => {
+  const { currentUser, logout } = useContext(AuthContext);
+
   const [isOpen, setIsOpen] = useState(false);
-  const [SettingClicked, setSettingClick] = useState(false)
+  const [SettingClicked, setSettingClick] = useState(false);
   const toggle = () => setIsOpen(!isOpen);
   const menuItem = [];
 
   // Conditional Based Routing
 
+  {
+    props.role.includes("Doctor") &&
+      menuItem.push(
+        {
+          path: "/DoctorView",
+          name: "Doctor",
+          icon: <FaUserDoctor />,
+        },
+        {
+          path: "/patients",
+          name: "Patients",
+          icon: <FaBed />,
+        },
+        {
+          path: "/reports",
+          name: "Reports",
+          icon: <FaFileMedical />,
+        },
+        {
+          path: "/filterPatients",
+          name: "FilterPatients",
+          icon: <FaUsers />,
+        },
+      );
+  }
+  {
+    props.role.includes("Receptionist") &&
+      menuItem.push(
+        {
+          path: "/addpatients",
+          name: "AddPatients",
+          icon: <FaHospitalUser />,
+        },
+        {
+          path: "/appointment",
+          name: "Appointment",
+          icon: <FaCalendarDays />,
+        },
+        {
+          path: "/filterPatients",
+          name: "FilterPatients",
+          icon: <FaUsers />,
+        }
+      );
+  }
+  {
+    props.role.includes("Nurse") &&
+      menuItem.push(
+        {
+          path: "/billing",
+          name: "Billing",
+          icon: <FaFileInvoice />,
+        },
+        {
+          path: "/filterPatients",
+          name: "FilterPatients",
+          icon: <FaUsers />,
+        }
+      );
+  }
+  {
+    props.role.includes("Laboratory") &&
+      menuItem.push(
+        {
+          path: "/lab",
+          name: "Lab",
+          icon: <FaVialCircleCheck />,
+        },
+        {
+          path: "/filterPatients",
+          name: "FilterPatients",
+          icon: <FaUsers />,
+        }
+      );
+  }
 
-  {props.role.includes("Doctor") &&
-    menuItem.push(
-      {
-        path: "/DoctorView",
-        name: "Doctor",
-        icon: <FaUserDoctor />,
-      },
-      {
-        path: "/patients",
-        name: "Patients",
-        icon: <FaBed />,
-      },
-      {
-        path: "/reports",
-        name: "Reports",
-        icon: <FaFileMedical />,
-      }
-    );
-  } 
- { props.role.includes("Receptionist") &&
-    menuItem.push(
-      {
-        path: "/addpatients",
-        name: "AddPatients",
-        icon: <FaHospitalUser />,
-      },
-      {
-        path: "/appointment",
-        name: "Appointment",
-        icon: <FaCalendarDays />,
-      }
-    );
-  }
-  {props.role.includes("Nurse") &&
-    menuItem.push({
-      path: "/billing",
-      name: "Billing",
-      icon: <FaFileInvoice />,
-    });
-  } 
-  {props.role.includes("Laboratory") &&
-    menuItem.push(
-      {
-        path: "/lab",
-        name: "Lab",
-        icon: <FaVialCircleCheck />,
-      },
-      {
-        path: "/filterPatients",
-        name: "FilterPatients",
-        icon: <FaUsers />,
-      }
-    );
-  }
-  
-  {props.role.includes("Medical") &&
-    menuItem.push(
-      {
-        path: "/medical",
-        name: "Medical",
-        icon: <FaBriefcaseMedical />,
-      },
-      {
-        path: "/billing",
-        name: "Billing",
-        icon: <FaFileInvoice />,
-      },
-      {
-        path: "/filterPatients",
-        name: "FilterPatients",
-        icon: <FaUsers />,
-      }
-    );
+  {
+    props.role.includes("Medical") &&
+      menuItem.push(
+        {
+          path: "/medical",
+          name: "Medical",
+          icon: <FaBriefcaseMedical />,
+        },
+        {
+          path: "/billing",
+          name: "Billing",
+          icon: <FaFileInvoice />,
+        },
+        {
+          path: "/filterPatients",
+          name: "FilterPatients",
+          icon: <FaUsers />,
+        }
+      );
   }
 
-    {props.role.includes("Admin") &&
-    menuItem.push(
-      {
-        path: "/DoctorView",
-        name: "Doctor",
-        icon: <FaUserDoctor />,
-      },
-      {
-        path: "/addpatients",
-        name: "AddPatients",
-        icon: <FaHospitalUser />,
-      },
-      {
-        path: "/appointment",
-        name: "Appointment",
-        icon: <FaCalendarDays />,
-      },
-      {
-        path: "/patients",
-        name: "Patients",
-        icon: <FaBed />,
-      },
-      {
-        path: "/adduser",
-        name: "AddUser",
-        icon: <FaUserPlus />,
-      },
-      {
-        path: "/filterPatients",
-        name: "FilterPatients",
-        icon: <FaUsers />,
-      },
-      {
-        path: "/medical",
-        name: "Medical",
-        icon: <FaBriefcaseMedical />,
-      },
-      {
-        path: "/lab",
-        name: "Lab",
-        icon: <FaVialCircleCheck />,
-      },
-      {
-        path: "/reports",
-        name: "Reports",
-        icon: <FaFileMedical />,
-      },
-      {
-        path: "/billing",
-        name: "Billing",
-        icon: <FaFileInvoice />,
-      },
-      {
-        path: "/Admin",
-        name: "Admin",
-        icon: <FaUserLock />,
+  {
+    props.role.includes("Admin") &&
+      menuItem.push(
+        {
+          path: "/DoctorView",
+          name: "Doctor",
+          icon: <FaUserDoctor />,
+        },
+        {
+          path: "/addpatients",
+          name: "AddPatients",
+          icon: <FaHospitalUser />,
+        },
+        {
+          path: "/appointment",
+          name: "Appointment",
+          icon: <FaCalendarDays />,
+        },
+        {
+          path: "/patients",
+          name: "Patients",
+          icon: <FaBed />,
+        },
+        {
+          path: "/adduser",
+          name: "AddUser",
+          icon: <FaUserPlus />,
+        },
+        {
+          path: "/filterPatients",
+          name: "FilterPatients",
+          icon: <FaUsers />,
+        },
+        {
+          path: "/medical",
+          name: "Medical",
+          icon: <FaBriefcaseMedical />,
+        },
+        {
+          path: "/lab",
+          name: "Lab",
+          icon: <FaVialCircleCheck />,
+        },
+        {
+          path: "/reports",
+          name: "Reports",
+          icon: <FaFileMedical />,
+        },
+        {
+          path: "/billing",
+          name: "Billing",
+          icon: <FaFileInvoice />,
+        },
+        {
+          path: "/Admin",
+          name: "Admin",
+          icon: <FaUserLock />,
+        }
+      );
+  }
+
+  function removeDuplicates(arr) {
+    const uniqueItems = [];
+    const seenNames = new Set();
+
+    for (const item of arr) {
+      if (!seenNames.has(item.name)) {
+        uniqueItems.push(item);
+        seenNames.add(item.name);
       }
-    );
-  } 
+    }
+
+    return uniqueItems;
+  }
+
+  const uniqueMenuItem = removeDuplicates(menuItem);
 
   const closeSidebar = () => {
     if (isOpen) {
@@ -170,10 +211,21 @@ const SideNavBar = (props) => {
     }
   };
 
-  const handleSettings = ()=>{
-    setSettingClick(true)
-    console.log(SettingClicked)
-  }
+  const handleSettings = () => {
+    setSettingClick(true);
+    console.log(SettingClicked);
+  };
+
+  const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    try {
+      await logout();
+      navigate("/");
+    } catch (e) {
+      console.log(e);
+    }
+  };
 
   return (
     <div className="sideNav" style={{ position: "relative", height: "100vh" }}>
@@ -195,20 +247,16 @@ const SideNavBar = (props) => {
         </div>
         <div className="d-flex justify-content-lg-center align-items-center justify-content-center onlymobile">
           <FaBell className="m-3 text-white" style={{ cursor: "pointer" }} />
-          <h6 className="text-white text-uppercase mt-2">USER: Manoj</h6>
+          <h6 className="text-white text-uppercase mt-2">
+            USER: {currentUser.userName}
+          </h6>
           <Link to={"/"}>
-            <button className="btn btn-primary m-4">Logout</button>
+            <button className="btn btn-primary m-4" onClick={handleLogout}>
+              Logout
+            </button>
           </Link>
         </div>
       </div>
-
-      {/* <div className="settingIconContent shadow rounded " style={{display:SettingClicked  ? "block" : 'none'}}>
-        <FaBell className="m-3 text-dark" style={{ cursor: "pointer" }} />
-        <h6 className="text-dark text-uppercase mt-2">USER: Manoj</h6>
-        <Link to={"/"}>
-          <button className="btn btn-primary m-4">Logout</button>
-        </Link>
-      </div> */}
 
       <div
         className="sidebar"
@@ -242,38 +290,32 @@ const SideNavBar = (props) => {
             )}
           </div>
         </div>
-        {menuItem.map((item, index) => (
-          <NavLink
-            to={item.path}
-            key={index}
-            className="link "
-            activeclassname="active"
-            style={{ textDecoration: "none" }}
-          >
-            <div
-              className="icon"
-              style={{ margin: !isOpen ? "0rem -0.2rem" : "" }}
-              data-toggle="tooltip"
-              title={item.name}
+        {uniqueMenuItem &&
+          uniqueMenuItem.map((item, index) => (
+            <NavLink
+              to={item.path}
+              key={index}
+              className="link "
+              activeclassname="active"
+              style={{ textDecoration: "none" }}
             >
-              {item.icon}
-            </div>
-            <div
-              className="link__text"
-              style={{ display: isOpen ? "block" : "none" }}
-            >
-              {item.name}
-            </div>
-          </NavLink>
-        ))}
+              <div
+                className="icon"
+                style={{ margin: !isOpen ? "0rem -0.2rem" : "" }}
+                data-toggle="tooltip"
+                title={item.name}
+              >
+                {item.icon}
+              </div>
+              <div
+                className="link__text"
+                style={{ display: isOpen ? "block" : "none" }}
+              >
+                {item.name}
+              </div>
+            </NavLink>
+          ))}
       </div>
-      {/* <main
-        style={{ zIndex: 1, backdropFilter: isOpen ? "darken" : "" }}
-        onClick={closeSidebar}
-      >
-        {children}
-      </main> */}
-
       <main onClick={closeSidebar}>
         <Outlet />
       </main>

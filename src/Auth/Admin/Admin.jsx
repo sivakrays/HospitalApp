@@ -14,18 +14,17 @@ const AdminPanel = (props) => {
       path: "/UpdatePatient",
     },
     {
-      title: "Appointment Scheduling",
-      text1: "Schedule and manage appointments.",
-      text2: "Todays Appointments: 150",
-      path: "/UpdateAppointment",
-    },
-    {
       title: "Staff Management",
       text1: "Manage hospital staff and their roles.",
       text2: "Total Staffs Records: 34",
       path: "/UpdateStaffs",
     },
-
+    {
+      title: "Appointment Scheduling",
+      text1: "Schedule and manage appointments.",
+      text2: "Todays Appointments: 150",
+      path: "/UpdateAppointment",
+    },
     {
       title: "Filter the Patient Details",
       text1: "Manage hospital staff and their roles.",

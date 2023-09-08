@@ -53,7 +53,6 @@ const AddPatients = (props) => {
     const ageCalculation = date - birthYear;
     setAge(ageCalculation);
   }, [patients.dob]);
-  // console.log(new Date().getFullYear() - birthYear);
 
   function handle(e) {
     const newPatient = { ...patients };
@@ -170,13 +169,11 @@ const AddPatients = (props) => {
     }
   };
 
-  console.log('patientss dooobbbb : ', patients.dob);
-
 
 
   return (
     <>
-      {props.role.includes("Admin") ? (
+      {props.role.includes("Admin") || props.role.includes("Receptionist") ? (
         <section className="addPatients mt">
           <form
             className="add__patient__form shadow "

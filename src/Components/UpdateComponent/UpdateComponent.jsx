@@ -1,17 +1,18 @@
 import React, { useEffect, useState } from "react";
 import "../../Utility/Utility.css";
+import "./UpdateComponent.css";
 import SearchBox from "../SearchBox/SearchBox";
 import { Button, Modal, Table } from "react-bootstrap";
-import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import { FaTrashCan } from "react-icons/fa6";
 import { FaEdit } from "react-icons/fa";
 import { get } from "../../ApiCalls/ApiCalls";
+import DeleteModal from "../DeleteModal/DeleteModal";
 
 const Lab = (props) => {
   const navigate = useNavigate();
 
-  const [medical, setMedicalData] = useState([]);
+  const [data, setData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [search, setSearch] = useState("");
   const recordPerPage = 10;
@@ -19,35 +20,54 @@ const Lab = (props) => {
 
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
 
-  const [staffData, setStaffData] = useState();
+  const [patientFields, setPatientFields] = useState(false);
+  const [patientData, setPatientData] = useState({})
+  const [staffFields, setStaffFields] = useState(false);
+  const [staffData, setStaffData] = useState({})
+  
+  const config = {
+    headers: {
+      "Content-Type": "application/json",
+    },
+  };
+
+  useEffect(() => {
+    if (props.path === "StaffsUpdate") {
+      setStaffFields(true);
+    } else if (props.path === "PatientUpdate") {
+      setPatientFields(true);
+    }
+  }, [props.path]);
+
+  const handleShow = (id) => {
+    setShow(true);
+    console.log(id);
+
+    if (staffFields === true) {
+      get(`/userId?userId=${id}`, config).then((res) => {
+        setStaffData(res.data);
+      });
+    } else if (patientFields === true) {
+      get(`/mrnNo?mrnNo=${id}`, config).then((res) => {
+        setPatientData(res.data);
+      });
+    }
+  };
 
   useEffect(() => {
     if (props.path === "StaffsUpdate") {
       const fetchData1 = async () => {
-        const config = {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        };
-
         get(`/getUser`, config).then((res) => {
-          setMedicalData(res.data);
-        });
+          setData(res.data);
+        }).catch((err)=>console.log(err))
       };
       fetchData1();
     } else if (props.path === "PatientUpdate") {
       const fetchData2 = async () => {
-        const config = {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        };
-
         get("/patients", config).then((res) => {
-          setMedicalData(res.data);
-        });
+          setData(res.data);
+        }).catch((err)=>console.log(err))
       };
       fetchData2();
     }
@@ -64,7 +84,7 @@ const Lab = (props) => {
     setSearch(data);
   };
 
-  const filteredMedical = medical.filter((item) =>
+  const filteredMedical = data.filter((item) =>
     props.path === "StaffsUpdate"
       ? item.userId.toString().includes(search)
       : item.mrnNo.toString().includes(search) ||
@@ -164,13 +184,13 @@ const Lab = (props) => {
                   </th>
                   <th>Name</th>
 
-                  <th colSpan="2">Action</th>
+                  <th>Action</th>
                 </tr>
               </thead>
               <tbody>
                 {sortedRecords.length === 0 ? (
                   <tr>
-                    <td colSpan="5" className="text-center">
+                    <td colSpan="3" className="text-center">
                       No records found.
                     </td>
                   </tr>
@@ -181,25 +201,26 @@ const Lab = (props) => {
                         {item.mrnNo} {item.userId}
                       </td>
                       <td>
-                        {item.PatientName} {item.userName}
+                        {item.patientName} {item.userName}
                       </td>
                       <td>
-                        <Link
-                          to={`/${props.path}/${item.mrnNo || item.userId}`}
-                          className="btn btn-primary"
-                        >
-                          Update
-                          <FaEdit />
-                        </Link>
-
-                       
-
-                        <div
-                          className="btn btn-danger mx-lg-3"
-                          onClick={handleShow}
-                        >
-                          Delete
-                          <FaTrashCan />
+                        <div className="d-flex actionBtn">
+                          <Link
+                            to={`/${props.path}/${item.mrnNo || item.userId}`}
+                            className="btn btn-primary"
+                          >
+                            <span className="small-screen">Update</span>
+                            <FaEdit />
+                          </Link>
+                          <div
+                            className="btn btn-danger mx-lg-3 "
+                            onClick={() =>
+                              handleShow(item.mrnNo || item.userId)
+                            }
+                          >
+                            <span className="small-screen">Delete</span>
+                            <FaTrashCan />
+                          </div>
                         </div>
                       </td>
                     </tr>
@@ -210,21 +231,7 @@ const Lab = (props) => {
           </center>
         </div>
       </div>
-      <Modal show={show} onHide={handleClose} centered>
-        <Modal.Header closeButton>
-          <Modal.Title>Are you sure?</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>You are trying to delete this user.</Modal.Body>
-        <Modal.Body>ID: Name:</Modal.Body>
-        <Modal.Footer>
-          <Button variant="danger" onClick={handleClose}>
-            Yes
-          </Button>
-          <Button variant="primary" onClick={handleClose}>
-            No
-          </Button>
-        </Modal.Footer>
-      </Modal>
+     <DeleteModal show={show} handleClose={handleClose} staffData={staffData} patientData={patientData} id={props.path=="StaffsUpdate"?staffData.userId:patientData.mrnNo} patientFields={patientFields} staffFields={staffFields}/>
     </section>
   );
 };

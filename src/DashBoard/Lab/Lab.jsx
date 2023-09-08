@@ -94,7 +94,7 @@ const Lab = (props) => {
 
   return (
     <>
-      {props.role.includes("Admin") ? (
+      {props.role.includes("Admin") || props.role.includes("Laboratory") ? (
         <section className="Lab">
           {medical.length > 0 ? (
             <>
@@ -211,7 +211,6 @@ const Lab = (props) => {
                             <th>Name</th>
                             <th>Date</th>
                             <th>Status</th>
-                            {/* <th>Action</th> */}
                           </tr>
                         </thead>
                         <tbody>
@@ -230,13 +229,6 @@ const Lab = (props) => {
                                   {new Date().toLocaleDateString("en-US")}
                                 </td>
                                 <td>Dispatched</td>
-                                {/* <td>
-                        <input
-                          type="button"
-                          value="Open"
-                          className="btn btn-secondary"
-                        />
-                      </td> */}
                               </tr>
                             ))
                           )}

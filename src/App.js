@@ -1,6 +1,6 @@
 import "./App.css";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import AddUser from "./DashBoard/AddUser/AddUser";
 import Medical from "./DashBoard/Medical/Medical";
 import SideNavBar from "./DashBoard/SideNavBar/SideNavBar";
@@ -29,91 +29,106 @@ import StaffsUpdate from "./Auth/Admin/StaffsUpdate/StaffsUpdate";
 import UpdateAppointment from "./Auth/Admin/UpdateAppointment/UpdateAppointment";
 import AppointmentUpdate from "./Auth/Admin/UpdateAppointment/AppointmentUpdate/AppointmentUpdate";
 import UpdatePerscription from "./Auth/Admin/UpdatePerscription/UpdatePerscription";
-import pageNotFound from "./Assets/404.svg"
+import pageNotFound from "./Assets/404.svg";
+import CardView from "./Components/CardView/CardView";
+import { useContext } from "react";
+import { AuthContext } from "./Context/authContext";
 
 function App() {
+
+  const {currentUser} = useContext(AuthContext)
+
+
+  const ProtectedRoute = ({children}) => {
+    if(!currentUser){
+      return <Navigate to={'/'}/>
+    }
+    return children
+  }
+
   // Doctor
   // Receptionist
   // Nurse
   // Laboratory
   // Medical
   // Admin
-
-  const role = ["Admin"];
+  const role = currentUser && currentUser.roles
+  // const role = ["Admin"];
 
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Login />} />
-        <Route element={<SideNavBar role={role} />}>
-          <Route path="/DoctorView" element={<DoctorView role={role} />} />
+        <Route path="/" element={ <Login />} />
+        <Route path="/cardView" element={<ProtectedRoute><CardView /></ProtectedRoute>} />
+        <Route element={<ProtectedRoute><SideNavBar role={role} /></ProtectedRoute>}>
+          <Route path="/DoctorView" element={<ProtectedRoute><DoctorView role={role} /></ProtectedRoute>} />
           <Route
             path="/medicinePrescription/:id"
-            element={<MedicinePrescription role={role}/>}
+            element={<ProtectedRoute><MedicinePrescription role={role} /></ProtectedRoute>}
           />
-          <Route path="/lab" element={<Lab role={role} />} />
-          <Route path="/labTest/:id" element={<LabTest role={role} />} />
-          <Route path="/stock" element={<Stock role={role} />} />
-          <Route path="/medical" element={<Medical role={role} />} />
-          <Route path="/addStock" element={<AddStock role={role} />} />
-          <Route path="/patients" element={<Patients role={role} />} />
-          <Route path="/adduser" element={<AddUser role={role} />} />
-          <Route path="/addpatients" element={<AddPatients role={role} />} />
-          <Route path="/appointment" element={<Appointment role={role} />} />
+          <Route path="/lab" element={<ProtectedRoute><Lab role={role} /></ProtectedRoute>} />
+          <Route path="/labTest/:id" element={<ProtectedRoute><LabTest role={role} /></ProtectedRoute>} />
+          <Route path="/stock" element={<ProtectedRoute><Stock role={role} /></ProtectedRoute>} />
+          <Route path="/medical" element={<ProtectedRoute><Medical role={role} /></ProtectedRoute>} />
+          <Route path="/addStock" element={<ProtectedRoute><AddStock role={role} /></ProtectedRoute>} />
+          <Route path="/patients" element={<ProtectedRoute><Patients role={role} /></ProtectedRoute>} />
+          <Route path="/adduser" element={<ProtectedRoute><AddUser role={role} /></ProtectedRoute>} />
+          <Route path="/addpatients" element={<ProtectedRoute><AddPatients role={role} /></ProtectedRoute>} />
+          <Route path="/appointment" element={<ProtectedRoute><Appointment role={role} /></ProtectedRoute>} />
           <Route
             path="/patientAppointment/:id"
-            element={<PatientAppointment role={role}/>}
+            element={<ProtectedRoute><PatientAppointment role={role} /></ProtectedRoute>}
           />
           <Route
             path="/filterPatients"
-            element={<FilterPatients role={role} />}
+            element={<ProtectedRoute><FilterPatients role={role} /></ProtectedRoute>}
           />
           <Route
             path="/PatientView/:id"
-            element={<PatientsView role={role} />}
+            element={<ProtectedRoute><PatientsView role={role} /></ProtectedRoute>}
           />
           <Route
             path="/BillingView/:id"
-            element={<BillingView role={role} />}
+            element={<ProtectedRoute> <BillingView role={role} /></ProtectedRoute>}
           />
           <Route
             path="/PatientReport/:id"
-            element={<PatientReport role={role} />}
+            element={<ProtectedRoute><PatientReport role={role} /></ProtectedRoute>}
           />
-          <Route path="/reports" element={<Report role={role} />} />
-          <Route path="/billing" element={<Billing role={role} />} />
-          <Route path="/Admin" element={<Admin role={role} />} />
+          <Route path="/reports" element={<ProtectedRoute><Report role={role} /></ProtectedRoute>} />
+          <Route path="/billing" element={<ProtectedRoute><Billing role={role} /></ProtectedRoute>} />
+          <Route path="/Admin" element={<ProtectedRoute><Admin role={role} /></ProtectedRoute>} />
           <Route
             path="/UpdatePatient"
-            element={<UpdatePatient role={role} />}
+            element={<ProtectedRoute><UpdatePatient role={role} /></ProtectedRoute>}
           />
           <Route
             path="/PatientUpdate/:id"
-            element={<PatientUpdate role={role} />}
+            element={<ProtectedRoute><PatientUpdate role={role} /></ProtectedRoute>}
           />
-          <Route path="/UpdateStaffs" element={<UpdateStaffs role={role} />} />
+          <Route path="/UpdateStaffs" element={<ProtectedRoute><UpdateStaffs role={role} /></ProtectedRoute>} />
           <Route
             path="/StaffsUpdate/:id"
-            element={<StaffsUpdate role={role} />}
+            element={<ProtectedRoute><StaffsUpdate role={role} /></ProtectedRoute>}
           />
           <Route
             path="/UpdateAppointment"
-            element={<UpdateAppointment role={role} />}
+            element={<ProtectedRoute><UpdateAppointment role={role} /></ProtectedRoute>}
           />
           <Route
             path="/AppointmentUpdate/:id"
-            element={<AppointmentUpdate role={role} />}
+            element={<ProtectedRoute><AppointmentUpdate role={role} /></ProtectedRoute>}
           />
           <Route
             path="/UpdatePerscription"
-            element={<UpdatePerscription role={role} />}
+            element={<ProtectedRoute><UpdatePerscription role={role} /></ProtectedRoute>}
           />
 
           <Route
             path="*"
             element={
               <div className="accessDenied">
-                <img src={pageNotFound} alt="PageNotFound"/>
+                <img src={pageNotFound} alt="PageNotFound" />
               </div>
             }
           />

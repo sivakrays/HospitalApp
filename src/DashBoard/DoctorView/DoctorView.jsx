@@ -143,11 +143,10 @@ const DoctorView = (props) => {
   };
 
   const height = "auto";
-  // const buttonSize ="sm";
 
   return (
     <>
-      {props.role.includes("Admin") ? (
+      {props.role.includes("Admin") || props.role.includes("Doctor")? (
         <div className="container container2 mt-5 ">
           <Fullcalendar
             plugins={[dayGridPlugin, timeGridPlugin, listPlugin]}
@@ -157,7 +156,6 @@ const DoctorView = (props) => {
             eventClick={handleEventClick}
             themeSystem="bootstrap"
             height={height}
-            // buttonSize={buttonSize}
           />
 
           {isModalOpen && selectedEvent && (

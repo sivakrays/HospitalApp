@@ -5,7 +5,8 @@ import axios from "axios";
 import { Link } from "react-router-dom";
 import accessDenied from "../../Assets/Access_Denied.svg";
 import { get } from "../../ApiCalls/ApiCalls";
-import Loader from '../../Components/Loader/Loader'
+import Loader from "../../Components/Loader/Loader";
+import CardView from "../../Components/CardView/CardView";
 
 const Patients = (props) => {
   const [data, setData] = useState([]);
@@ -82,7 +83,7 @@ const Patients = (props) => {
 
   return (
     <>
-      {props.role.includes("Admin") ? (
+      {props.role.includes("Admin") || props.role.includes("Receptionist")? (
         <section className="patients">
           {data.length > 0 ? (
             <div className="patient__search">
@@ -123,23 +124,6 @@ const Patients = (props) => {
                 <p>Total Records: {getTotalRecords()}</p>
               </div>
 
-              {/* <div class="container mt-5">
-              <div class="card" style={{ width: "18rem" }}>
-                <img
-                  src={data.photo}
-                  class="card-img-top"
-                  alt="Profile Picture"
-                />
-                <div class="card-body">
-                  <h5 class="card-title">John Doe</h5>
-                  <p class="card-text">ID: 1234567890</p>
-                  <a href="#" class="btn btn-primary">
-                    View Profile
-                  </a>
-                </div>
-              </div>
-            </div> */}
-
               <div className="patients__view g-3">
                 {currentItems.map((item) => {
                   return (
@@ -148,34 +132,12 @@ const Patients = (props) => {
                       className="text-dark"
                       key={item.mrnNo}
                     >
-                      {/* <div className="container mt-5">
-                      <div className="card" style={{ width: "18rem" }}>
-                        <img
-                          src={item.photo}
-                          className="card-img-top"
-                          alt="Profile Picture"
+                      <CardView
+                          patientName={item.patientName}
+                          mrnNo={item.mrnNo}
+                          photo={item.photo}
                         />
-                        <div className="card-body">
-                          <h5 className="card-title ">Name: <span className="text-uppercase">{item.PatientName}</span></h5>
-                          <p className="card-text">Mrn.No: {item.mrnNo}</p>
-                          <a href="#" className="btn btn-primary">
-                            View Profile
-                          </a>
-                        </div>
-                      </div>
-                    </div> */}
-                      {/* <div class="profile-card" key={item.mrnNo}>
-                      <img
-                        src={item.photo}
-                        alt="Profile Picture"
-                        class="profile-picture"
-                      />
-                      <p class="number">Mrn.No:{item.mrnNo}</p>
-                      <h1 class="name">Name:{item.PatientName}</h1>
-                      <button class="view-button">View Profile</button>
-                    </div> */}
-
-                      <div className="patients__box shadow" key={item.mrnNo}>
+                      {/* <div className="patients__box shadow" key={item.mrnNo}>
                         <img src={item.photo} alt="patient" />
                         <div className="patient__details">
                           <p>
@@ -188,7 +150,7 @@ const Patients = (props) => {
                           </p>
                           <div className="btn btn-primary">View Patient</div>
                         </div>
-                      </div>
+                      </div> */}
                     </Link>
                   );
                 })}

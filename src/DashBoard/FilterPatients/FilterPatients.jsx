@@ -7,11 +7,13 @@ import "./FilterPatients.css";
 import accessDenied from "../../Assets/Access_Denied.svg";
 import { get } from "../../ApiCalls/ApiCalls";
 import Loader from "../../Components/Loader/Loader";
+import CardView from "../../Components/CardView/CardView";
 
 const FilterPatients = (props) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [search, setSearch] = useState("");
   const [data, setData] = useState([]);
+  const [newData, setNewData] = useState("");
   const [ageError, setageError] = useState("");
 
   const [age, setAge] = useState("");
@@ -26,7 +28,7 @@ const FilterPatients = (props) => {
         },
       };
       {
-        get(`/patients`, config).then((res) => setData(res.data));
+        get(`/allPatient`, config).then((res) => setData(res.data));
       }
     };
 
@@ -50,11 +52,11 @@ const FilterPatients = (props) => {
   const filteredData = data.filter(
     (item) =>
       item.mrnNo.toString().includes(search) ||
-      item.PatientName.toLowerCase().includes(search.toLowerCase())
+      item.firstName.toLowerCase().includes(search.toLowerCase()) ||
+      item.lastName.toLowerCase().includes(search.toLocaleLowerCase())
   );
 
   const currentItems = filteredData.slice(indexOfFirstItem, indexOfLastItem);
-
   const changeCurrentPage = (newPage) => {
     setCurrentPage(newPage);
   };
@@ -99,19 +101,20 @@ const FilterPatients = (props) => {
         "Content-Type": "application/json",
       },
     };
-    if (age !== "") {
-      get(`filter?age=${age}`, config).then((res) => {
-        console.log(res.data);
-      });
+    if (age && age !== "") {
+      get(`filter?age=${age}`, config)
+        .then((res) => {
+          setData(res.data);
+        })
+        .catch((err) => console.log(err));
+    } else if (gender && gender !== "") {
+      get(`filter?gender=${gender}`, config)
+        .then((res) => {
+          setData(res.data);
+        })
+        .catch((err) => console.log(err));
     }
-    else if (gender !== "") {
-      get(`filter?gender=${gender}`, config).then((res) => {
-        console.log(res.data);
-      });
-    }
-  }, [age]);
-
-  console.log(gender)
+  }, [age && age, gender && gender]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -120,7 +123,7 @@ const FilterPatients = (props) => {
 
   return (
     <>
-      {props.role.includes("Admin") ? (
+      {props.role ? (
         <section className="patients">
           {data.length > 0 ? (
             <div className="patient__search">
@@ -154,7 +157,7 @@ const FilterPatients = (props) => {
                             name="gender"
                             required
                             className="mb-2"
-                            onChange={(e)=> setGender(e.target.value)}
+                            onChange={(e) => setGender(e.target.value)}
                           >
                             <option value="">Select The Gender</option>
                             <option value="Male">Male</option>
@@ -206,11 +209,6 @@ const FilterPatients = (props) => {
                         />
                       </Col>
                     </Row>
-                    {/* <input
-                      type="submit"
-                      value="Filter"
-                      className="btn btn-primary"
-                    /> */}
                   </Container>
                 </div>
               </form>
@@ -256,26 +254,18 @@ const FilterPatients = (props) => {
               </div>
 
               <div className="patients__view g-3">
-                {currentItems.map((item) => {
-                  return (
-                    // to={`/PatientView/${item.id}`}
-                    <Link className="text-dark" key={item.mrnNo}>
-                      <div className="patients__box shadow" key={item.mrnNo}>
-                        <img src={item.photo} alt="patient" />
-                        <div className="patient__details">
-                          <p>
-                            <b>Mrn.No:</b>
-                            {item.mrnNo}
-                          </p>
-                          <p>
-                            <b>Name:</b>
-                            {item.PatientName}
-                          </p>
-                        </div>
-                      </div>
-                    </Link>
-                  );
-                })}
+                {currentItems &&
+                  currentItems.map((item) => {
+                    return (
+                      <Link className="text-dark" key={item.mrnNo}>
+                        <CardView
+                          patientName={item.firstName + " " + item.lastName}
+                          mrnNo={item.mrnNo}
+                          photo={item.photo}
+                        />
+                      </Link>
+                    );
+                  })}
               </div>
             </div>
           ) : (

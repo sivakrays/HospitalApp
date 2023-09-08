@@ -7,6 +7,7 @@ import { Link } from "react-router-dom";
 import accessDenied from "../../Assets/Access_Denied.svg";
 import { get } from "../../ApiCalls/ApiCalls";
 import Loader from "../../Components/Loader/Loader";
+import CardView from "../../Components/CardView/CardView";
 
 const Report = (props) => {
   const [data, setData] = useState([]);
@@ -129,7 +130,12 @@ const Report = (props) => {
                       className="text-dark"
                       key={item.mrnNo}
                     >
-                      <div className="patients__box shadow" key={item.mrnNo}>
+                       <CardView
+                          patientName={item.patientName}
+                          mrnNo={item.mrnNo}
+                          photo={item.photo}
+                        />
+                      {/* <div className="patients__box shadow" key={item.mrnNo}>
                         <img src={item.photo} alt="patient" />
                         <div className="patient__details">
                           <p>
@@ -141,7 +147,7 @@ const Report = (props) => {
                             {item.PatientName}
                           </p>
                         </div>
-                      </div>
+                      </div> */}
                     </Link>
                   );
                 })}

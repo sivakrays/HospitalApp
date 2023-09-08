@@ -7,8 +7,6 @@
     background-repeat: no-repeat;
   }
   
-  
-  
   .login__form{
     top: 50%;
     left: 50%;
@@ -16,7 +14,7 @@
     position: absolute;
   
     width: 400px;
-    height: 400px;
+    /* height: 400px; */
     background-color: white;
     padding: 0 25px;
   

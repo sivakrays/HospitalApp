@@ -7,6 +7,7 @@ import { Link } from "react-router-dom";
 import accessDenied from "../../Assets/Access_Denied.svg";
 import { get } from "../../ApiCalls/ApiCalls";
 import Loader from "../../Components/Loader/Loader";
+import CardView from "../../Components/CardView/CardView";
 
 const Patients = (props) => {
   const [data, setData] = useState([]);
@@ -76,7 +77,7 @@ const Patients = (props) => {
   };
 
   // Api Calls
- 
+
   return (
     <>
       {props.role.includes("Admin") ? (
@@ -122,26 +123,18 @@ const Patients = (props) => {
 
               <div className="patients__view g-3">
                 {currentItems &&
-                  currentItems.map((item) => {
+                  currentItems.map((item, index) => {
                     return (
                       <Link
                         to={`/PatientView/${item.mrnNo}`}
                         className="text-dark"
                         key={item.mrnNo}
                       >
-                        <div className="patients__box shadow" key={item.mrnNo}>
-                          <img src={item.photo} alt="patient" />
-                          <div className="patient__details">
-                            <p>
-                              <b>Mrn.No:</b>
-                              {item.mrnNo}
-                            </p>
-                            <p>
-                              <b>Name:</b>
-                              {item.patientName}
-                            </p>
-                          </div>
-                        </div>
+                        <CardView
+                          patientName={item.patientName}
+                          mrnNo={item.mrnNo}
+                          photo={item.photo}
+                        />
                       </Link>
                     );
                   })}

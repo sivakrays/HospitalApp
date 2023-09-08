@@ -100,14 +100,9 @@ const AddPatients = (props) => {
   const [emergencyContact, setEmergencyContact] = useState("");
   const [allergyName, setAllergyName] = useState("");
   const [allergyMedicine, setAllergyMedicine] = useState("");
-  // const [allergies, setAllergies] = useState("");
-  // const [medicines, setMedicines] = useState("");
-
   const [allergy, setAllergy] = useState();
   const [medicine, setMedicine] = useState();
 
-  console.log(firstName);
-  console.log("PatientData : ", patientData);
 
   const capture = React.useCallback(() => {
     const imageSrc = webcamRef.current.getScreenshot();
@@ -124,11 +119,6 @@ const AddPatients = (props) => {
     }
   }, [patientData]);
 
-  // function handle(e) {
-  //   const newPatient = { ...patients };
-  //   newPatient[e.target.name] = e.target.value;
-  //   setPatient(newPatient);
-  // }
 
   const videoConstraints = {
     width: 220,

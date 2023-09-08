@@ -14,7 +14,52 @@ const PatientAppointment = (props) => {
   const [search, setSearch] = useState("");
   const [doctorName, setDoctorName] = useState("");
   const [doctorError, setDoctorError] = useState("");
-  const [doctorId, setDoctorId]= useState('10')
+  const [doctorId, setDoctorId] = useState("10");
+
+  // Get the current time
+
+
+
+  const getCurrentTime = () => {
+    const now = new Date();
+    const hours = now.getHours().toString().padStart(2, "0");
+    const minutes = now.getMinutes().toString().padStart(2, "0");
+    return `${hours}:${minutes}`;
+  };
+
+  const currentTimePlus30Minutes = () => {
+    const now = new Date();
+    now.setMinutes(now.getMinutes() + 30);
+    const hours = now.getHours().toString().padStart(2, "0");
+    const minutes = now.getMinutes().toString().padStart(2, "0");
+    return `${hours}:${minutes}`;
+  };
+
+  const [appointmentDate, setAppointmentDate] = useState();
+  const [startingTime, setStartingTime] = useState(getCurrentTime());
+  const [endingTime, setEndingTime] = useState(currentTimePlus30Minutes());
+  const [comments, setComments] = useState();
+  const [criticalStatus, setCriticalStatus] = useState();
+  // const [doctor, setDoctor] = useState()
+
+// console.log(getCurrentTime())
+
+  const appointmentData = {
+    doctor: doctorName,
+    startingTime: startingTime,
+    endingTime: endingTime,
+    criticalStatus: criticalStatus,
+    comments: comments,
+    appointmentDate: appointmentDate,
+  };
+
+  // console.log(doctor)
+  // console.log(doctorName);
+  // console.log(criticalStatus);
+  // console.log(startingTime);
+  // console.log(endingTime);
+  // console.log(comments);
+  // console.log(appointmentDate);
 
   // Fetch the data Based on the Id
 
@@ -44,9 +89,7 @@ const PatientAppointment = (props) => {
           },
         };
         {
-          get(`/doctor`, config).then((res) =>
-          setDoctorNameList(res.data)
-          );
+          get(`/doctor`, config).then((res) => setDoctorNameList(res.data));
         }
       }
     };
@@ -65,60 +108,44 @@ const PatientAppointment = (props) => {
       item.toLowerCase().includes(search.toLowerCase())
     );
 
-  // Get the current time
-  const getCurrentTime = () => {
-    const now = new Date();
-    const hours = now.getHours().toString().padStart(2, "0");
-    const minutes = now.getMinutes().toString().padStart(2, "0");
-    return `${hours}:${minutes}`;
-  };
-
-  const [appointmentData, setAppointmentData] = useState({
-    doctor: doctorName,
-    date: "",
-    time: getCurrentTime(),
-    appointmentComment: "",
-    criticalityStatus: "",
-  });
-
-  const handle = (e) => {
-    const newData = { ...appointmentData };
-    newData[e.target.name] = e.target.value;
-    setAppointmentData(newData);
-  };
+  // const handle = (e) => {
+  //   const newData = { ...appointmentData };
+  //   newData[e.target.name] = e.target.value;
+  //   setAppointmentData(newData);
+  // };
 
   const handleDoctorName = (e) => {
     const selectedDoctorName = e.target.innerText;
     setDoctorName(selectedDoctorName);
     setSearch("");
 
-    setAppointmentData((prevData) => ({
-      ...prevData,
-      doctor: selectedDoctorName,
-    }));
+    // setAppointmentData((prevData) => ({
+    //   ...prevData,
+    //   doctor: selectedDoctorName,
+    // }));
   };
 
   // Api Call
 
-  const handlePatientAppointment = () => {
-    const data = {
-      doctorId: doctorId,
-      doctor: doctorName,
-      date: appointmentData.date,
-      time: appointmentData.time,
-      appointmentComment: appointmentData.appointmentComment,
-      criticalityStatus: appointmentData.criticalityStatus,
-    };
-    const config = {
-      headers: {
-        Accept: "application/json",
-      },
-    };
+  // const handlePatientAppointment = () => {
+  //   const data = {
+  //     doctorId: doctorId,
+  //     doctor: doctorName,
+  //     date: appointmentData.date,
+  //     time: appointmentData.time,
+  //     appointmentComment: appointmentData.appointmentComment,
+  //     criticalityStatus: appointmentData.criticalityStatus,
+  //   };
+  //   const config = {
+  //     headers: {
+  //       Accept: "application/json",
+  //     },
+  //   };
 
-    post("/appointment", data, config).then((res) => {
-      console.log("Appointment Successfully Added", res);
-    });
-  };
+  //   post("/appointment", data, config).then((res) => {
+  //     console.log("Appointment Successfully Added", res);
+  //   });
+  // };
 
   // Submit Function
 
@@ -128,20 +155,23 @@ const PatientAppointment = (props) => {
     if (doctorName.length === 0) {
       setDoctorError("Must Have the Doctor Name");
     } else {
-      handlePatientAppointment();
+      // handlePatientAppointment();
       setDoctorError("");
       setDoctorName("");
+      // setEndingTime("");
+      setComments("");
+      // setCriticalStatus("");
       console.log("AppointMent Details", appointmentData);
-      const data = { ...appointmentData };
-      data.appointmentComment = "";
-      data.criticalityStatus = "";
-      setAppointmentData(data);
+      // const data = { ...appointmentData };
+      // data.appointmentComment = "";
+      // data.criticalityStatus = "";
+      // setAppointmentData(data);
     }
   };
 
   return (
     <>
-      {props.role.includes("Admin") ? (
+      {props.role.includes("Admin") || props.role.includes("Receptionist") ? (
         <section className="LabTest mt w-100">
           <div className="labTest__Box  p-3">
             <h3 className="text-center text-uppercase">Appointment</h3>
@@ -180,11 +210,9 @@ const PatientAppointment = (props) => {
                 <div className="doctor-list">
                   {search.length !== 0 &&
                     filteredData &&
-                    filteredData.map((doctor,index) => (
+                    filteredData.map((doctor, index) => (
                       <div key={index}>
-                        <p onClick={(e) => handleDoctorName(e)}>
-                          {doctor}
-                        </p>
+                        <p onClick={(e) => handleDoctorName(e)}>{doctor}</p>
                       </div>
                     ))}
                 </div>
@@ -201,7 +229,7 @@ const PatientAppointment = (props) => {
                       type="text"
                       placeholder="DoctorName"
                       name="DoctorName"
-                      onChange={(e) => handle(e)}
+                      onChange={(e) => setDoctorName(e.target.value)}
                       value={doctorName}
                       required
                       disabled
@@ -218,7 +246,7 @@ const PatientAppointment = (props) => {
                       type="date"
                       placeholder="date"
                       name="date"
-                      onChange={(e) => handle(e)}
+                      onChange={(e) => setAppointmentDate(e.target.value)}
                       required
                     />
                   </FloatingLabel>
@@ -226,36 +254,53 @@ const PatientAppointment = (props) => {
                 <Col md={3} className="mb-2">
                   <FloatingLabel
                     controlId="appointmentTime"
-                    label="Appointment time"
+                    label="Starting time"
                   >
                     <Form.Control
                       type="time"
                       placeholder="time"
                       name="time"
-                      defaultValue={appointmentData.time}
-                      onChange={(e) => handle(e)}
+                      defaultValue={startingTime}
+                      onChange={(e) => setStartingTime(e.target.value)}
                       required
                     />
                   </FloatingLabel>
                 </Col>
                 <Col md={3} className="mb-2">
                   <FloatingLabel
-                    controlId={`appointmentComment`}
-                    label="Purpose"
-                    className=""
+                    controlId="appointmentTime"
+                    label="Ending time"
                   >
                     <Form.Control
-                      type="text"
-                      placeholder="Comment"
-                      name="appointmentComment"
-                      value={appointmentData.appointmentComment}
-                      onChange={(e) => handle(e)}
+                      type="time"
+                      placeholder="time"
+                      name="time"
+                      defaultValue={endingTime}
+                      onChange={(e) => setEndingTime(e.target.value)}
                       required
                     />
                   </FloatingLabel>
                 </Col>
               </Row>
-
+              <Row>
+                <Col md={12} className="mb-2">
+                  <FloatingLabel
+                    controlId={`appointmentComment`}
+                    label="Purpose"
+                    className=""
+                  >
+                    <Form.Control
+                      as="textarea"
+                      rows={3}
+                      placeholder="Comment"
+                      name="comments"
+                      value={comments}
+                      onChange={(e) => setComments(e.target.value)}
+                      required
+                    />
+                  </FloatingLabel>
+                </Col>
+              </Row>
               <Row>
                 <Col md={6}>
                   <div className="d-flex check flex-wrap">
@@ -265,7 +310,7 @@ const PatientAppointment = (props) => {
                       name="criticalityStatus"
                       value="Critical"
                       style={{ marginRight: "10px" }}
-                      onChange={(e) => handle(e)}
+                      onChange={(e) => setCriticalStatus(e.target.value)}
                     />
                     <Form.Check
                       type="radio"
@@ -273,7 +318,7 @@ const PatientAppointment = (props) => {
                       name="criticalityStatus"
                       value="Normal"
                       style={{ marginRight: "10px" }}
-                      onChange={(e) => handle(e)}
+                      onChange={(e) => setCriticalStatus(e.target.value)}
                       required
                     />
                   </div>
