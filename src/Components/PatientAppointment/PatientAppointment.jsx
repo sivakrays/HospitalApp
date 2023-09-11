@@ -105,13 +105,14 @@ const PatientAppointment = (props) => {
   const filteredData =
     doctorNameList &&
     doctorNameList.filter((item) =>
-      item.toLowerCase().includes(search.toLowerCase())
+      item.doctorName.toLowerCase().includes(search.toLowerCase()) || 
+      item.userId.includes(search)
     );
 
   // const handle = (e) => {
   //   const newData = { ...appointmentData };
   //   newData[e.target.name] = e.target.value;
-  //   setAppointmentData(newData);
+  //   setAppointmentData(newData);`
   // };
 
   const handleDoctorName = (e) => {
