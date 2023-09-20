@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Form, Row, Col, FloatingLabel } from "react-bootstrap";
 import axios from "axios";
@@ -6,19 +6,19 @@ import DataSearch from "../DataSearch/DataSearch";
 import "./PatientAppointment.css";
 import { get, post } from "../../ApiCalls/ApiCalls";
 import accessDenied from "../../Assets/Access_Denied.svg";
+import { AuthContext } from "../../Context/authContext";
 
 const PatientAppointment = (props) => {
+  const { currentUser } = useContext(AuthContext);
+
   const { id } = useParams();
   const [patient, setPatient] = useState([]);
-  const [doctorNameList, setDoctorNameList] = useState("");
+  const [doctorNameList, setDoctorNameList] = useState([]);
   const [search, setSearch] = useState("");
   const [doctorName, setDoctorName] = useState("");
   const [doctorError, setDoctorError] = useState("");
-  const [doctorId, setDoctorId] = useState("10");
 
   // Get the current time
-
-
 
   const getCurrentTime = () => {
     const now = new Date();
@@ -40,11 +40,13 @@ const PatientAppointment = (props) => {
   const [endingTime, setEndingTime] = useState(currentTimePlus30Minutes());
   const [comments, setComments] = useState();
   const [criticalStatus, setCriticalStatus] = useState();
-  // const [doctor, setDoctor] = useState()
+  const [doctorId, setDoctorId] = useState("");
 
-// console.log(getCurrentTime())
+  console.log(doctorId);
 
   const appointmentData = {
+    userId: currentUser.userId,
+    mrnNo: id,
     doctor: doctorName,
     startingTime: startingTime,
     endingTime: endingTime,
@@ -52,14 +54,6 @@ const PatientAppointment = (props) => {
     comments: comments,
     appointmentDate: appointmentDate,
   };
-
-  // console.log(doctor)
-  // console.log(doctorName);
-  // console.log(criticalStatus);
-  // console.log(startingTime);
-  // console.log(endingTime);
-  // console.log(comments);
-  // console.log(appointmentDate);
 
   // Fetch the data Based on the Id
 
@@ -105,48 +99,45 @@ const PatientAppointment = (props) => {
   const filteredData =
     doctorNameList &&
     doctorNameList.filter((item) =>
-      item.doctorName.toLowerCase().includes(search.toLowerCase()) || 
-      item.userId.includes(search)
+      item.doctorName.toLowerCase().includes(search.toLowerCase())
     );
 
-  // const handle = (e) => {
-  //   const newData = { ...appointmentData };
-  //   newData[e.target.name] = e.target.value;
-  //   setAppointmentData(newData);`
-  // };
+  console.log(doctorNameList);
 
-  const handleDoctorName = (e) => {
+  const handleDoctorName = (e, index) => {
     const selectedDoctorName = e.target.innerText;
     setDoctorName(selectedDoctorName);
     setSearch("");
-
-    // setAppointmentData((prevData) => ({
-    //   ...prevData,
-    //   doctor: selectedDoctorName,
-    // }));
+    console.log(index);
+    setDoctorId(doctorNameList[index].doctorId);
+    // console.log('indexx',index)
+    // console.log('dociddd',doctorNameList[index].doctorId)
   };
 
+  console.log(doctorId);
   // Api Call
 
-  // const handlePatientAppointment = () => {
-  //   const data = {
-  //     doctorId: doctorId,
-  //     doctor: doctorName,
-  //     date: appointmentData.date,
-  //     time: appointmentData.time,
-  //     appointmentComment: appointmentData.appointmentComment,
-  //     criticalityStatus: appointmentData.criticalityStatus,
-  //   };
-  //   const config = {
-  //     headers: {
-  //       Accept: "application/json",
-  //     },
-  //   };
+  const handlePatientAppointment = () => {
+    const data = {
+      userId: currentUser.userId,
+      mrnNo: id,
+      doctorId: doctorId,
+      appointmentDate: appointmentDate,
+      startingTime: startingTime,
+      endingTime: endingTime,
+      comments: comments,
+      criticalStatus: criticalStatus,
+    };
+    const config = {
+      headers: {
+        Accept: "application/json",
+      },
+    };
 
-  //   post("/appointment", data, config).then((res) => {
-  //     console.log("Appointment Successfully Added", res);
-  //   });
-  // };
+    post("/appointment", data, config).then((res) => {
+      console.log("Appointment Successfully Added", res);
+    });
+  };
 
   // Submit Function
 
@@ -156,17 +147,13 @@ const PatientAppointment = (props) => {
     if (doctorName.length === 0) {
       setDoctorError("Must Have the Doctor Name");
     } else {
-      // handlePatientAppointment();
+      handlePatientAppointment();
       setDoctorError("");
       setDoctorName("");
       // setEndingTime("");
       setComments("");
       // setCriticalStatus("");
       console.log("AppointMent Details", appointmentData);
-      // const data = { ...appointmentData };
-      // data.appointmentComment = "";
-      // data.criticalityStatus = "";
-      // setAppointmentData(data);
     }
   };
 
@@ -213,7 +200,9 @@ const PatientAppointment = (props) => {
                     filteredData &&
                     filteredData.map((doctor, index) => (
                       <div key={index}>
-                        <p onClick={(e) => handleDoctorName(e)}>{doctor}</p>
+                        <p onClick={(e) => handleDoctorName(e, index)}>
+                          {doctor.doctorName}
+                        </p>
                       </div>
                     ))}
                 </div>

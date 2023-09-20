@@ -7,7 +7,7 @@ const UpdateAppointment = (props) => {
     <>
       {props.role.includes("Admin") ? (
         <div>
-          <UpdateComponent path="PatientAppointment" />
+          <UpdateComponent path="AppointmentUpdate" />
         </div>
       ) : (
         <div className="accessDenied">

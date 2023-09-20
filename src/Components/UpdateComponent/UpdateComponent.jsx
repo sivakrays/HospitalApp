@@ -22,10 +22,10 @@ const Lab = (props) => {
   const handleClose = () => setShow(false);
 
   const [patientFields, setPatientFields] = useState(false);
-  const [patientData, setPatientData] = useState({})
+  const [patientData, setPatientData] = useState({});
   const [staffFields, setStaffFields] = useState(false);
-  const [staffData, setStaffData] = useState({})
-  
+  const [staffData, setStaffData] = useState({});
+
   const config = {
     headers: {
       "Content-Type": "application/json",
@@ -58,18 +58,31 @@ const Lab = (props) => {
   useEffect(() => {
     if (props.path === "StaffsUpdate") {
       const fetchData1 = async () => {
-        get(`/getUser`, config).then((res) => {
-          setData(res.data);
-        }).catch((err)=>console.log(err))
+        get(`/getUser`, config)
+          .then((res) => {
+            setData(res.data);
+          })
+          .catch((err) => console.log(err));
       };
       fetchData1();
     } else if (props.path === "PatientUpdate") {
       const fetchData2 = async () => {
-        get("/patients", config).then((res) => {
-          setData(res.data);
-        }).catch((err)=>console.log(err))
+        get("/patients", config)
+          .then((res) => {
+            setData(res.data);
+          })
+          .catch((err) => console.log(err));
       };
       fetchData2();
+    } else if (props.path === "AppointmentUpdate") {
+      const fetchData3 = async () => {
+        get(`/appointmentById`, config)
+          .then((res) => {
+            setData(res.data);
+          });
+      };
+
+      fetchData3();
     }
   }, []);
 
@@ -86,16 +99,39 @@ const Lab = (props) => {
 
   const filteredMedical = data.filter((item) =>
     props.path === "StaffsUpdate"
-      ? item.userId.toString().includes(search)
-      : item.mrnNo.toString().includes(search) ||
-        item.PatientName.toLowerCase().includes(search.toLowerCase())
+      ? (item && item.userId && item.userId.toString().includes(search)) ||
+        (item.userName &&
+          item.userName.toString().toLowerCase().includes(search.toLowerCase()))
+      : (item && item.mrnNo && item.mrnNo.toString().includes(search)) ||
+        (item.patientName &&
+          item.patientName
+            .toString()
+            .toLowerCase()
+            .includes(search.toLowerCase()))
+  );
+
+  const appointmentFilter = data.filter(
+    (data) =>
+      (props.path === "AppointmentUpdate" &&
+        data &&
+        data.appointmentId &&
+        data.appointmentId.toString().includes(search)) ||
+      (data &&
+        data.patientName &&
+        data.patientName
+          .toString()
+          .toLowerCase()
+          .includes(search.toLowerCase()))
   );
 
   // Page Pagination
 
   const lastIndex = currentPage * recordPerPage;
   const firstIndex = lastIndex - recordPerPage;
-  const currentRecords = filteredMedical.slice(firstIndex, lastIndex);
+  const currentRecords =
+    props.path === "AppointmentUpdate"
+      ? appointmentFilter.slice(firstIndex, lastIndex)
+      : filteredMedical.slice(firstIndex, lastIndex);
   const nextPage = Math.ceil(filteredMedical.length / recordPerPage);
 
   const prePage = () => {
@@ -180,7 +216,9 @@ const Lab = (props) => {
                     }
                     style={{ cursor: "pointer" }}
                   >
-                    Mrn.No
+                    {props.path === "AppointmentUpdate"
+                      ? "AppointmentId"
+                      : "Mrn.No"}
                   </th>
                   <th>Name</th>
 
@@ -198,7 +236,7 @@ const Lab = (props) => {
                   sortedRecords.map((item, index) => (
                     <tr key={index}>
                       <td>
-                        {item.mrnNo} {item.userId}
+                        {item.mrnNo} {item.userId} {item.appointmentId}
                       </td>
                       <td>
                         {item.patientName} {item.userName}
@@ -206,7 +244,7 @@ const Lab = (props) => {
                       <td>
                         <div className="d-flex actionBtn">
                           <Link
-                            to={`/${props.path}/${item.mrnNo || item.userId}`}
+                            to={`/${props.path}/${item.mrnNo || item.userId || item.appointmentId}`}
                             className="btn btn-primary"
                           >
                             <span className="small-screen">Update</span>
@@ -231,7 +269,15 @@ const Lab = (props) => {
           </center>
         </div>
       </div>
-     <DeleteModal show={show} handleClose={handleClose} staffData={staffData} patientData={patientData} id={props.path=="StaffsUpdate"?staffData.userId:patientData.mrnNo} patientFields={patientFields} staffFields={staffFields}/>
+      <DeleteModal
+        show={show}
+        handleClose={handleClose}
+        staffData={staffData}
+        patientData={patientData}
+        id={props.path == "StaffsUpdate" ? staffData.userId : patientData.mrnNo}
+        patientFields={patientFields}
+        staffFields={staffFields}
+      />
     </section>
   );
 };
