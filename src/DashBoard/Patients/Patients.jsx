@@ -30,13 +30,12 @@ const Patients = (props) => {
     setCurrentPage(1);
   }, [search]);
 
-  // Filter data based on search input for ID and name
-
   const handleSearch = (e) => {
     const searchData = e.target.value;
     setSearch(searchData);
   };
 
+  // Filter data based on search input for ID and name
   const filteredData = data.filter(
     (item) =>
       item.mrnNo.toString().includes(search) ||
@@ -122,22 +121,23 @@ const Patients = (props) => {
               </div>
 
               <div className="patients__view g-3">
-                {currentItems &&
-                  currentItems.map((item, index) => {
-                    return (
-                      <Link
-                        to={`/PatientView/${item.mrnNo}`}
-                        className="text-dark"
-                        key={item.mrnNo}
-                      >
-                        <CardView
-                          patientName={item.patientName}
-                          mrnNo={item.mrnNo}
-                          photo={item.photo}
-                        />
-                      </Link>
-                    );
-                  })}
+                {currentItems.length === 0
+                  ? "No records found."
+                  : currentItems.map((item, index) => {
+                      return (
+                        <Link
+                          to={`/PatientView/${item.mrnNo}`}
+                          className="text-dark"
+                          key={item.mrnNo}
+                        >
+                          <CardView
+                            patientName={item.patientName}
+                            mrnNo={item.mrnNo}
+                            photo={item.photo}
+                          />
+                        </Link>
+                      );
+                    })}
               </div>
             </div>
           ) : (

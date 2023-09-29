@@ -4,8 +4,13 @@ import { Container, Form, Row, Col, FloatingLabel } from "react-bootstrap";
 import Webcam from "react-webcam";
 import { post } from "../../ApiCalls/ApiCalls";
 import accessDenied from "../../Assets/Access_Denied.svg";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { useNavigate } from "react-router-dom";
 
 const AddPatients = (props) => {
+  const navigate = useNavigate();
+
   const [allergy, setAllergy] = useState("");
   const [medicine, setMedicine] = useState("");
   const [image, setImage] = useState("");
@@ -121,6 +126,19 @@ const AddPatients = (props) => {
   };
 
   // Submit Function
+  const notify = () => {
+    toast.success("Patient Added Successfully", {
+      position: "bottom-center",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "light",
+    });
+    navigate("/addpatients");
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -138,10 +156,10 @@ const AddPatients = (props) => {
       handleRegister();
       setError("");
       setImageError("");
-      setImage("")
-      setPregancy("")
-      setAllergy("")
-      setMedicine("")
+      setImage("");
+      setPregancy("");
+      setAllergy("");
+      setMedicine("");
       console.log("image", image);
       console.log("patient", patients);
       setPatient({
@@ -166,10 +184,9 @@ const AddPatients = (props) => {
         allergyName: "",
         medicineName: "",
       });
+      notify();
     }
   };
-
-
 
   return (
     <>
@@ -666,6 +683,18 @@ const AddPatients = (props) => {
               </div>
             </div>
           </form>
+          <ToastContainer
+            position="bottom-center"
+            autoClose={5000}
+            hideProgressBar={false}
+            newestOnTop={false}
+            closeOnClick
+            rtl={false}
+            pauseOnFocusLoss
+            draggable
+            pauseOnHover
+            theme="light"
+          />
         </section>
       ) : (
         <div className="accessDenied">

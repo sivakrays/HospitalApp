@@ -23,8 +23,12 @@ const Lab = (props) => {
 
   const [patientFields, setPatientFields] = useState(false);
   const [patientData, setPatientData] = useState({});
+
   const [staffFields, setStaffFields] = useState(false);
   const [staffData, setStaffData] = useState({});
+
+  const [appointmentFields, setAppointMentFields] = useState(false)
+  const [appointmentData, setAppointmentData] = useState([])
 
   const config = {
     headers: {
@@ -38,7 +42,11 @@ const Lab = (props) => {
     } else if (props.path === "PatientUpdate") {
       setPatientFields(true);
     }
+    else if(props.path === "AppointmentUpdate"){
+      setAppointMentFields(true)
+    }
   }, [props.path]);
+
 
   const handleShow = (id) => {
     setShow(true);
@@ -52,6 +60,11 @@ const Lab = (props) => {
       get(`/mrnNo?mrnNo=${id}`, config).then((res) => {
         setPatientData(res.data);
       });
+    }
+    else if(appointmentFields === true){
+      get(`/getAppointmentId?appointmentId=${id}`, config).then((res) => {
+        setAppointmentData(res.data)
+      }).catch((err)=>console.log(err))
     }
   };
 
@@ -253,7 +266,7 @@ const Lab = (props) => {
                           <div
                             className="btn btn-danger mx-lg-3 "
                             onClick={() =>
-                              handleShow(item.mrnNo || item.userId)
+                              handleShow(item.mrnNo || item.userId || item.appointmentId)
                             }
                           >
                             <span className="small-screen">Delete</span>
@@ -274,9 +287,11 @@ const Lab = (props) => {
         handleClose={handleClose}
         staffData={staffData}
         patientData={patientData}
-        id={props.path == "StaffsUpdate" ? staffData.userId : patientData.mrnNo}
+        appointmentData = {appointmentData}
+        id={ staffData.userId || patientData.mrnNo || appointmentData.appointmentId}
         patientFields={patientFields}
         staffFields={staffFields}
+        appointmentFields={appointmentFields}
       />
     </section>
   );

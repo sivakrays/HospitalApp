@@ -53,7 +53,7 @@ const FilterPatients = (props) => {
     (item) =>
       item.mrnNo.toString().includes(search) ||
       item.firstName.toLowerCase().includes(search.toLowerCase()) ||
-      item.lastName.toLowerCase().includes(search.toLocaleLowerCase())
+      item.lastName.toLowerCase().includes(search.toLowerCase())
   );
 
   const currentItems = filteredData.slice(indexOfFirstItem, indexOfLastItem);
@@ -254,18 +254,19 @@ const FilterPatients = (props) => {
               </div>
 
               <div className="patients__view g-3">
-                {currentItems &&
-                  currentItems.map((item) => {
-                    return (
-                      <Link className="text-dark" key={item.mrnNo}>
-                        <CardView
-                          patientName={item.firstName + " " + item.lastName}
-                          mrnNo={item.mrnNo}
-                          photo={item.photo}
-                        />
-                      </Link>
-                    );
-                  })}
+                {currentItems.length === 0
+                  ? "No records found."
+                  : currentItems.map((item) => {
+                      return (
+                        <Link className="text-dark" key={item.mrnNo}>
+                          <CardView
+                            patientName={item.firstName + " " + item.lastName}
+                            mrnNo={item.mrnNo}
+                            photo={item.photo}
+                          />
+                        </Link>
+                      );
+                    })}
               </div>
             </div>
           ) : (

@@ -20,7 +20,6 @@ const Medical = (props) => {
   const [patientName, setPatientName] = useState("");
   const [mrnNo, setMrnNo] = useState("");
 
-
   const fetchData = async () => {
     const config = {
       headers: {
@@ -55,9 +54,12 @@ const Medical = (props) => {
   const filteredMedical = medical.filter(
     (item) =>
       item.patient.mrnNo.toString().includes(search) ||
-      item.patient.firstName.toLowerCase().includes(search.toLowerCase() ||
-      item.patient.lastName.toLowerCase().includes(search.toLowerCase())
-    )
+      item.patient.firstName
+        .toLowerCase()
+        .includes(
+          search.toLowerCase() ||
+            item.patient.lastName.toLowerCase().includes(search.toLowerCase())
+        )
   );
 
   // Page Pagination
@@ -190,16 +192,20 @@ const Medical = (props) => {
                               </td>
                             </tr>
                           ) : (
-                            sortedRecords.map((item) => (
+                            sortedRecords.map((item, index) => (
                               <tr key={item.patient.mrnNo}>
                                 <td>{item.patient.mrnNo}</td>
-                                <td>{item.patient.firstName + ' '+ item.patient.lastName}</td>
                                 <td>
-                                  {item.appointmentDate}
+                                  {item.patient.firstName +
+                                    " " +
+                                    item.patient.lastName}
                                 </td>
+                                <td>{item.appointmentDate}</td>
                                 <td>Pending</td>
                                 <td>
-                                  <Link to={`/medicinePrescription/${item.patient.mrnNo}`}>
+                                  <Link
+                                    to={`/medicinePrescription/${item.patient.mrnNo}`}
+                                  >
                                     <input
                                       type="button"
                                       value="Open"
@@ -244,12 +250,14 @@ const Medical = (props) => {
                             </tr>
                           ) : (
                             sortedRecords.map((item) => (
-                              <tr key={item.id}>
-                                <td>{item.id}</td>
-                                <td>{item.title}</td>
+                              <tr key={item.patient.mrnNo}>
+                                <td>{item.patient.mrnNo}</td>
                                 <td>
-                                  {new Date().toLocaleDateString("en-US")}
+                                  {item.patient.firstName +
+                                    " " +
+                                    item.patient.lastName}
                                 </td>
+                                <td>{item.appointmentDate}</td>
                                 <td>Dispatched</td>
                               </tr>
                             ))

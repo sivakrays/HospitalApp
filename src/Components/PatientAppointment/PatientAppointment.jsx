@@ -7,6 +7,8 @@ import "./PatientAppointment.css";
 import { get, post } from "../../ApiCalls/ApiCalls";
 import accessDenied from "../../Assets/Access_Denied.svg";
 import { AuthContext } from "../../Context/authContext";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const PatientAppointment = (props) => {
   const { currentUser } = useContext(AuthContext);
@@ -18,28 +20,43 @@ const PatientAppointment = (props) => {
   const [doctorName, setDoctorName] = useState("");
   const [doctorError, setDoctorError] = useState("");
 
-  // Get the current time
+  useEffect(() => {
+    const currentTime = new Date();
+    const hours = String(currentTime.getHours()).padStart(2, "0");
+    const minutes = String(currentTime.getMinutes()).padStart(2, "0");
+    const currentTimeString = `${hours}:${minutes}`;
 
-  const getCurrentTime = () => {
-    const now = new Date();
-    const hours = now.getHours().toString().padStart(2, "0");
-    const minutes = now.getMinutes().toString().padStart(2, "0");
-    return `${hours}:${minutes}`;
+    setStartingTime(currentTimeString);
+
+    const endingTimeDate = new Date(currentTime.getTime() + 30 * 60000);
+    const endingHours = String(endingTimeDate.getHours()).padStart(2, "0");
+    const endingMinutes = String(endingTimeDate.getMinutes()).padStart(2, "0");
+    const endingTimeString = `${endingHours}:${endingMinutes}`;
+    setEndingTime(endingTimeString);
+  }, []);
+
+  const handleStartingTimeChange = (e) => {
+    const newStartingTime = e.target.value;
+    setStartingTime(newStartingTime);
+
+    const startingDate = new Date(`2000-01-01T${newStartingTime}`);
+    startingDate.setMinutes(startingDate.getMinutes() + 30);
+    const endingTime = startingDate.toTimeString().slice(0, 5);
+
+    setEndingTime(endingTime);
   };
 
-  const currentTimePlus30Minutes = () => {
-    const now = new Date();
-    now.setMinutes(now.getMinutes() + 30);
-    const hours = now.getHours().toString().padStart(2, "0");
-    const minutes = now.getMinutes().toString().padStart(2, "0");
-    return `${hours}:${minutes}`;
+
+  const getTimePeriod = (time) => {
+    const [hours] = time.split(':').map(Number);
+    return hours < 12 ? 'AM' : 'PM';
   };
 
   const [appointmentDate, setAppointmentDate] = useState();
-  const [startingTime, setStartingTime] = useState(getCurrentTime());
-  const [endingTime, setEndingTime] = useState(currentTimePlus30Minutes());
-  const [comments, setComments] = useState();
-  const [criticalStatus, setCriticalStatus] = useState();
+  const [startingTime, setStartingTime] = useState("");
+  const [endingTime, setEndingTime] = useState("");
+  const [comments, setComments] = useState("");
+  const [criticalStatus, setCriticalStatus] = useState("");
   const [doctorId, setDoctorId] = useState("");
 
   console.log(doctorId);
@@ -108,8 +125,9 @@ const PatientAppointment = (props) => {
     const selectedDoctorName = e.target.innerText;
     setDoctorName(selectedDoctorName);
     setSearch("");
-    console.log(index);
-    setDoctorId(doctorNameList[index].doctorId);
+    console.log("doctorId", index);
+    setDoctorId(index);
+    // setDoctorId(doctorNameList[index].doctorId);
     // console.log('indexx',index)
     // console.log('dociddd',doctorNameList[index].doctorId)
   };
@@ -140,6 +158,19 @@ const PatientAppointment = (props) => {
   };
 
   // Submit Function
+  const notify = () => {
+    toast.success("Appointment Added Successfully", {
+      position: "bottom-center",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "light",
+    });
+    // navigate("/addpatients");
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -154,6 +185,7 @@ const PatientAppointment = (props) => {
       setComments("");
       // setCriticalStatus("");
       console.log("AppointMent Details", appointmentData);
+      notify();
     }
   };
 
@@ -198,9 +230,11 @@ const PatientAppointment = (props) => {
                 <div className="doctor-list">
                   {search.length !== 0 &&
                     filteredData &&
-                    filteredData.map((doctor, index) => (
-                      <div key={index}>
-                        <p onClick={(e) => handleDoctorName(e, index)}>
+                    filteredData.map((doctor, ind) => (
+                      <div key={ind}>
+                        <p
+                          onClick={(e) => handleDoctorName(e, doctor.doctorId)}
+                        >
                           {doctor.doctorName}
                         </p>
                       </div>
@@ -251,9 +285,11 @@ const PatientAppointment = (props) => {
                       placeholder="time"
                       name="time"
                       defaultValue={startingTime}
-                      onChange={(e) => setStartingTime(e.target.value)}
+                      // onChange={(e) => setStartingTime(e.target.value)}
+                      onChange={handleStartingTimeChange}
                       required
                     />
+                    {/* <div>Time Period: {getTimePeriod(startingTime)}</div> */}
                   </FloatingLabel>
                 </Col>
                 <Col md={3} className="mb-2">
@@ -269,6 +305,7 @@ const PatientAppointment = (props) => {
                       onChange={(e) => setEndingTime(e.target.value)}
                       required
                     />
+                    {/* <div>Time Period: {getTimePeriod(endingTime)}</div> */}
                   </FloatingLabel>
                 </Col>
               </Row>
@@ -326,6 +363,18 @@ const PatientAppointment = (props) => {
               </Row>
             </form>
           </div>
+          <ToastContainer
+            position="bottom-center"
+            autoClose={5000}
+            hideProgressBar={false}
+            newestOnTop={false}
+            closeOnClick
+            rtl={false}
+            pauseOnFocusLoss
+            draggable
+            pauseOnHover
+            theme="light"
+          />
         </section>
       ) : (
         <div className="accessDenied">

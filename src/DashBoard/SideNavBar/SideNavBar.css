@@ -2,6 +2,16 @@
     display: flex;
 }
 
+.bt-color{
+background-color: var(--color-sidebarActive) !important;
+color: white;
+text-transform: uppercase;
+}
+
+.bt-color:hover{
+    color: white;
+}
+
 main{
     width:100%;
     padding: 20px;

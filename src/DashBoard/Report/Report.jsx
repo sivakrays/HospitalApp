@@ -16,22 +16,18 @@ const Report = (props) => {
   const itemsPerPage = 12;
 
   useEffect(() => {
-    const fetchData = async () => {
-      const config = {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      };
-      {
-        get(`/patients`, config).then((res) => setData(res.data));
-      }
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+      },
     };
-
-    fetchData();
+    {
+      get(`/patients`, config).then((res) => setData(res.data));
+    }
   }, []);
 
   useEffect(() => {
-    setCurrentPage(1); // Reset page number when search changes
+    setCurrentPage(1);
   }, [search]);
 
   const handleSearch = (e) => {
@@ -39,15 +35,18 @@ const Report = (props) => {
     setSearch(searchData);
   };
 
-  const indexOfLastItem = currentPage * itemsPerPage;
-  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  console.log(data);
 
   // Filter data based on search input for ID and name
-  const filteredData = data.filter(
-    (item) =>
-      item.mrnNo.toString().includes(search) ||
-      item.PatientName.toLowerCase().includes(search.toLowerCase())
-  );
+  const filteredData =
+    data &&
+    data.filter(
+      (item) =>
+        item.mrnNo.toString().includes(search) ||
+        item.patientName.toLowerCase().includes(search.toLowerCase())
+    );
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
 
   const currentItems = filteredData.slice(indexOfFirstItem, indexOfLastItem);
 
@@ -123,19 +122,21 @@ const Report = (props) => {
               </div>
 
               <div className="patients__view g-3">
-                {currentItems.map((item) => {
-                  return (
-                    <Link
-                      to={`/PatientReport/${item.mrnNo}`}
-                      className="text-dark"
-                      key={item.mrnNo}
-                    >
-                       <CardView
-                          patientName={item.patientName}
-                          mrnNo={item.mrnNo}
-                          photo={item.photo}
-                        />
-                      {/* <div className="patients__box shadow" key={item.mrnNo}>
+                {currentItems.length === 0
+                  ? "No records found."
+                  : currentItems.map((item) => {
+                      return (
+                        <Link
+                          to={`/PatientReport/${item.mrnNo}`}
+                          className="text-dark"
+                          key={item.mrnNo}
+                        >
+                          <CardView
+                            patientName={item.patientName}
+                            mrnNo={item.mrnNo}
+                            photo={item.photo}
+                          />
+                          {/* <div className="patients__box shadow" key={item.mrnNo}>
                         <img src={item.photo} alt="patient" />
                         <div className="patient__details">
                           <p>
@@ -148,9 +149,9 @@ const Report = (props) => {
                           </p>
                         </div>
                       </div> */}
-                    </Link>
-                  );
-                })}
+                        </Link>
+                      );
+                    })}
               </div>
             </div>
           ) : (

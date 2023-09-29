@@ -251,7 +251,7 @@ const SideNavBar = (props) => {
             USER: {currentUser.userName}
           </h6>
           <Link to={"/"}>
-            <button className="btn btn-primary m-4" onClick={handleLogout}>
+            <button className="btn bt-color m-4"  onClick={handleLogout}>
               Logout
             </button>
           </Link>

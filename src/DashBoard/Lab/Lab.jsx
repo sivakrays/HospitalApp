@@ -7,6 +7,7 @@ import axios from "axios";
 import { Link } from "react-router-dom";
 import accessDenied from "../../Assets/Access_Denied.svg";
 import Loader from "../../Components/Loader/Loader";
+import { get } from "../../ApiCalls/ApiCalls";
 
 const Lab = (props) => {
   const [medical, setMedicalData] = useState([]);
@@ -17,13 +18,13 @@ const Lab = (props) => {
 
   useEffect(() => {
     const fetchData = async () => {
-      try {
-        const res = await axios.get(
-          "https://jsonplaceholder.typicode.com/photos"
-        );
-        setMedicalData(res.data);
-      } catch (error) {
-        console.error("Error fetching data:", error);
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      };
+      {
+        get(`/allAppointments`, config).then((res) => setMedicalData(res.data));
       }
     };
 
@@ -43,8 +44,13 @@ const Lab = (props) => {
 
   const filteredMedical = medical.filter(
     (item) =>
-      item.id.toString().includes(search) ||
-      item.title.toLowerCase().includes(search.toLowerCase())
+      item.patient.mrnNo.toString().includes(search) ||
+      item.patient.firstName
+        .toLowerCase()
+        .includes(
+          search.toLowerCase() ||
+            item.patient.lastName.toLowerCase().includes(search.toLowerCase())
+        )
   );
 
   // Page Pagination
@@ -170,12 +176,14 @@ const Lab = (props) => {
                             </tr>
                           ) : (
                             sortedRecords.map((item) => (
-                              <tr key={item.id}>
-                                <td>{item.id}</td>
-                                <td>{item.title}</td>
+                              <tr key={item.patient.mrnNo}>
+                                <td>{item.patient.mrnNo}</td>
                                 <td>
-                                  {new Date().toLocaleDateString("en-US")}
+                                  {item.patient.firstName +
+                                    " " +
+                                    item.patient.lastName}
                                 </td>
+                                <td>{item.appointmentDate}</td>
                                 <td>Pending</td>
                                 <td>
                                   <Link to={`/LabTest/${item.id}`}>
@@ -222,12 +230,14 @@ const Lab = (props) => {
                             </tr>
                           ) : (
                             sortedRecords.map((item) => (
-                              <tr key={item.id}>
-                                <td>{item.id}</td>
-                                <td>{item.title}</td>
+                              <tr key={item.patient.mrnNo}>
+                                <td>{item.patient.mrnNo}</td>
                                 <td>
-                                  {new Date().toLocaleDateString("en-US")}
+                                  {item.patient.firstName +
+                                    " " +
+                                    item.patient.lastName}
                                 </td>
+                                <td>{item.appointmentDate}</td>
                                 <td>Dispatched</td>
                               </tr>
                             ))

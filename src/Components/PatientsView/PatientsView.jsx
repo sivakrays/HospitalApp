@@ -18,11 +18,22 @@ import "./PatientsView.css";
 import accessDenied from "../../Assets/Access_Denied.svg";
 import { get, post } from "../../ApiCalls/ApiCalls";
 import { AuthContext } from "../../Context/authContext";
+import "react-toastify/dist/ReactToastify.css";
+import { ToastContainer, toast } from "react-toastify";
 
 const InputTaskOne = (props) => {
   const { currentUser } = useContext(AuthContext);
-
   const { id } = useParams();
+
+  const today = new Date();
+  const year = today.getFullYear();
+  const month = String(today.getMonth() + 1).padStart(2, "0");
+  const day = String(today.getDate()).padStart(2, "0");
+
+  const cuttentDate = `${year}-${month}-${day}`;
+
+  console.log(cuttentDate);
+
   const [patientDetails, setPatientDetails] = useState([]);
   const [searchValue, setSearchValue] = useState("");
   useEffect(() => {
@@ -41,37 +52,46 @@ const InputTaskOne = (props) => {
       );
     }
   };
+
   const [searchBar, setSearchBar] = useState("");
   const [data, setData] = useState([
     {
+      prescribedDate: cuttentDate,
+      userId: currentUser.userId,
       doctorId: currentUser.userId,
       mrnNo: id,
       medicineName: "",
       duration: "",
-      interval: "",
+      intervals: "",
       comments: "",
       searchResults: [],
     },
   ]);
   const [labTestFields, setLabTestFields] = useState([
     {
+      prescribedDate: cuttentDate,
       id: uuidv4(),
+      userId: currentUser.userId,
       doctorId: currentUser.userId,
       mrnNo: id,
       labTestName: "",
-      comments: "",
+      labTestComments: "",
     },
   ]);
   const [medicineNames, setMedicineNames] = useState([]);
+  const [mName, setMName] = useState("");
+
   const handleAddLabTestField = () => {
     setLabTestFields([
       ...labTestFields,
       {
+        prescribedDate: cuttentDate,
         id: uuidv4(),
         doctorId: currentUser.userId,
+        userID: currentUser.userId,
         mrnNo: id,
         labTestName: "",
-        comments: "",
+        labTestComments: "",
       },
     ]);
   };
@@ -86,19 +106,23 @@ const InputTaskOne = (props) => {
       },
     };
     {
-      get(`/medicine`, config).then((res) => setMedicineNames(res.data));
+      get(`/medicine?medicineName=${searchBar}`, config)
+        .then((res) => setMedicineNames(res.data))
+        .catch((err) => console.log(err));
     }
-  }, []);
+  }, [searchBar]);
 
   const handleAdd = () => {
     setData([
       ...data,
       {
+        prescribedDate: cuttentDate,
+        userId: currentUser.userId,
         mrnNo: id,
         doctorId: currentUser.userId,
         medicineName: "",
         duration: "",
-        interval: "",
+        intervals: "",
         comments: "",
         searchResults: [],
       },
@@ -123,20 +147,27 @@ const InputTaskOne = (props) => {
     setSearchValue(e.target.value.toLowerCase());
     // const searchValue = e.target.value.toLowerCase();
     setSearchBar(searchValue);
-    const filteredResults = medicineNames.filter((name) =>
-      name.toLowerCase().includes(searchBar)
-    );
+    const filteredResults =
+      medicineNames &&
+      medicineNames.filter((name) =>
+        name.toString().toLowerCase().includes(searchBar)
+      );
+
     const newData = [...data];
-    newData[dataIndex].searchResults = filteredResults;
+    newData[dataIndex].searchResults = medicineNames;
     setData(newData);
+    console.log("filteredResults", data);
   };
 
   const handleSearchResultClick = (result, dataIndex) => {
     const newData = [...data];
-    newData[dataIndex].medicineName = result;
+    newData[dataIndex].medicineName = result.medicineName;
     newData[dataIndex].searchResults = [];
     setData(newData);
     setSearchValue("");
+    console.log("searchClickData", data[0].medicineName.medicineName);
+    setMName(result.medicineName);
+    console.log(mName);
   };
 
   // Api Call
@@ -158,15 +189,30 @@ const InputTaskOne = (props) => {
     });
   };
 
+  const notify = () => {
+    toast.success("Perscription Added Successfully", {
+      position: "bottom-center",
+      autoClose: 3000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "light",
+    });
+  };
+
   const handleSubmit = (e) => {
-    e.preventDefault()
+    e.preventDefault();
     console.log("Medicine details:", data);
     console.log("Lab Test Fields", labTestFields);
     setData("");
     setLabTestFields("");
-    handleAppointment()
+    handleAppointment();
+    notify();
   };
 
+  console.log(data);
   return (
     <>
       {props.role.includes("Admin") ? (
@@ -197,7 +243,7 @@ const InputTaskOne = (props) => {
           </div>
           <hr />
           <div className="responsive-perscription">
-            <form onSubmit={(e)=>handleSubmit(e)}>
+            <form onSubmit={(e) => handleSubmit(e)}>
               <div className="medicine-perscription">
                 {data &&
                   data.map((dataItem, i) => (
@@ -224,7 +270,7 @@ const InputTaskOne = (props) => {
                             <Form.Control
                               type="text"
                               name="medicine"
-                              value={dataItem.medicineName}
+                              value={dataItem && dataItem.medicineName}
                               onChange={(e) => handleChange(e, i)}
                               disabled
                               required
@@ -243,14 +289,22 @@ const InputTaskOne = (props) => {
                           </FloatingLabel>
                         </Col>
                         <Col sm={3}>
-                          <FloatingLabel label="Interval">
-                            <Form.Control
-                              type="text"
-                              name="interval"
-                              value={dataItem.interval}
+                          <FloatingLabel controlId="Interval" label="Interval">
+                            <Form.Select
+                              aria-label="Floating label select example"
+                              name="intervals"
                               onChange={(e) => handleChange(e, i)}
+                              value={dataItem.intervals}
                               required
-                            />
+                            >
+                              <option> Select the Interval</option>
+                              <option value="1-1-1">1-1-1</option>
+                              <option value="1-0-1">1-0-1</option>
+                              <option value="1-0-0">1-0-0</option>
+                            </Form.Select>
+                            <Form.Control.Feedback type="invalid">
+                              Please select a Gender.
+                            </Form.Control.Feedback>
                           </FloatingLabel>
                         </Col>
                         <Col sm={3} className="mb-2 ">
@@ -283,7 +337,7 @@ const InputTaskOne = (props) => {
                                 }
                                 className="result-item"
                               >
-                                {result}
+                                <p>{result.medicineName}</p>
                               </div>
                             ))}
                         </div>
@@ -340,12 +394,12 @@ const InputTaskOne = (props) => {
                             type="text"
                             placeholder="Comments"
                             required
-                            name="comments"
-                            value={field.comments}
+                            name="labTestComments"
+                            value={field.labTestComments}
                             onChange={(e) => {
                               const updatedFields = labTestFields.map((item) =>
                                 item.id === field.id
-                                  ? { ...item, comments: e.target.value }
+                                  ? { ...item, labTestComments: e.target.value }
                                   : item
                               );
                               setLabTestFields(updatedFields);
@@ -395,6 +449,19 @@ const InputTaskOne = (props) => {
               />
             </form>
           </div>
+
+          <ToastContainer
+            position="bottom-center"
+            autoClose={5000}
+            hideProgressBar={false}
+            newestOnTop={false}
+            closeOnClick
+            rtl={false}
+            pauseOnFocusLoss
+            draggable
+            pauseOnHover
+            theme="light"
+          />
         </Container>
       ) : (
         <div className="accessDenied">

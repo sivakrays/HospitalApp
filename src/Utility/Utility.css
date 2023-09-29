@@ -1,19 +1,19 @@
 :root{
-    --color-sidebar:rgb(62,169,199);
-    --color-sidebarActive:rgb(12, 119, 148);
+    --color-sidebar:rgb(6, 143, 181);
+    --color-sidebarActive:rgb(20, 88, 107);
     --color-blue100: #dbeafe;
     --color-slate950:#020617;
     --color-slate50:#f8fafc;
 }
 
-:root{
+/* :root{
     --color-blue: #0663ee;
     --color-blue800: #5b21b6;
     --color-slate400:#94a3b8;
     --color-slate600:#475569;
     --color-sidebar:rgb(62,169,199);
     --color-sidebarActive:rgb(12, 119, 148);
-}
+} */
 
 
 

@@ -22,12 +22,14 @@ const Patients = (props) => {
         },
       };
       {
-        get(`/patients`, config).then((res) => setData(res.data));
+        get(`/allPatient`, config).then((res) => setData(res.data));
       }
     };
 
     fetchData();
   }, []);
+
+  console.log("patients", data);
 
   useEffect(() => {
     setCurrentPage(1);
@@ -46,8 +48,11 @@ const Patients = (props) => {
   const filteredData = data.filter(
     (item) =>
       item.mrnNo.toString().includes(search) ||
-      item.PatientName.toLowerCase().includes(search.toLowerCase())
+      item.firstName.toLowerCase().includes(search.toLowerCase()) ||
+      item.lastName.toLowerCase().includes(search.toLowerCase())
   );
+
+  console.log("filtered Data", filteredData);
 
   // Pagination for Patients view
 
@@ -83,7 +88,7 @@ const Patients = (props) => {
 
   return (
     <>
-      {props.role.includes("Admin") || props.role.includes("Receptionist")? (
+      {props.role.includes("Admin") || props.role.includes("Receptionist") ? (
         <section className="patients">
           {data.length > 0 ? (
             <div className="patient__search">
@@ -125,19 +130,21 @@ const Patients = (props) => {
               </div>
 
               <div className="patients__view g-3">
-                {currentItems.map((item) => {
-                  return (
-                    <Link
-                      to={`/PatientAppointment/${item.mrnNo}`}
-                      className="text-dark"
-                      key={item.mrnNo}
-                    >
-                      <CardView
-                          patientName={item.patientName}
-                          mrnNo={item.mrnNo}
-                          photo={item.photo}
-                        />
-                      {/* <div className="patients__box shadow" key={item.mrnNo}>
+                {currentItems.length === 0
+                  ? "No records found."
+                  : currentItems.map((item) => {
+                      return (
+                        <Link
+                          to={`/PatientAppointment/${item.mrnNo}`}
+                          className="text-dark"
+                          key={item.mrnNo}
+                        >
+                          <CardView
+                            patientName={item.firstName + " " + item.lastName}
+                            mrnNo={item.mrnNo}
+                            photo={item.photo}
+                          />
+                          {/* <div className="patients__box shadow" key={item.mrnNo}>
                         <img src={item.photo} alt="patient" />
                         <div className="patient__details">
                           <p>
@@ -151,9 +158,9 @@ const Patients = (props) => {
                           <div className="btn btn-primary">View Patient</div>
                         </div>
                       </div> */}
-                    </Link>
-                  );
-                })}
+                        </Link>
+                      );
+                    })}
               </div>
             </div>
           ) : (

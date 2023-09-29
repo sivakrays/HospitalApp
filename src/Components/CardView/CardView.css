@@ -9,9 +9,8 @@
 }
 
 .patient__cardView:hover{
-    transform: scale(1.050);
+    transform: scale(1.015);
 }
-
 
 /* Media Query */
 

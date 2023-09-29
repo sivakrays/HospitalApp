@@ -6,19 +6,20 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 import accessDenied from "../../Assets/Access_Denied.svg";
 import Loader from "../../Components/Loader/Loader";
+import { get } from "../../ApiCalls/ApiCalls";
 
 const Billing = (props) => {
   const [billingData, setBillingData] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
-      try {
-        const res = await axios.get(
-          "https://jsonplaceholder.typicode.com/photos"
-        );
-        setBillingData(res.data);
-      } catch (error) {
-        console.error("Error fetching data:", error);
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      };
+      {
+        get(`/allAppointments`, config).then((res) => setBillingData(res.data));
       }
     };
 
@@ -29,8 +30,13 @@ const Billing = (props) => {
 
   const filteredBilling = billingData.filter(
     (item) =>
-      (item.id && item.id.toString().includes(search)) ||
-      (item.title && item.title.toLowerCase().includes(search.toLowerCase()))
+      item.patient.mrnNo.toString().includes(search) ||
+      item.patient.firstName
+        .toLowerCase()
+        .includes(
+          search.toLowerCase() ||
+            item.patient.lastName.toLowerCase().includes(search.toLowerCase())
+        )
   );
 
   // Pagination
@@ -146,12 +152,14 @@ const Billing = (props) => {
                               </tr>
                             ) : (
                               currentRecords.map((item) => (
-                                <tr key={item.id}>
-                                  <td>{item.id}</td>
-                                  <td>{item.title}</td>
+                                <tr key={item.patient.mrnNo}>
+                                  <td>{item.patient.mrnNo}</td>
                                   <td>
-                                    {new Date().toLocaleDateString("en-US")}
+                                    {item.patient.firstName +
+                                      " " +
+                                      item.patient.lastName}
                                   </td>
+                                  <td>{item.appointmentDate}</td>
                                   <td>Pending</td>
                                   <td>
                                     <Link to={`/BillingView/${item.id}`}>
@@ -189,12 +197,14 @@ const Billing = (props) => {
                               </tr>
                             ) : (
                               currentRecords.map((item) => (
-                                <tr key={item.id}>
-                                  <td>{item.id}</td>
-                                  <td>{item.title}</td>
+                                <tr key={item.patient.mrnNo}>
+                                  <td>{item.patient.mrnNo}</td>
                                   <td>
-                                    {new Date().toLocaleDateString("en-US")}
+                                    {item.patient.firstName +
+                                      " " +
+                                      item.patient.lastName}
                                   </td>
+                                  <td>{item.appointmentDate}</td>
                                   <td>Completed</td>
                                 </tr>
                               ))

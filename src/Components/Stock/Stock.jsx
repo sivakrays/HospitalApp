@@ -43,7 +43,7 @@ const Stock = (props) => {
 
   const filteredStock = stockData.filter(
     (item) =>
-      item.id.toString().includes(search) ||
+      item.userId.toString().includes(search) ||
       item.medicineName.toLowerCase().includes(search.toLowerCase())
   );
 
@@ -156,8 +156,8 @@ const Stock = (props) => {
                 ) : (
                   currentRecords &&
                   currentRecords.map((item) => (
-                    <tr key={item.id}>
-                      <td>{item.id}</td>
+                    <tr key={item.stockId}>
+                      <td>{item.stockId}</td>
                       <td>{item.medicineName}</td>
                       <td>{item.expiryDate.slice(0,10)}</td>
                       <td>{item.stockQty}</td>

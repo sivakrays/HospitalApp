@@ -17,7 +17,7 @@ const CardView = ({patientName,mrnNo,photo}) => {
               Name: {patientName}
             </p>
           </div>
-          <button className="card_btn btn btn-primary btn-block">View</button>
+          <button className="card_btn btn btn-secondary btn-block">View</button>
         </div>
       </div>
     </>

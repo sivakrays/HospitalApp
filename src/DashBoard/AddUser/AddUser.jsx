@@ -6,7 +6,10 @@ import Form from "react-bootstrap/Form";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import { post } from "../../ApiCalls/ApiCalls";
+import { ToastContainer, toast } from "react-toastify";
 import accessDenied from "../../Assets/Access_Denied.svg";
+import "react-toastify/dist/ReactToastify.css";
+
 
 const AddUser = (props) => {
   const [role, setRole] = useState([]);
@@ -104,6 +107,20 @@ const AddUser = (props) => {
 
   // Submit Function
 
+
+  const notify = () => {
+    toast.success("User Added Successfully", {
+      position: "bottom-center",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "light",
+    });
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
     if (register.password !== register.confirmPassword) {
@@ -118,6 +135,7 @@ const AddUser = (props) => {
       setPasswordMismatch(false);
       resetForm();
       console.log("User register", register);
+      notify();
     }
   };
 
@@ -466,6 +484,19 @@ const AddUser = (props) => {
               )}
             </div>
           </form>
+
+          <ToastContainer
+            position="bottom-center"
+            autoClose={5000}
+            hideProgressBar={false}
+            newestOnTop={false}
+            closeOnClick
+            rtl={false}
+            pauseOnFocusLoss
+            draggable
+            pauseOnHover
+            theme="light"
+          />
         </section>
       ) : (
         <div className="accessDenied">

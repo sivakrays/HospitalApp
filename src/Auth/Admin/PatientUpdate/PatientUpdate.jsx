@@ -6,9 +6,11 @@ import { get, post, put } from "../../../ApiCalls/ApiCalls";
 import accessDenied from "../../../Assets/Access_Denied.svg";
 import { useNavigate, useParams } from "react-router-dom";
 import Loader from "../../../Components/Loader/Loader";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const AddPatients = (props) => {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const { id } = useParams();
   const webcamRef = React.useRef(null);
   const [imageError, setImageError] = useState("");
@@ -103,7 +105,6 @@ const AddPatients = (props) => {
   const [allergy, setAllergy] = useState();
   const [medicine, setMedicine] = useState();
 
-
   const capture = React.useCallback(() => {
     const imageSrc = webcamRef.current.getScreenshot();
     setImage(imageSrc);
@@ -118,7 +119,6 @@ const AddPatients = (props) => {
       setAge(ageCalculation);
     }
   }, [patientData]);
-
 
   const videoConstraints = {
     width: 220,
@@ -166,11 +166,24 @@ const AddPatients = (props) => {
 
     put("/updatePatient", data, config).then((res) => {
       console.log("Result", res);
-      
     });
   };
 
   // Submit Function
+
+  const notify = () => {
+    toast.success("Patient Update Successfully", {
+      position: "bottom-center",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "light",
+    });
+    // navigate("/admin");
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -189,6 +202,11 @@ const AddPatients = (props) => {
       // alert("res", navigate('/'))
       setError("");
       setImageError("");
+      notify();
+
+      setTimeout(() => {
+        navigate("/admin");
+      }, 2000);
     }
   };
 
@@ -693,6 +711,18 @@ const AddPatients = (props) => {
                   />
                 </div>
               </div>
+              <ToastContainer
+                position="bottom-center"
+                autoClose={5000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+                theme="light"
+              />
             </form>
           ) : (
             <Loader />

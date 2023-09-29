@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import axios from "axios";
 import {
   Button,
@@ -14,11 +14,24 @@ import "./AddStock.css";
 import { FaMinus, FaPlus } from "react-icons/fa6";
 import accessDenied from "../../Assets/Access_Denied.svg";
 import { get, post } from "../../ApiCalls/ApiCalls";
+import { AuthContext } from "../../Context/authContext";
+import "react-toastify/dist/ReactToastify.css";
+import { ToastContainer, toast } from "react-toastify";
+
 
 const InputTaskOne = (props) => {
+  const { currentUser } = useContext(AuthContext);
+
   const [searchBar, setSearchBar] = useState("");
   const [data, setData] = useState([
-    { medicineName: "", expiryDate: "", stockQty: "", price: "", searchResults: [] ,userId: '20'},
+    {
+      medicineName: "",
+      expiryDate: "",
+      stockQty: "",
+      price: "",
+      searchResults: [],
+      userId: currentUser.userId,
+    },
   ]);
   const [medicineNames, setMedicineNames] = useState([]);
   const [searchValue, setSearchValue] = useState("");
@@ -29,15 +42,23 @@ const InputTaskOne = (props) => {
       },
     };
     {
-      get(`/medicine`, config).then((res) => setMedicineNames(res.data));
+      get(`/medicine?medicineName=${searchBar}`, config)
+        .then((res) => setMedicineNames(res.data))
+        .catch((err) => console.log(err));
     }
-
-  }, []);
+  }, [searchBar]);
 
   const handleAdd = () => {
     setData([
       ...data,
-      { medicineName: "", expiryDate: "", stockQty: "", price: "", searchResults: [],userId: '20' },
+      {
+        medicineName: "",
+        expiryDate: "",
+        stockQty: "",
+        price: "",
+        searchResults: [],
+        userId: currentUser.userId,
+      },
     ]);
   };
 
@@ -59,28 +80,49 @@ const InputTaskOne = (props) => {
     setSearchValue(e.target.value.toLowerCase());
     // const searchValue = e.target.value.toLowerCase();
     setSearchBar(searchValue);
-    const filteredResults = medicineNames.filter((name) =>
-      name.toLowerCase().includes(searchBar)
-    );
+    // const filteredResults =
+    //   medicineNames &&
+    //   medicineNames.filter((name) =>
+    //     name.toString().toLowerCase().includes(searchBar)
+    //   );
+
     const newData = [...data];
-    newData[dataIndex].searchResults = filteredResults;
+    newData[dataIndex].searchResults = medicineNames;
     setData(newData);
+    console.log("filteredResults", data);
   };
+
+  const [mName, setMName] = useState("");
 
   const handleSearchResultClick = (result, dataIndex) => {
     const newData = [...data];
-    newData[dataIndex].medicineName = result;
+    newData[dataIndex].medicineName = result.medicineName;
     newData[dataIndex].searchResults = [];
     setData(newData);
     setSearchValue("");
+    console.log("searchClickData", data[0].medicineName.medicineName);
+    setMName(result.medicineName);
+    console.log("result ", result.medicineName);
+    // setMName(data);
+    // console.log(mName)
   };
-
-
 
   // Api Call
 
-  const handleRegister = () => {
+  const notify = () => {
+    toast.success("Stock Added Successfully", {
+      position: "bottom-center",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "light",
+    });
+  };
 
+  const handleRegister = () => {
     const config = {
       headers: {
         "Content-Type": "application/json",
@@ -94,19 +136,18 @@ const InputTaskOne = (props) => {
 
   const handleSubmit = () => {
     console.log("Submitted data:", data);
-    handleRegister()
-    setData("");
+    handleRegister();
+    notify();
+    setData([]);
   };
 
   // Calculate form validity
   const formIsValid =
     data &&
     data.every(
-      (item) => item.medicineName && item.expiryDate && item.stockQty && item.price
+      (item) =>
+        item.medicineName && item.expiryDate && item.stockQty && item.price
     );
-
-
-
 
   return (
     <>
@@ -127,6 +168,7 @@ const InputTaskOne = (props) => {
                           name={`search-${i}`}
                           placeholder="Search the Name"
                           onChange={(e) => handleSearch(e, i)}
+                          value={searchValue}
                         />
                       </FloatingLabel>
                     </InputGroup>
@@ -138,7 +180,7 @@ const InputTaskOne = (props) => {
                       <Form.Control
                         type="text"
                         name="medicineName"
-                        value={dataItem.medicineName}
+                        value={dataItem && dataItem.medicineName}
                         onChange={(e) => handleChange(e, i)}
                         disabled
                       />
@@ -152,7 +194,7 @@ const InputTaskOne = (props) => {
                               onClick={() => handleSearchResultClick(result, i)}
                               className="result-item"
                             >
-                              {result}
+                              <p>{result.medicineName}</p>
                             </div>
                           ))}
                       </div>
@@ -231,6 +273,19 @@ const InputTaskOne = (props) => {
             className="btn btn-secondary mt-2"
             onClick={handleSubmit}
             disabled={!formIsValid}
+          />
+
+          <ToastContainer
+            position="bottom-center"
+            autoClose={5000}
+            hideProgressBar={false}
+            newestOnTop={false}
+            closeOnClick
+            rtl={false}
+            pauseOnFocusLoss
+            draggable
+            pauseOnHover
+            theme="light"
           />
         </Container>
       ) : (
